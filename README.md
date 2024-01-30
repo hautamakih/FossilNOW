@@ -3,6 +3,7 @@
 ## Questions?
 
 - How is this clustering done?
+- What are the x and y axes of the line charts?
 
 ## Plan
 
