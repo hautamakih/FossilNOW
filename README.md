@@ -12,5 +12,5 @@
 ## Plan
 
 - Two groups
--   one focusing on the recommender system
--   one focusing on the visualizations
+- one focusing on the recommender system
+- one focusing on the visualizations

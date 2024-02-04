@@ -1,0 +1,575 @@
+Genus,Order,Family,MassSource,Massg,LogMass,LargeSmall,SizeClass,Diet,DietSource
+Abudhabia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Aceratherium,Perissodactyla,Rhinocerotidae,Cooke,1099005.843,6.041000001,Large,large,Herbivore,Phylacine
+Acinonyx,Carnivora,Felidae,Phylacine,46700,4.669316881,Large,large,Non-Herbivore,Phylacine
+Aepyosciurus,Rodentia,Sciuridae,NOW,286,2.456366033,Small,small,Herbivore,Phylacine
+Aeretes,Rodentia,Sciuridae,Phylacine,732.4,2.864748336,Small,small,Herbivore,Phylacine
+Agriotherium,Carnivora,Ursidae,Cooke,417590.2575,5.620750358,Large,large,Non-Herbivore,Sorkin 2007
+Ailuropoda,Carnivora,Ursidae,Phylacine,108400,5.035029282,Large,large,Non-Herbivore,Phylacine
+Ailurus,Carnivora,Ailuridae,Phylacine,4900,3.69019608,Large,medium,Non-Herbivore,Phylacine
+Alactagulus,Rodentia,Dipodidae,Family average,51.18235294,1.709120247,Small,small,Herbivore,Phylacine
+Alcelaphus,Artiodactyla,Bovidae,Phylacine,171001.5,5.23299992,Large,large,Herbivore,Phylacine
+Alces,Cetartiodactyla,Cervidae,Phylacine,356998,5.552665783,Large,large,Herbivore,Phylacine
+Alephis,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Algarolutra,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,Willemsen 1992
+Alilepus,Lagomorpha,Leporidae,Cooke,157.2818783,2.196678687,Small,small,Herbivore,Phylacine
+Allactaga,Rodentia,Dipodidae,Phylacine,108.1083333,2.033859172,Small,small,Herbivore,Phylacine
+Alloblarinella,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Allocaenelaphus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Allocricetus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Allophaiomys,Rodentia,Muridae,Cooke,46.94609366,1.671599461,Small,small,Herbivore,Phylacine
+Alopex,Carnivora,Canidae,Pantheria,3600,3.556302501,Large,medium,Non-Herbivore,GroupAv
+Alticola,Rodentia,Cricetidae,Phylacine,34.08333333,1.532542062,Small,small,Herbivore,Phylacine
+Amblonyx,Carnivora,Mustelidae,Pantheria,3530,3.547774705,Large,medium,Non-Herbivore,Willemsen 1992
+Ammotragus,Cetartiodactyla,Bovidae,Phylacine,48000,4.681241237,Large,large,Herbivore,Phylacine
+Amphicyon,Carnivora,Amphicyonidae,Cooke,213781.4845,5.329970088,Large,large,Non-Herbivore,GroupAv
+Anancus,Proboscidea,Gomphotheriidae,Family average,5855000,6.767526899,Large,large,Herbivore,Phylacine
+Ancylotherium,Perissodactyla,Chalicotheriidae,Cooke,2779713.27,6.444,Large,large,Herbivore,Phylacine
+Anisodon,Perissodactyla,Chalicotheriidae,Family average,2779713.27,6.444,Large,large,Herbivore,Phylacine
+Anourosorex,Eulipotyphla,Soricidae,Phylacine,23.45,1.370142847,Small,small,Non-Herbivore,Phylacine
+Antilope,Cetartiodactyla,Bovidae,Phylacine,37500,4.574031268,Large,medium,Herbivore,Phylacine
+Antilospira,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Antispiroides,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Aonyx,Carnivora,Mustelidae,Phylacine,14849.2,4.171703057,Large,medium,Non-Herbivore,Phylacine
+Apocricetus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Apodemus,Rodentia,Muridae,Phylacine,31,1.491361694,Small,small,Non-Herbivore,Phylacine
+Apomys,Rodentia,Muridae,Phylacine,53.52,1.728516105,Small,small,Herbivore,Phylacine
+Archaeodesmana,Eulipotyphla,Talpidae,Cooke,79.2461181,1.898977997,Small,small,Non-Herbivore,GroupAv
+Arctictis,Carnivora,Viverridae,Phylacine,9875,3.994537104,Large,medium,Non-Herbivore,Phylacine
+Arctogalidia,Carnivora,Viverridae,Phylacine,2250,3.352182518,Large,medium,Non-Herbivore,Phylacine
+Arctomeles,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,comparable to Meles
+Arctonyx,Carnivora,Mustelidae,Phylacine,6789.133333,3.831814338,Large,medium,Non-Herbivore,Phylacine
+Arvernoceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Arvicola,Rodentia,Cricetidae,Phylacine,180.8333333,2.257278488,Small,small,Herbivore,Phylacine
+Aselliscus,Chiroptera,Hipposideridae,Phylacine,4.5,0.653212514,Small,small,Non-Herbivore,Phylacine
+Asoletragus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Asoriculus,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Atherurus,Rodentia,Hystricidae,Phylacine,1967,3.29380436,Large,medium,Herbivore,Phylacine
+Axis,Cetartiodactyla,Cervidae,Phylacine,48950.15,4.689754027,Large,large,Herbivore,Phylacine
+Bahomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Bandicota,Rodentia,Muridae,Phylacine,369.1666667,2.56722248,Small,small,Herbivore,Phylacine
+Baranogale,Carnivora,Mustelidae,Cooke,3500.10361,3.544080901,Large,medium,Non-Herbivore,comparable to Ictonyx and Vormela
+Baranomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Barbastella,Chiroptera,Vespertilionidae,Phylacine,11.55,1.062581984,Small,small,Non-Herbivore,Phylacine
+Batomys,Rodentia,Muridae,Phylacine,168.95,2.227758196,Small,small,Herbivore,Phylacine
+Belomys,Rodentia,Sciuridae,Phylacine,217,2.336459734,Small,small,Herbivore,Phylacine
+Beremendia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Bibos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Bison,Cetartiodactyla,Bovidae,Cooke,727650.0953,5.861922591,Large,large,Herbivore,Phylacine
+Blackia,Rodentia,Sciuridae,Family average,618.4478571,2.791303089,Small,small,Herbivore,Phylacine
+Blancomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Blanfordimys,Rodentia,Cricetidae,Phylacine,32.9,1.517195898,Small,small,Herbivore,Phylacine
+Blarinella,Eulipotyphla,Soricidae,Phylacine,9.4,0.973127854,Small,small,Non-Herbivore,Phylacine
+Blarinoides,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Boocercus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Boopsis,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Borsodia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Bos,Cetartiodactyla,Bovidae,Phylacine,754250,5.877515319,Large,large,Herbivore,Phylacine
+Boselaphus,Cetartiodactyla,Bovidae,Phylacine,169000,5.227886705,Large,large,Herbivore,Phylacine
+Brachypotherium,Perissodactyla,Rhinocerotidae,Family average,2457350.889,6.390467175,Large,large,Herbivore,Phylacine
+Brachyrhizomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Brevilagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Bubalus,Cetartiodactyla,Bovidae,Phylacine,392656.7333,5.594013049,Large,large,Herbivore,Phylacine
+Bucapra,Artiodactyla,Bovidae,NOW,248225,5.394845519,Large,large,Herbivore,Phylacine
+Budorcas,Cetartiodactyla,Bovidae,Phylacine,302000,5.480006943,Large,large,Herbivore,Phylacine
+Callosciurus,Rodentia,Sciuridae,Phylacine,262.9666667,2.419900701,Small,small,Herbivore,Phylacine
+Camelus,Cetartiodactyla,Camelidae,MOM,535385.25,5.728666402,Large,large,Herbivore,Phylacine
+Canis,Carnivora,Canidae,Cooke,25965.44165,4.414395714,Large,medium,Non-Herbivore,Phylacine
+Cannomys,Rodentia,Spalacidae,Phylacine,275,2.439332694,Small,small,Herbivore,Phylacine
+Capra,Cetartiodactyla,Bovidae,MOM,72416.63636,4.859838349,Large,large,Herbivore,Phylacine
+Capreolus,Cetartiodactyla,Cervidae,Phylacine,30117.16667,4.478814112,Large,medium,Herbivore,Phylacine
+Capricornis,Cetartiodactyla,Bovidae,Phylacine,79276.66667,4.899145381,Large,large,Herbivore,Phylacine
+Caprolagus,Lagomorpha,Leporidae,Phylacine,2497,3.397418542,Large,medium,Herbivore,Phylacine
+Castillomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Castor,Rodentia,Castoridae,Phylacine,20410,4.309843005,Large,medium,Herbivore,Phylacine
+Catopuma,Carnivora,Felidae,Phylacine,7000,3.84509804,Large,medium,Non-Herbivore,Phylacine
+Cercopithecus,Primates,Cercopithecidae,Phylacine,4179.026951,3.621075172,Large,medium,Herbivore,Phylacine
+Cervalces,Cetartiodactyla,Cervidae,Phylacine,632000,5.800717078,Large,large,Herbivore,Phylacine
+Cervavitus,Artiodactyla,Cervidae,Cooke,74993.27324,4.87502231,Large,large,Herbivore,Phylacine
+Cervocerus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Cervulus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Cervus,Cetartiodactyla,Cervidae,Pantheria,116040,5.06460772,Large,large,Herbivore,Phylacine
+Chardinomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Chasmaporthetes,Carnivora,Hyaenidae,Cooke,98670.72016,4.994188298,Large,large,Non-Herbivore,GroupAv
+Chilotherium,Perissodactyla,Rhinocerotidae,Cooke,1012577.254,6.005428167,Large,large,Herbivore,Phylacine
+Chimarrogale,Eulipotyphla,Soricidae,Phylacine,34.93333333,1.543240028,Small,small,Non-Herbivore,Phylacine
+Chionomys,Rodentia,Cricetidae,Phylacine,80.33333333,1.904895788,Small,small,Herbivore,Phylacine
+Chiromyscus,Rodentia,Muridae,Phylacine,77.8,1.890979597,Small,small,NA,NA
+Chiropodomys,Rodentia,Muridae,Phylacine,28.5,1.45484486,Small,small,Herbivore,Phylacine
+Chodsigoa,Eulipotyphla,Soricidae,Phylacine,8.55,0.931966115,Small,small,Non-Herbivore,Phylacine
+Clethrionomys,Rodentia,Muridae,Pantheria,23.02,1.362105319,Small,small,Herbivore,Phylacine
+Coelodonta,Perissodactyla,Rhinocerotidae,Cooke,2897343.585,6.462,Large,large,Herbivore,Phylacine
+Cokia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Condylura,Eulipotyphla,Talpidae,Phylacine,84,1.924279286,Small,small,Non-Herbivore,Phylacine
+Conohyus,Artiodactyla,Suidae,Cooke,52665.89269,4.72152945,Large,large,Non-Herbivore,GroupAv
+Cremnomys,Rodentia,Muridae,Phylacine,68.45,1.835373452,Small,small,Herbivore,Phylacine
+Cricetulus,Rodentia,Cricetidae,Phylacine,29.6,1.471291711,Small,small,Herbivore,Phylacine
+Cricetus,Rodentia,Cricetidae,Phylacine,510,2.707570176,Small,small,Herbivore,Phylacine
+Crocidura,Eulipotyphla,Soricidae,Phylacine,12.37118644,1.092411352,Small,small,Non-Herbivore,Phylacine
+Crociduradracula,Eulipotyphla,Soricidae,Family average,11.45527,1.05900533,Small,small,Non-Herbivore,GroupAv
+Crocuta,Carnivora,Hyaenidae,MOM,66492,4.822769396,Large,large,Non-Herbivore,Phylacine
+Croizetoceros,Artiodactyla,Cervidae,Cooke,79983.42542,4.903,Large,large,Herbivore,Phylacine
+Cromeromys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Cuon,Carnivora,Canidae,Cooke,14173.33333,4.151472001,Large,medium,Non-Herbivore,Phylacine
+Cynocephalus,Dermoptera,Cynocephalidae,Phylacine,1250,3.096910013,Small,medium,Herbivore,Phylacine
+Cynogale,Carnivora,Viverridae,Phylacine,4500,3.653212514,Large,medium,Non-Herbivore,Phylacine
+Cynopterus,Chiroptera,Pteropodidae,Phylacine,39.48571429,1.596439999,Small,small,Herbivore,Phylacine
+Cynotherium,Carnivora,Canidae,Phylacine,11071.4,4.044202542,Large,medium,Non-Herbivore,Phylacine
+Cyrnaonyx,Carnivora,Mustelidae,NOW,20000,4.301029996,Large,medium,Non-Herbivore,Willemsen 1992
+Cyrnolutra,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,comparable to Lutra
+Dama,Cetartiodactyla,Cervidae,Phylacine,64375,4.808717242,Large,large,Herbivore,Phylacine
+Damalops,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Deinotherium,Proboscidea,Deinotheriidae,Cooke,17450000.06,7.241795433,Large,large,Herbivore,Phylacine
+Deinsdorfia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Deperetia,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Desmagale,Eulipotyphla,Talpidae,Family average,78.42380952,1.894447935,Small,small,Non-Herbivore,GroupAv
+Desmana,Eulipotyphla,Talpidae,Phylacine,383,2.583198774,Small,small,Non-Herbivore,Phylacine
+Desmanella,Eulipotyphla,Talpidae,Family average,78.42380952,1.894447935,Small,small,Non-Herbivore,GroupAv
+Dicerorhinus,Perissodactyla,Rhinocerotidae,Phylacine,1266667,6.102662456,Large,large,Herbivore,Phylacine
+Dicoryphochoerus,Artiodactyla,Suidae,Family average,88494.49048,4.946916233,Large,large,Herbivore,GroupAv
+Dicrostonyx,Rodentia,Cricetidae,Phylacine,61.875,1.791515212,Small,small,Herbivore,Phylacine
+Dihoplus,Perissodactyla,Rhinocerotidae,Cooke,1399528.669,6.145981799,Large,large,Herbivore,Phylacine
+Dilatomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Dinaromys,Rodentia,Cricetidae,Phylacine,56,1.748188027,Small,small,Herbivore,Phylacine
+Dinofelis,Carnivora,Felidae,Cooke,58512.75245,4.767250528,Large,large,Non-Herbivore,GroupAv
+Diplothrix,Rodentia,Muridae,Phylacine,505.9,2.704064679,Small,small,NA,NA
+Dipoides,Rodentia,Castoridae,Cooke,1983.273271,3.297382559,Large,medium,Herbivore,Phylacine
+Dipus,Rodentia,Dipodidae,Phylacine,85.7,1.932980822,Small,small,Herbivore,Phylacine
+Dolinasorex,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Dolomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Dorcabune,Artiodactyla,Tragulidae,Cooke,48977.88213,4.690000002,Large,large,Herbivore,Phylacine
+Dremomys,Rodentia,Sciuridae,Wilman,188.6383333,2.275629951,Small,small,Herbivore,Phylacine
+Drepanosorex,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Dryomimus,Rodentia,Gliridae,Family average,43.41034483,1.637593236,Small,small,Herbivore,Phylacine
+Dryomys,Rodentia,Gliridae,Phylacine,28.03333333,1.447674741,Small,small,Non-Herbivore,Phylacine
+Duboisia,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Echinosorex,Eulipotyphla,Erinaceidae,Phylacine,957,2.980911938,Small,small,Non-Herbivore,Phylacine
+Eirictis,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,GroupAv
+Elaphodus,Cetartiodactyla,Cervidae,Cooke,33692.20782,4.527529471,Large,medium,Herbivore,Phylacine
+Elaphurus,Cetartiodactyla,Cervidae,Phylacine,149000,5.173186268,Large,large,Herbivore,Phylacine
+Elasmotherium,Perissodactyla,Rhinocerotidae,Phylacine,4100000,6.612783857,Large,large,Herbivore,Phylacine
+Elephas,Proboscidea,Elephantidae,Phylacine,4999679.388,6.698942155,Large,large,Herbivore,Phylacine
+Eliomys,Rodentia,Gliridae,Phylacine,112.2,2.049992857,Small,small,Non-Herbivore,Phylacine
+Ellobius,Rodentia,Cricetidae,Phylacine,73.62,1.866995813,Small,small,Herbivore,Phylacine
+Emballonura,Chiroptera,Emballonuridae,Phylacine,6.8875,0.838061612,Small,small,Non-Herbivore,Phylacine
+Enhydrictis,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,comparable to Ictonyx and Vormela
+Enhydriodon,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,Grohe et al. 2022
+Eolagurus,Rodentia,Cricetidae,Phylacine,21,1.322219295,Small,small,Herbivore,Phylacine
+Eonycteris,Chiroptera,Pteropodidae,Phylacine,69.46666667,1.84177646,Small,small,Herbivore,Phylacine
+Eostyloceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Eosyncerus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Eothenomys,Rodentia,Cricetidae,Phylacine,33.4875,1.524882727,Small,small,Herbivore,Phylacine
+Eozapus,Rodentia,Dipodidae,Phylacine,32.6,1.5132176,Small,small,Herbivore,Phylacine
+Epileptobos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Episiphneus,Rodentia,Spalacidae,Family average,514.2095238,2.711140116,Small,small,Herbivore,Phylacine
+Episoriculus,Eulipotyphla,Soricidae,Phylacine,9.4,0.973127854,Small,small,Non-Herbivore,Phylacine
+Eptesicus,Chiroptera,Vespertilionidae,Phylacine,12.78181818,1.106592635,Small,small,Non-Herbivore,Phylacine
+Equus,Perissodactyla,Equidae,MOM,350954.7917,5.545251176,Large,large,Herbivore,Phylacine
+Erinaceus,Eulipotyphla,Erinaceidae,Phylacine,758.75,2.880098704,Small,small,Non-Herbivore,Phylacine
+Estramomys,Rodentia,Eomyidae,Family average,NA,NA,Small,small,Herbivore,Comparable to Geomydiae and Heteromyidae
+Euarctos,Carnivora,Ursidae,Family average,197564.3154,5.295708504,Large,large,Non-Herbivore,comparable to Arctos
+Eucladoceros,Artiodactyla,Cervidae,Cooke,250067.5519,5.398057342,Large,large,Herbivore,Phylacine
+Eucladoceros/Megaloceros,Cetartiodactyla,Cervidae,"Average of two suggested species, Eucladoceros giulli (NOW) and Megaloceras savinii (Cooke)",311721,5.493766061,Large,large,Herbivore,Phylacine
+Eucyon,Carnivora,Canidae,Cooke,12027.23533,4.080165809,Large,medium,Non-Herbivore,Bartolini Lucenti and Rook 2021
+Euroxenomys,Rodentia,Castoridae,Cooke,446.0807547,2.649413487,Small,small,Herbivore,Phylacine
+Euryceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Eutamias,Rodentia,Sciuridae,Phylacine,85,1.929418926,Small,small,Herbivore,Phylacine
+Euthyceros,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Felis,Carnivora,Felidae,Phylacine,4893.6,3.689628467,Large,medium,Non-Herbivore,Phylacine
+Galemys,Eulipotyphla,Talpidae,Phylacine,60.2,1.779596491,Small,small,Non-Herbivore,Phylacine
+Galerix,Eulipotyphla,Erinaceidae,Family average,376.2333333,2.57545727,Small,small,Non-Herbivore,Mixed diets within Erinaceidae
+Gallogoral,Artiodactyla,Bovidae,Cooke,136144.4686,5.134000001,Large,large,Herbivore,Phylacine
+Gangicobus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Gazella,Cetartiodactyla,Bovidae,Phylacine,26203.65,4.41836179,Large,medium,Herbivore,Phylacine
+Gazellospira,Artiodactyla,Bovidae,Cooke,146892.6284,5.167000002,Large,large,Herbivore,Phylacine
+Geotrypus,Eulipotyphla,Talpidae,Family average,78.42380952,1.894447935,Small,small,Non-Herbivore,GroupAv
+Gerbillus,Rodentia,Muridae,Phylacine,26.54583333,1.423996363,Small,small,Herbivore,Phylacine
+Germanomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Gigantocamelus,Artiodactyla,Camelidae,Cooke,1912435.273,6.281586745,Large,large,Herbivore,Phylacine
+Gigantopithecus,Primates,Hominidae,Cooke,383154.718,5.583374178,Large,large,Herbivore,Phylacine
+Giraffa,Cetartiodactyla,Giraffidae,MOM,899995,5.954240097,Large,large,Herbivore,Phylacine
+Giraffokeryx,Artiodactyla,Giraffidae,Cooke,362242.9977,5.558999999,Large,large,Herbivore,Phylacine
+Glirulus,Rodentia,Gliridae,Phylacine,27,1.431363764,Small,small,Non-Herbivore,Phylacine
+Glis,Rodentia,Gliridae,Phylacine,125,2.096910013,Small,small,Herbivore,Phylacine
+Golunda,Rodentia,Muridae,Phylacine,60.9,1.784617293,Small,small,Herbivore,Phylacine
+Gomphotherium,Proboscidea,Gomphotheriidae,Family average,5855000,6.767526899,Large,large,Herbivore,Phylacine
+Gromovia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Gulo,Carnivora,Mustelidae,Phylacine,17012.6,4.230770691,Large,medium,Non-Herbivore,Phylacine
+Hadromys,Rodentia,Muridae,Phylacine,59,1.770852012,Small,small,Herbivore,Phylacine
+Hapalomys,Rodentia,Muridae,Phylacine,67.15,1.827046017,Small,small,Herbivore,Phylacine
+Haploidoceros,Cetartiodactyla,Cervidae,Phylacine,100000,5,Large,large,Herbivore,Phylacine
+Helarctos,Carnivora,Ursidae,Phylacine,46500,4.667452953,Large,large,Non-Herbivore,Phylacine
+Hemibos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Hemiechinus,Eulipotyphla,Erinaceidae,Phylacine,241.5,2.382917135,Small,small,Non-Herbivore,Phylacine
+Hemitragus,Cetartiodactyla,Bovidae,MOM,44400,4.64738297,Large,large,Herbivore,Phylacine
+Hengduanshanhyrax,Hyracoidea,Pliohyracidae,Family average,70000,4.84509804,Large,large,Herbivore,Phylacine
+Herpestes,Carnivora,Herpestidae,Phylacine,1840.133333,3.264849292,Large,medium,Non-Herbivore,Phylacine
+Hesperidoceras,Artiodactyla,Bovidae,NOW,153000,5.184691431,Large,large,Herbivore,Phylacine
+Hesperoptenus,Chiroptera,Vespertilionidae,Phylacine,14.96,1.174931594,Small,small,Non-Herbivore,Phylacine
+Hesperotherium,Perissodactyla,Chalicotheriidae,Family average,2779713.27,6.444,Large,large,Herbivore,Phylacine
+Heterosorex,Eulipotyphla,Heterosoricidae,Family average,NA,NA,Small,small,Non-Herbivore,Most common diet of modern Soricidae
+Hexaprotodon,Cetartiodactyla,Hippopotamidae,Phylacine,300000,5.477121255,Large,large,Herbivore,Phylacine
+Hipparion,Perissodactyla,Equidae,Cooke,199158.5353,5.299198924,Large,large,Herbivore,Phylacine
+Hippohyus,Artiodactyla,Suidae,Family average,88494.49048,4.946916233,Large,large,Herbivore,Phylacine
+Hippopotamodon,Artiodactyla,Suidae,Cooke,510504.9996,5.708,Large,large,Herbivore,GroupAv
+Hippopotamus,Cetartiodactyla,Hippopotamidae,Cooke,3427288.997,6.534950727,Large,large,Herbivore,Phylacine
+Hipposideros,Chiroptera,Hipposideridae,Phylacine,23.67826087,1.374349801,Small,small,Non-Herbivore,Phylacine
+Hippotragus,Cetartiodactyla,Bovidae,Phylacine,215832.3333,5.334116506,Large,large,Herbivore,Phylacine
+Homo,Primates,Hominidae,Phylacine,60231.25,4.779821876,Large,large,NA,NA
+Homoiodorcas,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Homotherium,Carnivora,Felidae,Cooke,164266.4394,5.215548844,Large,large,Non-Herbivore,Phylacine
+Hooijeromys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Hoploaceratherium,Perissodactyla,Rhinocerotidae,Cooke,751622.8967,5.876000002,Large,large,Herbivore,GroupAv
+Huananomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Huaxiamys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Hyaena,Carnivora,Hyaenidae,MOM,38536.66667,4.585874147,Large,medium,Non-Herbivore,Phylacine
+Hyaenictis,Carnivora,Hyaenidae,Cooke,54954.08734,4.74,Large,large,Non-Herbivore,GroupAv
+Hydaspitherium,Artiodactyla,Giraffidae,Family average,564997.95,5.752046872,Large,large,Herbivore,GroupAv
+Hydropotes,Cetartiodactyla,Cervidae,Phylacine,14000,4.146128036,Large,medium,Herbivore,Phylacine
+Hylobates,Primates,Hylobatidae,Phylacine,5704.571429,3.756223022,Large,medium,Herbivore,Phylacine
+Hylomys,Eulipotyphla,Erinaceidae,Phylacine,54.2,1.733999287,Small,small,Non-Herbivore,Phylacine
+Hylopetes,Rodentia,Sciuridae,Phylacine,159.9,2.203848464,Small,small,Herbivore,Phylacine
+Hyperacrius,Rodentia,Cricetidae,Phylacine,37.45,1.573451822,Small,small,Herbivore,Phylacine
+Hypolagus,Lagomorpha,Leporidae,Cooke,946.1558851,2.975962695,Small,small,Herbivore,Phylacine
+Hypselephas,Proboscidea,Elephantidae,Family average,5054702.925,6.703695636,Large,large,Herbivore,Phylacine
+Hystrix,Rodentia,Hystricidae,Phylacine,11609.7,4.064820998,Large,medium,Herbivore,Phylacine
+Ia,Chiroptera,Vespertilionidae,Phylacine,49.2,1.691965103,Small,small,Non-Herbivore,Phylacine
+Iberomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Indarctos,Carnivora,Ursidae,Cooke,283373.1452,5.45235869,Large,large,Non-Herbivore,Soledad Domingo et al. 2016
+Insulotragus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Ioribos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Itanzatherium,Perissodactyla,Rhinocerotidae,Family average,2457350.889,6.390467175,Large,large,Herbivore,Phylacine
+Jordanomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Kalymnomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Karnimata,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Keramidomys,Rodentia,Eomyidae,Family average,NA,NA,Small,small,Herbivore,Comparable to Geomydiae and Heteromyidae
+Kerivoula,Chiroptera,Vespertilionidae,Phylacine,6.718181818,0.827251753,Small,small,Non-Herbivore,Phylacine
+Kislangia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Kolpochoerus,Cetartiodactyla,Suidae,Phylacine,264541.8,5.422494304,Large,large,NA,NA
+Komodomys,Rodentia,Muridae,Phylacine,115,2.06069784,Small,small,NA,NA
+Kordosia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Kowalskia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Kvabebihyrax,Hyracoidea,Pliohyracidae,NOW,70000,4.84509804,Large,large,Herbivore,Phylacine
+Lagotherium,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Lagurodon,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Lagurus,Rodentia,Cricetidae,Phylacine,20.3,1.307496038,Small,small,Herbivore,Phylacine
+Lasiopodomys,Rodentia,Cricetidae,Phylacine,65.2,1.814247596,Small,small,Herbivore,Phylacine
+Lemmus,Rodentia,Cricetidae,Phylacine,56.92,1.755264891,Small,small,Herbivore,Phylacine
+Leopoldamys,Rodentia,Muridae,Phylacine,363.3,2.560265398,Small,small,Herbivore,Phylacine
+Leptobos,Artiodactyla,Bovidae,Cooke,307799.455,5.488267847,Large,large,Herbivore,Phylacine
+Lepus,Lagomorpha,Leporidae,Phylacine,2570.0625,3.409943685,Large,medium,Herbivore,Phylacine
+Leukaristomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Libralces,Artiodactyla,Cervidae,Cooke,412097.5203,5.615000001,Large,large,Herbivore,Phylacine
+Limnonyx,Carnivora,Mustelidae,Cooke,3999.447498,3.602,Large,medium,Non-Herbivore,Willemsen 1992
+Listriodon,Artiodactyla,Suidae,Cooke,100067.6807,5.000293834,Large,large,Herbivore,GroupAv
+Lophocricetus,Rodentia,Dipodidae,Family average,51.18235294,1.709120247,Small,small,Herbivore,Phylacine
+Lufengpithecus,Primates,Hominidae,Family average,68227.51,4.833959522,Large,large,Herbivore,Phylacine
+Lunanosorex,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Lutra,Carnivora,Mustelidae,Phylacine,7142.55,3.853853289,Large,medium,Non-Herbivore,Phylacine
+Lutrogale,Carnivora,Mustelidae,Phylacine,9483.3,3.976959489,Large,medium,Non-Herbivore,Phylacine
+Lycaon,Carnivora,Canidae,Phylacine,22050.1,4.343410563,Large,medium,Non-Herbivore,Phylacine
+Lynx,Carnivora,Felidae,Phylacine,11406.825,4.057164779,Large,medium,Non-Herbivore,Phylacine
+Macaca,Primates,Cercopithecidae,Phylacine,7260.804545,3.860984746,Large,medium,Herbivore,Phylacine
+Macedonitherium,Artiodactyla,Giraffidae,Family average,564997.95,5.752046872,Large,large,Herbivore,GroupAv
+Machairodus,Carnivora,Felidae,Cooke,159892.9938,5.203829434,Large,large,Non-Herbivore,GroupAv
+Macroneomys,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,Parfitt and Harrison 2011
+Macrotragus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Mafia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Mammut,Proboscidea,Mammutidae,Cooke,3502401.571,6.544365939,Large,large,Herbivore,Phylacine
+Mammuthus,Proboscidea,Elephantidae,Cooke,7301522.094,6.863413404,Large,large,Herbivore,Phylacine
+Manis,Pholidota,Manidae,Phylacine,12946.46,4.112151034,Large,medium,Non-Herbivore,Phylacine
+Marmota,Rodentia,Sciuridae,Phylacine,4964.05,3.695836147,Large,medium,Herbivore,Phylacine
+Martes,Carnivora,Mustelidae,Phylacine,1763.2875,3.246323129,Large,medium,Non-Herbivore,Phylacine
+Maxomys,Rodentia,Muridae,Phylacine,122.8,2.089198367,Small,small,NA,NA
+Mececyon,Carnivora,Canidae,Family average,10973.62439,4.040350091,Large,medium,Non-Herbivore,GroupAv
+Megaceroides,Cetartiodactyla,Cervidae,Phylacine,800000,5.903089987,Large,large,Herbivore,Phylacine
+Megaceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Megaderma,Chiroptera,Megadermatidae,Phylacine,35.45,1.54961624,Small,small,Non-Herbivore,Phylacine
+Megalenhydris,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,Willemsen 1992
+Megaloceros,Cetartiodactyla,Cervidae,Cooke,610446.7253,5.785647768,Large,large,Herbivore,Phylacine
+Megalovis,Cetartiodactyla,Bovidae,Phylacine,76190.4,4.881900254,Large,large,Herbivore,Phylacine
+Megantereon,Carnivora,Felidae,Cooke,60980.34613,4.785189885,Large,large,Non-Herbivore,GroupAv
+Megatapirus,Perissodactyla,Tapiridae,NOW,664166,5.822276639,Large,large,Herbivore,GroupAv
+Meles,Carnivora,Mustelidae,Phylacine,10250,4.010723865,Large,medium,Non-Herbivore,Phylacine
+Mellivora,Carnivora,Mustelidae,Phylacine,8500,3.929418926,Large,medium,Non-Herbivore,Phylacine
+Melogale,Carnivora,Mustelidae,Phylacine,1513.62,3.180016858,Large,medium,Non-Herbivore,Phylacine
+Melursus,Carnivora,Ursidae,Phylacine,93130,4.969089603,Large,large,Non-Herbivore,Phylacine
+Menetes,Rodentia,Sciuridae,Phylacine,190,2.278753601,Small,small,Herbivore,Phylacine
+Meriones,Rodentia,Muridae,Phylacine,101.5823529,2.006818268,Small,small,Herbivore,Phylacine
+Merycopotamus,Artiodactyla,Anthracotheriidae,Family average,NA,NA,Large,Large,Herbivore,GroupAv
+Mesocricetus,Rodentia,Cricetidae,Phylacine,199.9,2.300812794,Small,small,Herbivore,Phylacine
+Mesopithecus,Primates,Cercopithecidae,NOW,4932,3.693023068,Large,medium,Herbivore,Phylacine
+Mesosiphneus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Metacervocerus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Metacervulus,Artiodactyla,Cervidae,Cooke,38194.42723,4.582000002,Large,medium,Herbivore,Phylacine
+Metailurus,Carnivora,Felidae,Cooke,59001.18261,4.770860717,Large,large,Non-Herbivore,GroupAv
+Micromys,Rodentia,Muridae,Phylacine,6,0.77815125,Small,small,Herbivore,Phylacine
+Microtodon,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Microtus,Rodentia,Cricetidae,Phylacine,39.96363636,1.601664999,Small,small,Herbivore,Phylacine
+Millardia,Rodentia,Muridae,Phylacine,85.2,1.930439595,Small,small,Herbivore,Phylacine
+Mimomys,Rodentia,Muridae,Cooke,80.08415071,1.903546574,Small,small,Herbivore,Phylacine
+Miniopterus,Chiroptera,Miniopteridae,Phylacine,8.92173913,0.95044952,Small,small,Non-Herbivore,Phylacine
+Miopetaurista,Rodentia,Sciuridae,Cooke,1339.676688,3.127,Small,medium,Herbivore,Phylacine
+Mitilanotherium,Artiodactyla,Giraffidae,Family average,564997.95,5.752046872,Large,large,Herbivore,GroupAv
+Mogera,Eulipotyphla,Talpidae,Phylacine,128.9285714,2.11034917,Small,small,Non-Herbivore,Phylacine
+Monosaulax,Rodentia,Castoridae,Cooke,576.5842724,2.760862792,Small,small,Herbivore,Phylacine
+Moschus,Cetartiodactyla,Moschidae,Phylacine,12485.71429,4.096413393,Large,medium,Herbivore,Phylacine
+Muntiacus,Cetartiodactyla,Cervidae,Phylacine,19566.675,4.291517031,Large,medium,Herbivore,Phylacine
+Murina,Chiroptera,Vespertilionidae,Phylacine,6.1375,0.787991505,Small,small,Non-Herbivore,Phylacine
+Mus,Rodentia,Muridae,Phylacine,15.12820513,1.179787405,Small,small,Herbivore,Phylacine
+Muscardinus,Rodentia,Gliridae,Phylacine,27.5,1.439332694,Small,small,Herbivore,Phylacine
+Mustela,Carnivora,Mustelidae,Phylacine,480.8526316,2.682011997,Small,small,Non-Herbivore,Phylacine
+Mustelavus,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,GroupAv
+Muva,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Myomimus,Rodentia,Gliridae,Phylacine,26.5,1.423245874,Small,small,Herbivore,Phylacine
+Myopus,Rodentia,Cricetidae,Phylacine,25,1.397940009,Small,small,Herbivore,Phylacine
+Myosorex,Eulipotyphla,Soricidae,Phylacine,12.78823529,1.106810618,Small,small,Non-Herbivore,Phylacine
+Myospalax,Rodentia,Spalacidae,Phylacine,280.8333333,2.448448655,Small,small,Herbivore,Phylacine
+Myotis,Chiroptera,Vespertilionidae,Phylacine,8.514563107,0.930162369,Small,small,Non-Herbivore,Phylacine
+Myotragus,Cetartiodactyla,Bovidae,Phylacine,26418,4.421899936,Large,medium,Herbivore,Phylacine
+Naemorhedus,Cetartiodactyla,Bovidae,Phylacine,26996.875,4.431313496,Large,medium,Herbivore,Phylacine
+Nannocricetus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Nectogale,Eulipotyphla,Soricidae,Phylacine,32.5,1.511883361,Small,small,Non-Herbivore,Phylacine
+Neofelis,Carnivora,Felidae,Phylacine,20500,4.311753861,Large,medium,Non-Herbivore,Phylacine
+Neomys,Eulipotyphla,Soricidae,Phylacine,14.4,1.158362492,Small,small,Non-Herbivore,Phylacine
+Neotetracus,Eulipotyphla,Erinaceidae,Phylacine,86.9,1.939019776,Small,small,Non-Herbivore,Phylacine
+Nesiotites,Eulipotyphla,Soricidae,Phylacine,22,1.342422681,Small,small,Non-Herbivore,Phylacine
+Nesogoral,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Nesokia,Rodentia,Muridae,Phylacine,445,2.648360011,Small,small,Herbivore,Phylacine
+Nesolagus,Lagomorpha,Leporidae,Phylacine,1803.7,3.256164305,Large,medium,Herbivore,Phylacine
+Nestoritherium,Perissodactyla,Chalicotheriidae,Family average,2779713.27,6.444,Large,large,Herbivore,Phylacine
+Neurotrichus,Eulipotyphla,Talpidae,Phylacine,8.9,0.949390007,Small,small,Non-Herbivore,Phylacine
+Nipponicervus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Niviventer,Rodentia,Muridae,Phylacine,86.31176471,1.936069996,Small,small,Herbivore,Phylacine
+Nomascus,Primates,Hylobatidae,Phylacine,7833.333333,3.893946608,Large,medium,Herbivore,Phylacine
+Nyctalus,Chiroptera,Vespertilionidae,Phylacine,25.2875,1.402905896,Small,small,Non-Herbivore,Phylacine
+Nyctereutes,Carnivora,Canidae,Cooke,10678.98708,4.028530061,Large,medium,Non-Herbivore,Phylacine
+Nycticebus,Primates,Lorisidae,Phylacine,962.1,2.983220215,Small,small,NA,NA
+Occitanomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Ochotona,Lagomorpha,Ochotonidae,Phylacine,183.6066667,2.263888446,Small,small,Herbivore,Phylacine
+Ochotonoides,Lagomorpha,Ochotonidae,Family average,183.6066667,2.263888446,Small,small,Herbivore,Phylacine
+Orchonoceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Orientalomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Oryctolagus,Lagomorpha,Leporidae,Phylacine,1958.3,3.291879224,Large,medium,Herbivore,Phylacine
+Oryx,Cetartiodactyla,Bovidae,Phylacine,156675.325,5.195000604,Large,large,Herbivore,Phylacine
+Ovibos,Cetartiodactyla,Bovidae,Phylacine,340501.1,5.532118519,Large,large,Herbivore,Phylacine
+Ovis,Cetartiodactyla,Bovidae,Phylacine,92059.1,4.964066725,Large,large,Herbivore,Phylacine
+Pachycrocuta,Carnivora,Hyaenidae,Cooke,125283.51,5.097893912,Large,large,Non-Herbivore,GroupAv
+Pachygazella,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Paenelimnoecus,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Paguma,Carnivora,Viverridae,Phylacine,4300,3.633468456,Large,medium,Non-Herbivore,Phylacine
+Palaeoloxodon,Proboscidea,Elephantidae,Cooke,9250648.472,6.966172178,Large,large,Herbivore,Phylacine
+Palaeomys,Rodentia,Castoridae,NOW,5000,3.698970004,Large,medium,Herbivore,Phylacine
+Palaeotragus,Artiodactyla,Giraffidae,Cooke,413624.6357,5.616606398,Large,large,Herbivore,Phylacine
+Pannonictis,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,GroupAv
+Panthera,Carnivora,Felidae,Cooke,172276.0267,5.236224847,Large,large,Non-Herbivore,Phylacine
+Papagomys,Rodentia,Muridae,Phylacine,854.05,2.931483297,Small,small,NA,NA
+Papio,Primates,Cercopithecidae,Phylacine,19870.78333,4.298214988,Large,medium,NA,NA
+Parabos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Parabubalis,Artiodactyla,Bovidae,Family average,131331.4,5.118368574,Large,large,Herbivore,GroupAv
+Paracamelus,Artiodactyla,Camelidae,Cooke,1163743.252,6.065857176,Large,large,Herbivore,Phylacine
+Paracervulus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Paradolichopithecus,Primates,Cercopithecidae,Family average,8486.364179,3.928721665,Large,medium,Herbivore,Phylacine
+Paradoxurus,Carnivora,Viverridae,Phylacine,2906.1,3.463310554,Large,medium,Non-Herbivore,Phylacine
+Paraethomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Parahyaena,Carnivora,Hyaenidae,Phylacine,32200.3,4.507859918,Large,medium,Non-Herbivore,Phylacine
+Parailurus,Carnivora,Ailuridae,Family average,4900,3.69019608,Large,medium,Non-Herbivore,GroupAv
+Paralactaga,Rodentia,Dipodidae,Family average,51.18235294,1.709120247,Small,small,Herbivore,Phylacine
+Paramachaerodus,Carnivora,Felidae,Family average,52902.55652,4.72347666,Large,large,Non-Herbivore,GroupAv
+Parameles,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,Phylacine
+Parapelomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Parapodemus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Non-Herbivore,comparable to Apodemus
+Parapresbytis,Primates,Cercopithecidae,Family average,8486.364179,3.928721665,Large,medium,Herbivore,GroupAv
+Parastrepsiceros,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Paulamys,Rodentia,Muridae,Phylacine,123,2.089905111,Small,small,Non-Herbivore,Phylacine
+Peisorex,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Pelorovis,Cetartiodactyla,Bovidae,Phylacine,1000000,6,Large,large,Herbivore,Phylacine
+Petaurista,Rodentia,Sciuridae,Phylacine,1927.47,3.284987627,Large,medium,Herbivore,Phylacine
+Petenyia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Phanourios,Cetartiodactyla,Hippopotamidae,Phylacine,200000,5.301029996,Large,large,Herbivore,Phylacine
+Phodopus,Rodentia,Cricetidae,Phylacine,25.33333333,1.403692338,Small,small,Herbivore,Phylacine
+Pipistrellus,Chiroptera,Vespertilionidae,Phylacine,5.488095238,0.739421639,Small,small,Non-Herbivore,Phylacine
+Pitymimomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Pitymys,Rodentia,Muridae,Cooke,114.8153622,2.06,Small,small,NA,NA
+Platybos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Plecotus,Chiroptera,Vespertilionidae,Phylacine,7.827272727,0.893610466,Small,small,Non-Herbivore,Phylacine
+Plesiaceratherium,Perissodactyla,Rhinocerotidae,Cooke,699842,5.845000002,Large,large,Herbivore,GroupAv
+Plesiohipparion,Perissodactyla,Equidae,Cooke,214783.0483,5.332000002,Large,large,Herbivore,Phylacine
+Pliocrocuta,Carnivora,Hyaenidae,Cooke,79432.82382,4.900000002,Large,large,Non-Herbivore,GroupAv
+Pliolagomys,Lagomorpha,Ochotonidae,Family average,183.6066667,2.263888446,Small,small,Herbivore,Phylacine
+Pliolagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Pliomys,Rodentia,Cricetidae,Phylacine,62.5,1.795880017,Small,small,Herbivore,Phylacine
+Pliopentalagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Pliopetaurista,Rodentia,Sciuridae,Family average,618.4478571,2.791303089,Small,small,Herbivore,Phylacine
+Plioscirtopoda,Rodentia,Dipodidae,Family average,51.18235294,1.709120247,Small,small,Herbivore,Phylacine
+Pliosiphneus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Pliosiwalagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Pliospalax,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Pliotragus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Poephagus,Artiodactyla,Bovidae,NOW,525000,5.720159303,Large,large,Herbivore,GroupAv
+Pongo,Primates,Hominidae,Phylacine,56950,4.755493728,Large,large,NA,NA
+Pontoceros,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Postschizotherium,Hyracoidea,Pliohyracidae,Family average,70000,4.84509804,Large,large,Herbivore,Phylacine
+Potamochoerus,Cetartiodactyla,Suidae,Cooke,55854.27221,4.747056397,Large,large,Non-Herbivore,Phylacine
+Praemegaceros,Cetartiodactyla,Cervidae,Phylacine,70000,4.84509804,Large,large,Herbivore,Phylacine
+Praeovibos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Pratilepus,Lagomorpha,Leporidae,Cooke,972.6263598,2.987946035,Small,small,Herbivore,Phylacine
+Predicrostonyx,Rodentia,Muridae,Cooke,218.1101041,2.338675785,Small,small,Herbivore,Phylacine
+Presbytis,Primates,Cercopithecidae,Phylacine,6405.454545,3.806549954,Large,medium,Herbivore,Phylacine
+Prionailurus,Carnivora,Felidae,Phylacine,5143.675,3.71127352,Large,medium,Non-Herbivore,Phylacine
+Prionodon,Carnivora,Prionodontidae,Phylacine,606,2.782472624,Small,small,Non-Herbivore,Phylacine
+Proamphibos,Artiodactyla,Bovidae,NOW,423732,5.627091263,Large,large,Herbivore,Phylacine
+Probison,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Proboscidipparion,Perissodactyla,Equidae,Cooke,205116.2171,5.311999998,Large,large,Herbivore,Phylacine
+Proboselaphus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Procamptoceras,Artiodactyla,Bovidae,Cooke,107894.6719,5.032999999,Large,large,Herbivore,Phylacine
+Procapra,Cetartiodactyla,Bovidae,Phylacine,25083.33333,4.399385249,Large,medium,Herbivore,Phylacine
+Procapreolus,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Procynocephalus,Primates,Cercopithecidae,Family average,8486.364179,3.928721665,Large,medium,Herbivore,Phylacine
+Prodeinotherium,Proboscidea,Deinotheriidae,Cooke,5916999.99,6.772101569,Large,large,Herbivore,Willemsen 1992
+Proedromys,Rodentia,Cricetidae,Phylacine,156.05,2.193263773,Small,small,Herbivore,Phylacine
+Prolagurus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Prolagus,Lagomorpha,Prolagidae,Phylacine,350,2.544068044,Small,small,Herbivore,Phylacine
+Proleptobos,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Prometheomys,Rodentia,Cricetidae,Phylacine,75,1.875061263,Small,small,Herbivore,Phylacine
+Promimomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Proochotona,Lagomorpha,Ochotonidae,Family average,183.6066667,2.263888446,Small,small,Herbivore,Phylacine
+Propliomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Propotamochoerus,Artiodactyla,Suidae,Cooke,147611.7784,5.169121013,Large,large,Non-Herbivore,GroupAv
+Prosiphneus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Prospalax,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Protoryx,Artiodactyla,Bovidae,Cooke,84963.8221,4.929234041,Large,large,Herbivore,Phylacine
+Prototocyon,Carnivora,Canidae,Family average,10973.62439,4.040350091,Large,medium,Non-Herbivore,Comparable to modern Otocyon
+Pseudalces,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Pseudaxis,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Pseudodama,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Pseudois,Cetartiodactyla,Bovidae,MOM,37125,4.569666462,Large,medium,Herbivore,Phylacine
+Pseudomeriones,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Pteromys,Rodentia,Sciuridae,Phylacine,147.8,2.169674434,Small,small,Herbivore,Phylacine
+Pteropus,Chiroptera,Pteropodidae,Phylacine,407.9359375,2.610591967,Small,small,Herbivore,Phylacine
+Puma,Carnivora,Felidae,Phylacine,51600,4.712649702,Large,large,Non-Herbivore,Phylacine
+Punjabitherium,Perissodactyla,Rhinocerotidae,NOW,2856260,6.455797738,Large,large,Herbivore,Phylacine
+Pygathrix,Primates,Cercopithecidae,Phylacine,8310,3.919601024,Large,medium,Herbivore,Phylacine
+Pygeretmus,Rodentia,Dipodidae,Phylacine,44.96666667,1.652890695,Small,small,Herbivore,Phylacine
+Quyania,Eulipotyphla,Talpidae,Cooke,10.40300303,1.017158725,Small,small,Non-Herbivore,GroupAv
+Rangifer,Cetartiodactyla,Cervidae,Phylacine,86034,4.934670115,Large,large,Herbivore,Phylacine
+Rattus,Rodentia,Muridae,Phylacine,171.0164179,2.233037805,Small,small,Herbivore,Phylacine
+Ratufa,Rodentia,Sciuridae,Phylacine,1398.35,3.145615887,Large,medium,Herbivore,Phylacine
+Rhagamys,Rodentia,Muridae,Phylacine,30.6,1.485721426,Small,small,Herbivore,Phylacine
+Rhagapodemus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Rheithrosciurus,Rodentia,Sciuridae,Phylacine,1225,3.088136089,Small,medium,NA,NA
+Rhinoceros,Perissodactyla,Rhinocerotidae,Phylacine,1676166.5,6.224317157,Large,large,Herbivore,Phylacine
+Rhinolophus,Chiroptera,Rhinolophidae,Phylacine,11.71081081,1.068586965,Small,small,Non-Herbivore,Phylacine
+Rhinopithecus,Primates,Cercopithecidae,Phylacine,10567,4.023951707,Large,medium,Herbivore,Phylacine
+Rhizomyides,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Rhizomyoides,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,comparable(mis-spelling?) to Rhizomyiddes
+Rhizomys,Rodentia,Spalacidae,Phylacine,1646.666667,3.216605694,Large,medium,Herbivore,Phylacine
+Rupicapra,Cetartiodactyla,Bovidae,Phylacine,28050,4.447932866,Large,medium,Herbivore,Phylacine
+Rusa,Cetartiodactyla,Cervidae,Phylacine,85211.1,4.930496172,Large,large,Herbivore,Phylacine
+Ruscinomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Saidomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Saiga,Cetartiodactyla,Bovidae,MOM,39500,4.596597096,Large,medium,Herbivore,Phylacine
+Sardolutra,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,Willemsen 1992
+Scalopoides,Eulipotyphla,Talpidae,Cooke,29.82619397,1.474597838,Small,small,Non-Herbivore,GroupAv
+Scaptochirus,Eulipotyphla,Talpidae,Phylacine,90.5,1.956648579,Small,small,Non-Herbivore,Phylacine
+Scaptonyx,Eulipotyphla,Talpidae,Phylacine,12,1.079181246,Small,small,Non-Herbivore,Phylacine
+Scirtopoda,Rodentia,Dipodidae,Family average,51.18235294,1.709120247,Small,small,Herbivore,Phylacine
+Sciurotamias,Rodentia,Sciuridae,Phylacine,433.5,2.636989102,Small,small,Herbivore,Phylacine
+Sciurus,Rodentia,Sciuridae,Phylacine,599.35,2.77768051,Small,small,Herbivore,Phylacine
+Scotomanes,Chiroptera,Vespertilionidae,Phylacine,25,1.397940009,Small,small,Non-Herbivore,Phylacine
+Semnopithecus,Primates,Cercopithecidae,Phylacine,14835.71429,4.171308461,Large,medium,Herbivore,Phylacine
+Sericolagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Shikamainosorex,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Sicista,Rodentia,Dipodidae,Phylacine,8.892307692,0.949014482,Small,small,Herbivore,Phylacine
+Sinictis,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,GroupAv
+Sinocastor,Rodentia,Castoridae,Family average,40273.33333,4.605017577,Large,medium,Herbivore,Phylacine
+Sinocricetus,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Sinomastodon,Proboscidea,Gomphotheriidae,Family average,5855000,6.767526899,Large,large,Herbivore,Phylacine
+Sinomegaceros,Cetartiodactyla,Cervidae,Phylacine,363887.85,5.560967555,Large,large,Herbivore,Phylacine
+Sinoreas,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Sinoryx,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Sinotherium,Perissodactyla,Rhinocerotidae,Family average,2457350.889,6.390467175,Large,large,Herbivore,Phylacine
+Sivacapra,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Sivachoerus,Artiodactyla,Suidae,Family average,88494.49048,4.946916233,Large,large,Herbivore,GroupAv
+Sivacobus,Cetartiodactyla,Bovidae,Phylacine,78500.1,4.89487021,Large,large,Herbivore,Phylacine
+Sivadenota,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Sivalhippus,Perissodactyla,Equidae,Family average,308246.5417,5.488898213,Large,large,Herbivore,Phylacine
+Sivapanthera,Carnivora,Felidae,Family average,52902.55652,4.72347666,Large,large,Non-Herbivore,GroupAv
+Sivatherium,Artiodactyla,Giraffidae,Family average,564997.95,5.752046872,Large,large,Herbivore,GroupAv
+Soergelia,Cetartiodactyla,Bovidae,Phylacine,225000,5.352182518,Large,large,Herbivore,Phylacine
+Sorex,Eulipotyphla,Soricidae,Phylacine,6.687179487,0.82524298,Small,small,Non-Herbivore,Phylacine
+Soricella,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Soriculus,Eulipotyphla,Soricidae,Phylacine,14,1.146128036,Small,small,Non-Herbivore,Phylacine
+Spalax,Rodentia,Spalacidae,Phylacine,344.0444444,2.536614549,Small,small,Herbivore,Phylacine
+Spelaeomys,Rodentia,Muridae,Phylacine,870,2.939519253,Small,small,Herbivore,Phylacine
+Spermophilinus,Rodentia,Sciuridae,Family average,618.4478571,2.791303089,Small,small,Herbivore,Phylacine
+Spermophilus,Rodentia,Sciuridae,Phylacine,351.2066667,2.545562751,Small,small,Herbivore,Phylacine
+Spirocerus,Cetartiodactyla,Bovidae,Phylacine,790678.6,5.897999985,Large,large,Herbivore,Phylacine
+Stachomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Stegodon,Proboscidea,Stegodontidae,Phylacine,1788420.767,6.252469704,Large,large,Herbivore,Phylacine
+Stegolophodon,Proboscidea,Stegodontidae,Family average,1788420.767,6.252469704,Large,large,Herbivore,Phylacine
+Stephanomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Stephanorhinus,Perissodactyla,Rhinocerotidae,Phylacine,3287054.4,6.516806892,Large,large,Herbivore,Phylacine
+Subchilotherium,Perissodactyla,Rhinocerotidae,Cooke,599791.0779,5.778000001,Large,large,Herbivore,GroupAv
+Sulimskia,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Suncus,Eulipotyphla,Soricidae,Phylacine,10.52631579,1.022276395,Small,small,Non-Herbivore,Phylacine
+Sundasciurus,Rodentia,Sciuridae,Phylacine,200.3133333,2.301709858,Small,small,Herbivore,Phylacine
+Sus,Cetartiodactyla,Suidae,Phylacine,63653.36,4.803821333,Large,large,Non-Herbivore,Phylacine
+Synaptomys,Rodentia,Cricetidae,Phylacine,26.6,1.424881637,Small,small,Herbivore,Phylacine
+Szechuanopithecus,Primates,Cercopithecidae,Family average,8486.364179,3.928721665,Large,medium,NA,NA
+Tadarida,Chiroptera,Molossidae,Phylacine,26.4125,1.42180951,Small,small,Non-Herbivore,Phylacine
+Talpa,Eulipotyphla,Talpidae,Phylacine,80.33333333,1.904895788,Small,small,Non-Herbivore,Phylacine
+Talpavus,Eulipotyphla,Litocheridae,Family average,NA,,Small,small,Non-Herbivore,GroupAv
+Tamias,Rodentia,Sciuridae,Phylacine,111.9,2.048830087,Small,small,Non-Herbivore,Phylacine
+Tamiops,Rodentia,Sciuridae,Phylacine,66.7,1.824125834,Small,small,Herbivore,Phylacine
+Tapirus,Perissodactyla,Tapiridae,Phylacine,290955.075,5.463825937,Large,large,Herbivore,Phylacine
+Tatera,Rodentia,Muridae,Phylacine,166.3,2.220892249,Small,small,Herbivore,Phylacine
+Tcharinomys,Rodentia,Cricetidae,Family average,68.01005747,1.832573142,Small,small,Herbivore,Comparable to Microtus
+Terricola,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Tetraceros,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Tetraconodon,Artiodactyla,Suidae,Family average,88494.49048,4.946916233,Large,large,Herbivore,GroupAv
+Tetralophodon,Proboscidea,Gomphotheriidae,NOW,4489000,6.652149605,Large,large,Herbivore,Phylacine
+Thallomys,Rodentia,Muridae,Phylacine,89.55,1.95206559,Small,small,Herbivore,Phylacine
+Theropithecus,Primates,Cercopithecidae,Cooke,56524.91399,4.75223991,Large,large,Herbivore,Phylacine
+Tibericola,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Trachypithecus,Primates,Cercopithecidae,Phylacine,9226.6625,3.965044635,Large,medium,Herbivore,Phylacine
+Tragelaphus,Cetartiodactyla,Bovidae,Phylacine,255213.7778,5.406904116,Large,large,Herbivore,Phylacine
+Tragoportax,Artiodactyla,Bovidae,Cooke,123284.2766,5.090907691,Large,large,Herbivore,Phylacine
+Tragoreas,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Tragospira,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Tragulus,Cetartiodactyla,Tragulidae,Phylacine,2480.716667,3.394577165,Large,medium,Herbivore,Phylacine
+Trifurcatoceros,Artiodactyla,Cervidae,Family average,106166.5584,5.025987739,Large,large,Herbivore,Phylacine
+Trilophomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Trischizolagus,Lagomorpha,Leporidae,Family average,2069.12381,3.315786478,Large,medium,Herbivore,Phylacine
+Trogontherium,Rodentia,Castoridae,MOM,39994,4.601994842,Large,medium,Herbivore,Phylacine
+Trogopterus,Rodentia,Sciuridae,Phylacine,744.9,2.872097974,Small,small,Herbivore,Phylacine
+Tupaia,Scandentia,Tupaiidae,Phylacine,170.7866667,2.232453962,Small,small,Non-Herbivore,Phylacine
+Tylonycteris,Chiroptera,Vespertilionidae,Phylacine,5.6,0.748188027,Small,small,Non-Herbivore,Phylacine
+Typhlomys,Rodentia,Platacanthomyidae,Phylacine,24.5,1.389166084,Small,small,Herbivore,Phylacine
+Tyrrhenicola,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Ungaromys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Uropsilus,Eulipotyphla,Talpidae,Phylacine,17.125,1.23363058,Small,small,Non-Herbivore,Phylacine
+Urotrichus,Eulipotyphla,Talpidae,Phylacine,45,1.653212514,Small,small,Non-Herbivore,Phylacine
+Ursus,Carnivora,Ursidae,Cooke,134040.2204,5.127235133,Large,large,Non-Herbivore,Phylacine
+Vandeleuria,Rodentia,Muridae,Phylacine,28.83333333,1.459894853,Small,small,Herbivore,Phylacine
+Vernaya,Rodentia,Muridae,Phylacine,24.9,1.396199347,Small,small,Herbivore,Phylacine
+Vespertiliavus,Chiroptera,Emballonuridae,Family average,17.86792453,1.252074109,Small,small,Non-Herbivore,GroupAv
+Vespertilio,Chiroptera,Vespertilionidae,Phylacine,21.6,1.334453751,Small,small,Non-Herbivore,Phylacine
+Victoriamys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Villanyia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Vishnucobus,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Vishnuictis,Carnivora,Viverridae,Family average,3781.30303,3.577641483,Large,medium,Non-Herbivore,GroupAv
+Vishnumeryx,Artiodactyla,Bovidae,Family average,131331.4124,5.118368615,Large,large,Herbivore,Phylacine
+Viverra,Carnivora,Viverridae,Phylacine,9607.2,3.982596832,Large,medium,Non-Herbivore,Phylacine
+Viverravus,Carnivora,Viverravidae,Cooke,661.6850858,2.820651346,Small,small,Non-Herbivore,GroupAv
+Viverricula,Carnivora,Viverridae,Phylacine,2908.4,3.463654136,Large,medium,Non-Herbivore,Phylacine
+Vormela,Carnivora,Mustelidae,Phylacine,450.4,2.653598382,Small,small,Non-Herbivore,Phylacine
+Vulpes,Carnivora,Canidae,Phylacine,2934.691667,3.467562479,Large,medium,Non-Herbivore,Phylacine
+Wushanomys,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,Herbivore,Phylacine
+Xenalopex,Carnivora,Canidae,Family average,10973.62439,4.040350091,Large,medium,Non-Herbivore,GroupAv
+Xenictis,Carnivora,Mustelidae,Family average,4714.521875,3.673437655,Large,medium,Non-Herbivore,GroupAv
+Xenocyon,Carnivora,Canidae,Cooke,47598.25397,4.677591022,Large,large,Non-Herbivore,GroupAv
+Yangia,Rodentia,Muridae,Family average,134.3146939,2.128123527,Small,small,NA,NA
+Yanshuella,Eulipotyphla,Talpidae,Family average,78.42380952,1.894447935,Small,small,Non-Herbivore,GroupAv
+Zelceina,Eulipotyphla,Soricidae,Family average,11.45526992,1.059005327,Small,small,Non-Herbivore,comparable to Sorex
+Zygolophodon,Proboscidea,Mammutidae,Cooke,2958012.476,6.471000001,Large,large,Herbivore,Phylacine
