@@ -6,7 +6,7 @@ import plotly.express as px
 
 app = Dash(__name__)
 
-df = pd.read_csv("data_occ.csv", sep="\t")
+df = pd.read_csv("fossilrec/3_data/data_occ.csv", sep="\t")
 
 def parse_coord(coord_str):
     parts = coord_str.split()
