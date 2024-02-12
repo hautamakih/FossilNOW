@@ -22,3 +22,17 @@ Please visit [DSProject_FossilNOW](https://drive.google.com/file/d/1KbPRdbDTGs5p
 - Two groups
   - one focusing on the recommender system
   - one focusing on the visualizations
+
+## Visualization
+
+Install packages:
+
+`pip install -r requirements.txt`
+
+Run locally:
+
+`python app.py`
+
+Open your browser and go to the address
+
+`http://127.0.0.1:8050/`
