@@ -56,12 +56,12 @@ def update_graph(genera, threshold, df):
     if df is None:
         raise PreventUpdate
     gdf = create_gdf(pd.DataFrame(df))
-    gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry"]][gdf[genera] >= threshold]
+    gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry", "COUNTRY", "NAME"]][gdf[genera] >= threshold]
     if len(gdff[genera].unique()) <= 8:
         gdff[genera] = gdff[genera].astype(str)
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera, color_discrete_map=color_discrete_map)    
+        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera, color_discrete_map=color_discrete_map, hover_data=["COUNTRY", "NAME"])
     else:
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera)
+        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera, hover_data=["COUNTRY", "NAME"])
     fig.update_layout(mapbox_style="open-street-map")
     fig.update_traces(marker={'size': 15, 'opacity': 0.6})
     return fig
