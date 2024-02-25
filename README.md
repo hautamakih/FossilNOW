@@ -23,3 +23,13 @@ Please visit [DSProject_FossilNOW](https://drive.google.com/file/d/1KbPRdbDTGs5p
 - Two groups
   - one focusing on the recommender system
   - one focusing on the visualizations
+
+## Visualization
+
+Install packages:
+
+`pip install -r requirements.txt`
+
+Go to the source directory `src` and run locally:
+
+`python app.py`
