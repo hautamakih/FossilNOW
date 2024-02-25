@@ -3,12 +3,10 @@ from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
 from utils.dataframe import *
+from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure
 
 
 app = Dash(__name__)
-
-color_discrete_map = {'0': 'rgb(255,0,0)', '0.1': 'rgb(0,255,0)', '0.7': 'rgb(0,0,255)', '0.9': 'rgb(255,255,0)', '1': 'rgb(255,0,255)'}
-
 
 app.layout=html.Div([
     html.H1(children='FossilNOW', style={'textAlign':'center'}),
@@ -55,15 +53,18 @@ def update_options(df):
 def update_graph(genera, threshold, df):
     if df is None:
         raise PreventUpdate
-    gdf = create_gdf(pd.DataFrame(df))
-    gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry", "COUNTRY", "NAME"]][gdf[genera] >= threshold]
-    if len(gdff[genera].unique()) <= 8:
-        gdff[genera] = gdff[genera].astype(str)
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera, color_discrete_map=color_discrete_map, hover_data=["COUNTRY", "NAME"])
-    else:
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, mapbox_style="open-street-map", zoom=3, color=genera, hover_data=["COUNTRY", "NAME"])
-    fig.update_layout(mapbox_style="open-street-map")
-    fig.update_traces(marker={'size': 15, 'opacity': 0.6})
+    
+    # Preprocess data
+    gdff = preprocess_data(df, genera, threshold)
+
+    # Create map figure
+    fig = create_map_figure(gdff, genera)
+
+    # Add convex hull to the map if applicable
+    if gdff.shape[0] >= 3:
+        convex_hull = gdff.unary_union.convex_hull
+        add_convex_hull_to_figure(fig, convex_hull, gdff)
+    
     return fig
 
 @callback(
