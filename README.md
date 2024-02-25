@@ -11,6 +11,7 @@
 - What are the x and y axes of the line charts?
 - What are the column names of the file `res_all_Cervidae.csv` in the dir `4_outputs3`
   - [HoangLe]: According to the paper, **Cervidae** is a family name. By googling, I found that the left-most column contains the sites. So I think file `res_all_Cervidae.csv` contains the predicted occurence score of a family given the sites.
+- The deadline is at the end of April. Inform the client!
 
 ## Sketch
 
@@ -22,3 +23,13 @@ Please visit [DSProject_FossilNOW](https://drive.google.com/file/d/1KbPRdbDTGs5p
 - Two groups
   - one focusing on the recommender system
   - one focusing on the visualizations
+
+## Visualization
+
+Install packages:
+
+`pip install -r requirements.txt`
+
+Go to the source directory `src` and run locally:
+
+`python app.py`

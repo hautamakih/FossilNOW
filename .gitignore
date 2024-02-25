@@ -189,4 +189,4 @@ cython_debug/
 Pipfile
 Pipfile.lock
 
-data/
+*.npy
