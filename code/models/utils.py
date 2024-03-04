@@ -39,7 +39,7 @@ class CategoryDict:
         return len(self.dict_id2name)
 
     @classmethod
-    def from_file(cls, path: str):
+    def from_file(cls, path: str | Path):
         assert Path(path).exists()
 
         with open(path) as f:

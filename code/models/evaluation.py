@@ -1,34 +1,40 @@
 import numpy as np
+import pandas as pd
 from pandas import Series
+from scipy import stats
 
 
-def calc_mse(pred: list | np.ndarray | Series, prob_occ: float = 1.0) -> float:
-    """Calculate the mean square error of the predicted probability as treating the problem as regression
+def f(df_species: pd.DataFrame):
+    if np.sum(df_species["occurence"]) == 0:
+        return 0
+
+    preferences = df_species["pred"]
+    percentile_rank = 1 - stats.percentileofscore(preferences, preferences) / 100
+
+    expected_rank_species = np.sum(df_species["occurence"] * percentile_rank) / np.sum(
+        df_species["occurence"]
+    )
+
+    return expected_rank_species
+
+
+def calc_expected_percentile_rank(df_pred: pd.DataFrame) -> float:
+    """Calculate the expected percentile rank as in paper "Collaborative Filtering for Implicit Feedback Datasets"
 
     Args:
-        pred (list | np.ndarray | Series): predicted score
-        prob_occ (float, optional): target probability of occurrence. Defaults to 1.0.
+        df_pred (pd.DataFrame): prediction dataframe
 
     Returns:
-        float: result
+        float: expected percentile rank
     """
-    if not isinstance(pred, np.ndarray):
-        pred = np.array(pred, dtype=np.float32)
+    expected_ranks = (
+        df_pred.sort_values(by="pred")
+        .groupby(by="species")
+        .apply(f, include_groups=False)
+    )
+    expected_percentile_rank = expected_ranks[expected_ranks > 0].mean()
 
-    return np.mean(np.square(pred - prob_occ)).item()
-
-
-def calc_rmse(pred: list | np.ndarray | Series, prob_occ: float = 1.0) -> float:
-    """Calculate root mean square error of the predicted probability as treating the problem as regression
-
-    Args:
-        pred (list | np.ndarray | Series): predicted scores
-        prob_occ (float, optional): target probability of occurrence. Defaults to 1.0.
-
-    Returns:
-        float: result
-    """
-    return np.sqrt(calc_mse(pred, prob_occ))
+    return expected_percentile_rank
 
 
 def calc_tpr(pred: list | np.ndarray | Series, thres_occ: float = 0.5) -> float:
