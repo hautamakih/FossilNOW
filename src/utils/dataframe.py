@@ -21,11 +21,12 @@ def parse_coord(coord_str):
     return decimal_degrees
 
 def create_gdf(df):
-
-    latitudes = [parse_coord(lat_str) for lat_str in df["LATSTR"]]
-    longitudes = [parse_coord(lon_str) for lon_str in df["LONGSTR"]]
-    # Create a GeoDataFrame
-    geometry = [Point(lon, lat) for lon, lat in zip(longitudes, latitudes)]
+    try:
+        latitudes = [parse_coord(lat_str) for lat_str in df["LATSTR"]]
+        longitudes = [parse_coord(lon_str) for lon_str in df["LONGSTR"]]
+        geometry = [Point(lon, lat) for lon, lat in zip(longitudes, latitudes)]
+    except KeyError:
+        geometry = [Point(lon, lat) for lon, lat in zip(df["LONG"], df["LAT"])]
     df["geometry"] = geometry
     gdf = gpd.GeoDataFrame(df)
     return gdf
