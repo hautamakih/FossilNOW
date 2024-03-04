@@ -5,6 +5,8 @@ import plotly.express as px
 from utils.dataframe import *
 from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure
 
+AGE_SPANS = ["0-0.1", "0.1-0.6", "0.6-1.1", "1.1-1.6", "1.6-2.1", "2.1-2.6"]
+
 
 app = Dash(__name__)
 
@@ -29,6 +31,8 @@ app.layout=html.Div([
     dcc.Store("data"),
     "Species",
     dcc.Dropdown([], id='dropdown-species'),
+    "Age spans",
+    dcc.Dropdown(AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
     "Threshold",
     dcc.Slider(0, 1, 0.1,value=0, id='threshold'),
     dcc.Graph(id='graph-content')
@@ -42,15 +46,16 @@ app.layout=html.Div([
 )
 def update_options(df):
     df = pd.DataFrame(df)
-    return list(df.columns), df.columns[0]
+    return list(df.columns), df.columns[7]
 
 @callback(
     Output('graph-content', 'figure'),
     Input('dropdown-species', 'value'),
     Input('threshold', 'value'),
     Input("data", "data"),
+    Input("age_span", "value"),
 )
-def update_graph(genera, threshold, df):
+def update_graph(genera, threshold, df, age_spans):
     if df is None:
         raise PreventUpdate
     
@@ -62,8 +67,7 @@ def update_graph(genera, threshold, df):
 
     # Add convex hull to the map if applicable
     if gdff.shape[0] >= 3:
-        convex_hull = gdff.unary_union.convex_hull
-        add_convex_hull_to_figure(fig, convex_hull, gdff)
+        add_convex_hull_to_figure(fig, gdff, age_spans)
     
     return fig
 
