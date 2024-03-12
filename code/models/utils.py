@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pandas as pd
+
 
 class CategoryDict:
     def __init__(self) -> None:
@@ -61,3 +63,22 @@ class CategoryDict:
             obj.dict_name2id[name] = idx
 
         return obj
+
+
+def conv_dataset_patch2df(patches: list) -> pd.DataFrame:
+    records = []
+
+    for x in patches:
+        for i_site, site in enumerate(x["sites"]):
+            for i_gen, genera in enumerate(x["genera"]):
+                records.append(
+                    {
+                        "site": site,
+                        "species": genera,
+                        "occurence": x["occurence"][i_site, i_gen],
+                    }
+                )
+
+    df = pd.DataFrame.from_records(records)
+
+    return df

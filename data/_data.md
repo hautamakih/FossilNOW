@@ -59,8 +59,8 @@ This section describes the fields which are from given data files and can be use
 | Field                    | Column name             | Field type | Data type          | From file           |
 | ------------------------ | ----------------------- | ---------- | ------------------ | ------------------- |
 | order                    | order                   | taxonomy   | categorical (text) | 1.2.a, 1.3.a, 1.3.c |
-| family                   |                         | taxonomy   | categorical (text) | 1.2.a, 1.3.a, 1.3.c |
-| genus                    |                         | taxonomy   | categorical (text) | 1.2.a, 1.3.a, 1.3.c |
+| family                   | family                  | taxonomy   | categorical (text) | 1.2.a, 1.3.a, 1.3.c |
+| genus                    | genus                   | taxonomy   | categorical (text) | 1.2.a, 1.3.a, 1.3.c |
 | body mass                | BODYMASS, Mass.g, Massg | size       | numerical          | 1.2.a, 1.3.a, 1.3.c |
 | Diet.Plant               | Diet.Plant              | diet       | numerical          | 1.3.a               |
 | Diet.Vertebrate          | Diet.Vertebrate         | diet       | numerical          | 1.3.a               |

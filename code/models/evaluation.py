@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from pandas import Series
 from scipy import stats
 
 
@@ -37,7 +36,7 @@ def calc_expected_percentile_rank(df_pred: pd.DataFrame) -> float:
     return expected_percentile_rank
 
 
-def calc_tpr(pred: list | np.ndarray | Series, thres_occ: float = 0.5) -> float:
+def calc_tpr(pred: pd.DataFrame, thres_occ: float = 0.5) -> float:
     """Calculate the True Positive Rate as treating the problem as one-class classification
 
     Args:
@@ -47,7 +46,8 @@ def calc_tpr(pred: list | np.ndarray | Series, thres_occ: float = 0.5) -> float:
     Returns:
         float: result
     """
-    if not isinstance(pred, np.ndarray):
-        pred = np.array(pred, dtype=np.float32)
+    assert "occurence" in pred and "pred" in pred
 
-    return (np.sum(pred >= thres_occ) * 1.0 / len(pred)).item()
+    pred_all1 = pred[pred["occurence"] == 1]["pred"]
+
+    return (np.sum(pred_all1 >= thres_occ) * 1.0 / len(pred)).item()
