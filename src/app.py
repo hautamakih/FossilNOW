@@ -3,10 +3,18 @@ from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
 from utils.dataframe import *
-from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure
+from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo
+
 
 AGE_SPANS = ["0-0.1", "0.1-0.6", "0.6-1.1", "1.1-1.6", "1.6-2.1", "2.1-2.6"]
 
+dent_genus = pd.read_csv("../data/DentalTraits_Genus_PPPA.csv")
+dent_species = pd.read_csv("../data/DentalTraits_Species_PPPA.csv", encoding='unicode_escape')
+mass_diet = pd.read_csv("../data/FossilGenera_MammalMassDiet_Jan24.csv")
+sites = pd.read_csv("../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv")
+rec = pd.read_csv("../data/Collaborative_filtering_data.csv")
+
+species_in_sites, rec_species = preprocess_sites_df(sites, mass_diet, dent_genus, rec)
 
 app = Dash(__name__)
 
@@ -35,7 +43,8 @@ app.layout=html.Div([
     dcc.Dropdown(AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
     "Threshold",
     dcc.Slider(0, 1, 0.1,value=0, id='threshold'),
-    dcc.Graph(id='graph-content')
+    dcc.Graph(id='graph-content', style={'width': '50%'}),
+    html.Div(id='site-info')
 ])
 
 @callback(
@@ -81,5 +90,20 @@ def update_df(contents_list):
     df = parse_contents(contents_list)
     return df.to_dict("records")
 
+@callback(
+    Output("site-info", "children"),
+    Input("graph-content", "clickData")
+)
+def update_site_info(clickData):
+    if clickData is None:
+        return html.P('Click on a site to view more information.')
+    
+    site_name, mass_bar_fig, dent_fig = create_histo(clickData, species_in_sites, rec_species)
+    return [
+        html.H3(f'Site: {site_name}'),
+        dcc.Graph(id='site-bar-plot', figure=mass_bar_fig),
+        dcc.Graph(id='site-dent-plot', figure=dent_fig)
+    ]
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8010)
