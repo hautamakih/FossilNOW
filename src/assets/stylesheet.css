@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+#upload-data {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    border-width: 1px;
+    border-style: dashed;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.dash-dropdown {
+    width: 100%;
+}
+
+#threshold {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#graph-content {
+    margin-top: 20px;
+}
+
+#site-info {
+    margin-top: 20px;
+}
+
+.row {
+    display: flex;
+}
+
+.one-third-column {
+    width: 33%;
+    padding: 0 10px; /* Adjust padding as needed */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.half-column {
+    width: 50%;
+    padding: 0 10px; /* Adjust padding as needed */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
