@@ -18,33 +18,34 @@ species_in_sites, rec_species = preprocess_sites_df(sites, mass_diet, dent_genus
 
 app = Dash(__name__)
 
-app.layout=html.Div([
-    html.H1(children='FossilNOW', style={'textAlign':'center'}),
+app.layout = html.Div([
+    html.H1(children='FossilNOW', style={'textAlign': 'center'}),
     dcc.Upload(
         id="upload-data",
-        children=html.Div(([
+        children=html.Div([
             "Drag and Drop or ",
             html.A("Select Files")
-        ])),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-        },
+        ]),
     ),
-    dcc.Store("data"),
-    "Species",
-    dcc.Dropdown([], id='dropdown-species'),
-    "Age spans",
-    dcc.Dropdown(AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
-    "Threshold",
-    dcc.Slider(0, 1, 0.1,value=0, id='threshold'),
-    dcc.Graph(id='graph-content', style={'width': '50%'}),
-    html.Div(id='site-info')
+    dcc.Store(id="data"),
+    html.Div([
+        html.Div([
+            html.Label("Species"),
+            dcc.Dropdown(id='dropdown-species'),
+        ], className='one-third-column'),
+        html.Div([
+            html.Label("Age spans"),
+            dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
+        ], className='one-third-column'),
+        html.Div([
+            html.Label("Threshold"),
+            dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
+        ], className='one-third-column'),
+    ], className='row'),
+    html.Div([
+        html.Div([dcc.Graph(id='graph-content')], className='half-column'),
+        html.Div([html.Div(id='site-info')], className='half-column'),
+    ], className='row'),
 ])
 
 @callback(
@@ -106,4 +107,4 @@ def update_site_info(clickData):
     ]
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8010)
+    app.run(debug=True, port=8050)
