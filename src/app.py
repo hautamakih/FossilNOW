@@ -31,8 +31,8 @@ app.layout = dmc.NotificationsProvider(
         dcc.Store(id="data"),
         html.Div([
             html.Div([
-                html.Label("Species"),
-                dcc.Dropdown(id='dropdown-species'),
+                html.Label("Genus"),
+                dcc.Dropdown(id='dropdown-species', clearable=False),
             ], className='one-third-column'),
             html.Div([
                 html.Label("Age spans"),
