@@ -39,8 +39,12 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
         gdffs[a] = gdff[(gdff["MIN_AGE"] >= float(start)) & (gdff["MAX_AGE"] < float(end))]
 
     for i, (age_span, gdf) in enumerate(gdffs.items()):
-        convex_hull = gdf.unary_union.convex_hull
+        # Skip drawing a convex hull if it has less than three points
+        if len(gdf.drop_duplicates(subset=['LAT', 'LONG'])) < 3:
+            continue
         
+        convex_hull = gdf.unary_union.convex_hull
+
         fig.add_scattermapbox(
             lat=list(convex_hull.exterior.xy[1]),
             lon=list(convex_hull.exterior.xy[0]),
@@ -50,7 +54,7 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
             line=dict(color=COLORS[i], width=2),
             name=age_span
         )
-    
+
     fig.update_layout(
         legend=dict(x=1.025, y=0.5, yanchor="top")
     )
