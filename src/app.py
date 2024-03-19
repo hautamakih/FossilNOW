@@ -76,8 +76,7 @@ def update_graph(genera, threshold, df, age_spans):
     fig = create_map_figure(gdff, genera)
 
     # Add convex hull to the map if applicable
-    if gdff.shape[0] >= 3:
-        add_convex_hull_to_figure(fig, gdff, age_spans)
+    add_convex_hull_to_figure(fig, gdff, age_spans)
     
     return fig
 
