@@ -10,13 +10,9 @@ from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_
 
 AGE_SPANS = ["0-0.1", "0.1-0.6", "0.6-1.1", "1.1-1.6", "1.6-2.1", "2.1-2.6"]
 
-dent_genus = pd.read_csv("../data/DentalTraits_Genus_PPPA.csv")
-dent_species = pd.read_csv("../data/DentalTraits_Species_PPPA.csv", encoding='unicode_escape')
-mass_diet = pd.read_csv("../data/FossilGenera_MammalMassDiet_Jan24.csv")
-sites = pd.read_csv("../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv")
-rec = pd.read_csv("../data/Collaborative_filtering_data.csv")
+species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
+rec_species = pd.read_parquet("../data/rec_species.parquet")
 
-species_in_sites, rec_species = preprocess_sites_df(sites, mass_diet, dent_genus, rec)
 
 app = Dash(__name__)
 
@@ -122,4 +118,4 @@ def update_site_info(clickData):
     ]
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8050)
+    app.run(debug=True, port=8010)
