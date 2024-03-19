@@ -6,13 +6,14 @@ import pandas as pd
 import plotly.express as px
 from utils.dataframe import *
 from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo
+import numpy as np
 
 
 AGE_SPANS = ["0-0.1", "0.1-0.6", "0.6-1.1", "1.1-1.6", "1.6-2.1", "2.1-2.6"]
 
 species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 rec_species = pd.read_parquet("../data/rec_species.parquet")
-
+content_base = pd.read_csv("../data/content-based-filtering.csv")
 
 app = Dash(__name__)
 
@@ -43,7 +44,7 @@ app.layout = dmc.NotificationsProvider(
             ], className='one-third-column'),
         ], className='row'),
         html.Div([
-            html.Div([dcc.Graph(id='graph-content')], className='half-column'),
+            html.Div([dcc.Graph(id='graph-content'), html.Div([], id='site-summary')], className='half-column'),
             html.Div([html.Div(id='site-info')], className='half-column'),
         ], className='row'),
     ]), position='top-right'
@@ -104,18 +105,29 @@ def update_df(contents_list):
 
 @callback(
     Output("site-info", "children"),
+    Output("site-summary", "children"),
     Input("graph-content", "clickData")
 )
 def update_site_info(clickData):
     if clickData is None:
-        return html.P('Click on a site to view more information.')
+        return html.P('Click on a site to view more information.'), dash.no_update
     
     site_name, mass_bar_fig, dent_fig = create_histo(clickData, species_in_sites, rec_species)
+    
+    i = content_base[content_base["SITE_NAME"]==site_name].index.tolist()[0]
+    recommendations = content_base.iloc[i, 1:].T.sort_values(ascending=False)[:10]
+
+    recommendations_html = [
+        html.Div([
+            html.Li(str(index) + " " + str(value)) for index, value in recommendations.items()
+        ])
+    ]
+
     return [
         html.H3(f'Site: {site_name}'),
         dcc.Graph(id='site-bar-plot', figure=mass_bar_fig),
         dcc.Graph(id='site-dent-plot', figure=dent_fig)
-    ]
+    ], recommendations_html
 
 if __name__ == '__main__':
     app.run(debug=True, port=8010)
