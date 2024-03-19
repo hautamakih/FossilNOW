@@ -38,9 +38,12 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
         start, end = a.split("-")
         gdffs[a] = gdff[(gdff["MIN_AGE"] >= float(start)) & (gdff["MAX_AGE"] < float(end))]
 
+    errors = []
+
     for i, (age_span, gdf) in enumerate(gdffs.items()):
         # Skip drawing a convex hull if it has less than three points
         if len(gdf.drop_duplicates(subset=['LAT', 'LONG'])) < 3:
+            errors.append(age_span)
             continue
         
         convex_hull = gdf.unary_union.convex_hull
@@ -58,6 +61,8 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
     fig.update_layout(
         legend=dict(x=1.025, y=0.5, yanchor="top")
     )
+
+    return errors
 
 def create_histo(clickData, species_in_sites, rec_species):
     site_name = clickData['points'][0]['hovertext']

@@ -1,3 +1,5 @@
+import dash_mantine_components as dmc
+import dash
 from dash import Dash, html, dcc, callback, Output, Input
 from dash.exceptions import PreventUpdate
 import pandas as pd
@@ -18,35 +20,38 @@ species_in_sites, rec_species = preprocess_sites_df(sites, mass_diet, dent_genus
 
 app = Dash(__name__)
 
-app.layout = html.Div([
-    html.H1(children='FossilNOW', style={'textAlign': 'center'}),
-    dcc.Upload(
-        id="upload-data",
-        children=html.Div([
-            "Drag and Drop or ",
-            html.A("Select Files")
-        ]),
-    ),
-    dcc.Store(id="data"),
+app.layout = dmc.NotificationsProvider(
     html.Div([
+        html.Div(id='notifications-container'),
+        html.H1(children='FossilNOW', style={'textAlign': 'center'}),
+        dcc.Upload(
+            id="upload-data",
+            children=html.Div([
+                "Drag and Drop or ",
+                html.A("Select Files")
+            ]),
+        ),
+        dcc.Store(id="data"),
         html.Div([
-            html.Label("Species"),
-            dcc.Dropdown(id='dropdown-species'),
-        ], className='one-third-column'),
+            html.Div([
+                html.Label("Species"),
+                dcc.Dropdown(id='dropdown-species'),
+            ], className='one-third-column'),
+            html.Div([
+                html.Label("Age spans"),
+                dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
+            ], className='one-third-column'),
+            html.Div([
+                html.Label("Threshold"),
+                dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
+            ], className='one-third-column'),
+        ], className='row'),
         html.Div([
-            html.Label("Age spans"),
-            dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
-        ], className='one-third-column'),
-        html.Div([
-            html.Label("Threshold"),
-            dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
-        ], className='one-third-column'),
-    ], className='row'),
-    html.Div([
-        html.Div([dcc.Graph(id='graph-content')], className='half-column'),
-        html.Div([html.Div(id='site-info')], className='half-column'),
-    ], className='row'),
-])
+            html.Div([dcc.Graph(id='graph-content')], className='half-column'),
+            html.Div([html.Div(id='site-info')], className='half-column'),
+        ], className='row'),
+    ]), position='top-right'
+)
 
 @callback(
     Output("dropdown-species", "options"),
@@ -60,6 +65,7 @@ def update_options(df):
 
 @callback(
     Output('graph-content', 'figure'),
+    Output('notifications-container', 'children'),
     Input('dropdown-species', 'value'),
     Input('threshold', 'value'),
     Input("data", "data"),
@@ -76,9 +82,19 @@ def update_graph(genera, threshold, df, age_spans):
     fig = create_map_figure(gdff, genera)
 
     # Add convex hull to the map if applicable
-    add_convex_hull_to_figure(fig, gdff, age_spans)
+    errors = add_convex_hull_to_figure(fig, gdff, age_spans)
     
-    return fig
+    if len(errors) == 0:
+        return fig, dash.no_update
+    
+    return fig, dmc.Notification(
+        title='Warning!',
+        action='show',
+        message=f'For age spans {errors} convex hulls could not been generated, since there are less than 3 points',
+        autoClose=4000,
+        id='not-enough-points-notification',
+        color='yellow',
+    )
 
 @callback(
     Output("data", "data"),

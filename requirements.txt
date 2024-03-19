@@ -2,3 +2,4 @@ dash
 pandas
 geopandas
 plotly
+dash-mantine-components
