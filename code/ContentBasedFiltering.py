@@ -24,6 +24,7 @@ class ContentBasedFiltering:
         self.genus_info_with_site_info = None
         self.site_info_with_genus_info = None
         self.recommendation_matrix = None
+        self.recommendations = None
 
 
     def fit(self, site_data, genus_data):
@@ -38,8 +39,17 @@ class ContentBasedFiltering:
         self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max, n_species_to_recommend=500)
 
 
-    def predict(self, df):
-        pass
+    def predict(self, test_set):
+        df_test = test_set.merge(
+            self.recommendations, 
+            on=["SITE_NAME", "genus"],
+            how="left"
+        ).sort_values(
+            by=["SITE_NAME", "similarity"],
+            ascending=[True, False]
+        )
+
+        return df_test
 
 
     def build_site_genus_matrix(self, df):
@@ -227,14 +237,13 @@ class ContentBasedFiltering:
 
             recommendations.append(site_recommendations)
         
-        df_recommendations = pd.concat(recommendations).reset_index(drop=True)
-        self.recommendation_matrix = pd.pivot(df_recommendations, index="SITE_NAME", columns="genus", values="similarity").fillna(0)
+        self.recommendations = pd.concat(recommendations).reset_index(drop=True)
+        self.recommendation_matrix = pd.pivot(self.recommendations, index="SITE_NAME", columns="genus", values="similarity").fillna(0)
 
 
 #%%
 if __name__ == "__main__":
     path = "../data/FossilGenera_MammalMassDiet_Jan24.csv"
-
     df_mass_diet = pd.read_csv(path, sep=",")
 
     # Genera and sites
