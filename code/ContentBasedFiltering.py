@@ -34,9 +34,7 @@ class ContentBasedFiltering:
         self.build_genus_related_site_info()
         self.build_genus_info_with_site_info(genus_data)
         self.build_site_info_with_genus_info(site_data)
-
-        # This has to be edited so that it allways finds recommendations for all
-        self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max, n_species_to_recommend=500)
+        self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max)
     
 
     def get_recommendations(self, matrix_form=True):
@@ -194,14 +192,14 @@ class ContentBasedFiltering:
         return (df - df.mean()) / df.std()
 
 
-    def get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix, num_recommend = 10):
+    def get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix):
         idx = site_indices[site_name]
 
         # Sorted similarity scores
         sim_scores = sorted(list(enumerate(genus_site_similarity_matrix[:,idx])), key=lambda x: x[1], reverse=True)
 
         # Get the scores of the num_recommend most similar sites
-        similar_genus_for_site = sim_scores[:num_recommend]
+        similar_genus_for_site = sim_scores
 
         # Get the genus indices
         genus_indices = [i[0] for i in similar_genus_for_site]
@@ -212,7 +210,7 @@ class ContentBasedFiltering:
 
         return recommended_genus
     
-    def find_recommendations_for_all_sites(self, df, normalization=None, n_species_to_recommend=500):
+    def find_recommendations_for_all_sites(self, df, normalization=None):
         genus_info = self.genus_info_with_site_info
         site_info = self.site_info_with_genus_info
         
@@ -238,8 +236,7 @@ class ContentBasedFiltering:
                 genus_info=genus_info,
                 site_name=site,
                 site_indices=site_indices,
-                genus_site_similarity_matrix=sim,
-                num_recommend=n_species_to_recommend                        
+                genus_site_similarity_matrix=sim                       
             )
 
             recommendations.append(site_recommendations)
