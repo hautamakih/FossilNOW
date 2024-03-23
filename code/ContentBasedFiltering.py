@@ -7,29 +7,94 @@ from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 #%%
 
 class ContentBasedFiltering:
+    """
+    Content Based Filtering algorithm for recommending genera to sites.
+
+    Attibutes
+    ---------
+    None
+
+    Methods
+    -------
+    fit(site_data, genus_data, n_site_columns):
+        Fits the algorithm on given data
+    
+    get_recommendations(matrix_form=True):
+        Gives the similarity scores for all the genus-site pairs
+    
+    predict(test_set):
+        Gives a DataFrame with true values of the test set and predicted values from the fit
+    """
+    
     def __init__(self):
         pass
 
 
-    def fit(self, site_data, genus_data, n_site_columns):
+    def fit(self, site_data: pd.DataFrame, genus_data: pd.DataFrame, n_site_columns: int):
+        """
+        Fits the algorithm on given data
+
+        Parameters:
+        -----------
+        site_data: pd.DataFrame
+            a Pandas DataFrame containing occurences of genera at each site in a matrix form. The site information must be included in the same DataFrame as last columns
+
+        genus_data: pd.DataFrame
+            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand.
+
+        n_site_columns: int
+            The number of columns in the end of the site_data DataFrame containing the information about sites.
+
+        Returns
+        -------
+        None
+        """
+
         site_data = site_data.rename(columns={df.columns[0]: 'SITE_NAME'})
-        self.__build_site_info(site_data, n_site_columns) #
-        self.__build_site_genus_matrix(site_data, n_site_columns) #
-        self.__build_genus_info(genus_data) #
-        self.__build_genus_related_site_info() #
-        self.__build_genus_info_with_site_info() #
-        self.__build_site_info_with_genus_info(site_data, n_site_columns) #
+        self.__build_site_info(site_data, n_site_columns)
+        self.__build_site_genus_matrix(site_data, n_site_columns)
+        self.__build_genus_info(genus_data)
+        self.__build_genus_related_site_info()
+        self.__build_genus_info_with_site_info()
+        self.__build_site_info_with_genus_info(site_data, n_site_columns)
         self.__find_recommendations_for_all_sites(site_data, normalization=self.__normalize_columns_min_max)
     
 
-    def get_recommendations(self, matrix_form=True):
+    def get_recommendations(self, matrix_form:bool=True):
+        """
+        Gives the similarity scores for all the genus-site pairs
+
+        Parameters:
+        -----------
+        matrix_form: bool
+            A boolean value. If assigned true the recommendations are returned in matrix form. If assigned False the recommendations are returned in DataFrame that has columns SITE_NAME, genus, similarity. The defauls value is True.
+
+        Returns:
+        --------
+        pd.DataFrame
+        """
+
         if matrix_form:
             return self.recommendation_matrix
         else:
             return self.recommendations
 
 
-    def predict(self, test_set):
+    def predict(self, test_set:pd.DataFrame):
+        """
+        Gives a DataFrame with true values of the test set and predicted values from the fit
+
+        Parameters:
+        -----------
+        test_set: pd.DataFrame
+            A Pandas DataFrame containing the test set. The DataFrame must contain columns SITE_NAME, genus, occurence.
+
+        Returns:
+        --------
+        pd.DataFrame
+            A Pandas DataFrame containing columns SITE_NAME, genus, occurence and (predicted) similarity. 
+        """
+
         df_test = test_set.merge(
             self.recommendations, 
             on=["SITE_NAME", "genus"],
