@@ -1,17 +1,8 @@
 #%%
 import pandas as pd
 import numpy as np
-import utils_local
 
-from scipy import stats
-
-from surprise import Dataset, Reader
-from surprise import KNNBasic, KNNWithMeans
-from surprise.model_selection import train_test_split
-
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
-from sklearn.metrics import root_mean_squared_error, mean_squared_error, mean_absolute_error, f1_score
 
 #%%
 
@@ -27,13 +18,13 @@ class ContentBasedFiltering:
         self.recommendations = None
 
 
-    def fit(self, site_data, genus_data):
-        self.build_site_genus_matrix(site_data)
-        self.build_site_info(site_data)
-        self.build_genus_info(genus_data)
-        self.build_genus_related_site_info()
-        self.build_genus_info_with_site_info(genus_data)
-        self.build_site_info_with_genus_info(site_data)
+    def fit(self, site_data, genus_data, n_site_columns):
+        self.build_site_genus_matrix(site_data, n_site_columns) #
+        self.build_site_info(site_data, n_site_columns) #
+        self.build_genus_info(genus_data) #
+        self.build_genus_related_site_info() #
+        self.build_genus_info_with_site_info(genus_data) #
+        self.build_site_info_with_genus_info(site_data, n_site_columns)
         self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max)
     
 
@@ -57,77 +48,19 @@ class ContentBasedFiltering:
         return df_test
 
 
-    def build_site_genus_matrix(self, df):
-        cols_redundant = ['LAT',
-        'LONG',
-        'ALTITUDE',
-        'MAX_AGE',
-        'BFA_MAX',
-        'BFA_MAX_ABS',
-        'MIN_AGE',
-        'BFA_MIN',
-        'BFA_MIN_ABS',
-        'COUNTRY',
-        'age_range',
-        'Total_Gen_Count',
-        'Large_GenCount',
-        'Small_GenCount',
-        'smallperlarge',
-        'smallprop',
-        'Herb_GenCount',
-        'Nonherb_GenCount',
-        'DietRatio',
-        'HerbProp',
-        'mid_age'
-        ]
-
-        df_site_genus = df.drop(columns=cols_redundant).set_index('SITE_NAME')
-        self.site_genus_matrix = df_site_genus
+    def build_site_genus_matrix(self, df, n_site_columns):
+        self.site_genus_matrix = df.iloc[:, :-n_site_columns].set_index('SITE_NAME')
 
 
-    def build_site_info(self, df):
-        site_info_cols = [
-        'SITE_NAME',
-        'LAT',
-        'LONG',
-        'MAX_AGE',
-        'MIN_AGE',
-        'age_range',
-        'Large_GenCount',
-        'Small_GenCount',
-        'Herb_GenCount',
-        'Nonherb_GenCount',
-        'mid_age'
-        ]
-
-        df_site_info = df[site_info_cols].set_index('SITE_NAME')
+    def build_site_info(self, df, n_site_columns):
+        df_site_info = df.set_index('SITE_NAME')
+        df_site_info = df_site_info.iloc[:, -n_site_columns:]
         self.site_info = df_site_info
 
 
     def build_genus_info(self, df):
-        genus_info_cols = [
-            "Genus",
-            "Order",
-            "Family",
-            "Massg",
-            "Diet",
-        # "DietSource"
-        ]
-        
-        df_genus_info = df[genus_info_cols]
-
-        dummy_cols = [
-            "Order",
-            "Family",
-            "Diet",
-        # "DietSource"
-        ]
-
-        df_genus_info = pd.get_dummies(df_genus_info, columns=dummy_cols)
-        df_genus_info = df_genus_info.replace({False: 0, True: 1})
-        df_genus_info = df_genus_info.rename(columns={"Genus": "genus"})
-
-        self.genus_info = df_genus_info
+        # Renaming the first column to genus so merges will work
+        self.genus_info = df.rename(columns={df.columns[0]: 'genus'})
 
 
     def build_genus_related_site_info(self):
@@ -161,22 +94,9 @@ class ContentBasedFiltering:
         self.genus_info_with_site_info = genus_info
 
 
-    def build_site_info_with_genus_info(self, df):
-        site_info_cols = [
-        'SITE_NAME',
-        'LAT',
-        'LONG',
-        'MAX_AGE',
-        'MIN_AGE',
-        'age_range',
-        'Large_GenCount',
-        'Small_GenCount',
-        'Herb_GenCount',
-        'Nonherb_GenCount',
-        'mid_age'
-        ]
-
-        df_site_info = df[site_info_cols].set_index('SITE_NAME')
+    def build_site_info_with_genus_info(self, df, n_site_columns):
+        df_site_info = df.set_index('SITE_NAME')
+        df_site_info = df_site_info.iloc[:, -n_site_columns:]
         
         df_site_info_by_genera = self.genus_related_site_info
         df_site_info = df_site_info.merge(df_site_info_by_genera, left_index=True, right_on="SITE_NAME", how="left")
@@ -253,9 +173,46 @@ if __name__ == "__main__":
     # Genera and sites
     path = "../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv"
 
+    # With genus info, give the columns you want to use and convert categorical using one-hot-encoding
+    genus_info_cols = [
+        "Genus",
+        "Order",
+        "Family",
+        "Massg",
+        "Diet",
+        ]
+        
+    df_genus_info = df_mass_diet[genus_info_cols]
+
+    dummy_cols = [
+        "Order",
+        "Family",
+        "Diet",
+        ]
+
+    #The genus column must be the first one in genus data
+    df_genus_info = pd.get_dummies(df_genus_info, columns=dummy_cols)
+    df_genus_info = df_genus_info.replace({False: 0, True: 1})
+
+    # When giving the site-genus matrix, only give dataframe with columns that are used to fit. Spedsify the number of site-info columns at the end.
     df = pd.read_csv(path)
+    cols = [
+        'ALTITUDE',
+        'BFA_MAX',
+        'BFA_MAX_ABS',
+        'BFA_MIN',
+        'BFA_MIN_ABS',
+        'COUNTRY',
+        'Total_Gen_Count',
+        'smallperlarge',
+        'smallprop',
+        'DietRatio',
+        'HerbProp',
+    ]
+
+    df = df.drop(columns=cols)
 
     cbf = ContentBasedFiltering()
-    cbf.fit(df, df_mass_diet)
+    cbf.fit(df, df_genus_info, n_site_columns=10)
 
 # %%
