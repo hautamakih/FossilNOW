@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity
 
 #%%
 
@@ -30,7 +30,7 @@ class ContentBasedFiltering:
         pass
 
 
-    def fit(self, site_data: pd.DataFrame, genus_data: pd.DataFrame, n_site_columns: int):
+    def fit(self, site_data: pd.DataFrame, genus_data: pd.DataFrame, n_site_columns: int, normalization: str="min-max"):
         """
         Fits the algorithm on given data
 
@@ -44,6 +44,9 @@ class ContentBasedFiltering:
 
         n_site_columns: int
             The number of columns in the end of the site_data DataFrame containing the information about sites.
+        
+        normalization: str
+            The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
 
         Returns
         -------
@@ -57,7 +60,7 @@ class ContentBasedFiltering:
         self.__build_genus_related_site_info()
         self.__build_genus_info_with_site_info()
         self.__build_site_info_with_genus_info(site_data, n_site_columns)
-        self.__find_recommendations_for_all_sites(site_data, normalization=self.__normalize_columns_min_max)
+        self.__find_recommendations_for_all_sites(site_data, normalization=normalization)
     
 
     def get_recommendations(self, matrix_form:bool=True):
@@ -107,7 +110,7 @@ class ContentBasedFiltering:
         return df_test
 
 
-    def __build_site_genus_matrix(self, df, n_site_columns):
+    def __build_site_genus_matrix(self, df: pd.DataFrame, n_site_columns: int):
         """
         Creates a DataFrame containing matrix of genera occuring at each site. Saved as class variable.
 
@@ -127,7 +130,7 @@ class ContentBasedFiltering:
         self.site_genus_matrix = df.iloc[:, :-n_site_columns].set_index('SITE_NAME')
 
 
-    def __build_site_info(self, df, n_site_columns):
+    def __build_site_info(self, df: pd.DataFrame, n_site_columns: int):
         """
         Creates a DataFrame containing information about sites. Saved as class variable.
 
@@ -149,7 +152,7 @@ class ContentBasedFiltering:
         self.site_info = df_site_info
 
 
-    def __build_genus_info(self, df):
+    def __build_genus_info(self, df: pd.DataFrame):
         """
         Creates a DataFrame containing genus information. Saved as class variable.
 
@@ -222,7 +225,7 @@ class ContentBasedFiltering:
         self.genus_info_with_site_info = genus_info
 
 
-    def __build_site_info_with_genus_info(self, df, n_site_columns):
+    def __build_site_info_with_genus_info(self, df: pd.DataFrame, n_site_columns: int):
         """
         Adds genus related information for sites by calculating means of the genera features from genera that are present at the site. Saved as class variable
 
@@ -248,7 +251,7 @@ class ContentBasedFiltering:
         self.site_info_with_genus_info = df_site_info
     
 
-    def __normalize_columns_min_max(self, df):
+    def __normalize_columns_min_max(self, df: pd.DataFrame):
         """
         Normalizes the DataFrame columns using min-max method
 
@@ -266,7 +269,7 @@ class ContentBasedFiltering:
         return (df - df.min()) / (df.max() - df.min())
     
 
-    def __normalize_columns_mean(self, df):
+    def __normalize_columns_mean(self, df: pd.DataFrame):
         """
         Normalizes the DataFrame columns using mean and standard deviation
 
@@ -284,7 +287,7 @@ class ContentBasedFiltering:
         return (df - df.mean()) / df.std()
 
 
-    def __get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix):
+    def __get_recommendations_for_site(self, genus_info: pd.DataFrame, site_name: str, site_indices: pd.Series, genus_site_similarity_matrix: np.array):
         """
         Calculates similarity scores to a spesified site
 
@@ -325,7 +328,7 @@ class ContentBasedFiltering:
 
         return recommended_genus
     
-    def __find_recommendations_for_all_sites(self, df, normalization=None):
+    def __find_recommendations_for_all_sites(self, df: pd.DataFrame, normalization: str):
         """
         Calculates the similarity scores for all the genus-site pairs.
 
@@ -334,8 +337,8 @@ class ContentBasedFiltering:
         df: pd.DataFrame
             A Pandas DataFrame containing the site-genus matrix
 
-        normalization: function
-            The function used for the normalization
+        normalization: str
+            The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"].
 
         Returns:
         --------
@@ -345,10 +348,18 @@ class ContentBasedFiltering:
         genus_info = self.genus_info_with_site_info
         site_info = self.site_info_with_genus_info
         
-        if normalization != None:
-            genus_info = normalization(genus_info)
-            site_info = normalization(site_info)
+        # Normalizing columns
+        if normalization == "min-max":
+            normalization = self.__normalize_columns_min_max
+        elif normalization == "mean":
+            normalization = self.__normalize_columns_mean
+        else:
+            raise ValueError("The normalization must be either 'min-max' or 'mean'.")
+
+        genus_info = normalization(genus_info)
+        site_info = normalization(site_info)
         
+        # The DataFrames must not contain Nans
         if genus_info.isnull().values.any():
             print("WARNING! Genus info data contains nans. Assigning to zeros")
             genus_info = genus_info.fillna(0)
@@ -357,10 +368,11 @@ class ContentBasedFiltering:
             print("WARNING! Site info data contains nans. Assigning to zeros")
             site_info = site_info.fillna(0)
 
-
+        # Finding the indices of the sites so the right row can be found from the numpy arrya
         site_indices = pd.Series(df.index, index=df["SITE_NAME"]).drop_duplicates()
         sim = cosine_similarity(genus_info, site_info)
 
+        # Looping through all the sites and finding the similarity scores
         recommendations = []
         for site, idx in site_indices.items():
             site_recommendations = self.__get_recommendations_for_site(
@@ -425,6 +437,6 @@ if __name__ == "__main__":
     df = df.drop(columns=cols)
 
     cbf = ContentBasedFiltering()
-    cbf.fit(df, df_genus_info, n_site_columns=10)
+    cbf.fit(df, df_genus_info, n_site_columns=10, normalization='min-max')
 
 # %%
