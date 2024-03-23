@@ -25,7 +25,7 @@ class ContentBasedFiltering:
     predict(test_set):
         Gives a DataFrame with true values of the test set and predicted values from the fit
     """
-    
+
     def __init__(self):
         pass
 
@@ -108,21 +108,78 @@ class ContentBasedFiltering:
 
 
     def __build_site_genus_matrix(self, df, n_site_columns):
+        """
+        Creates a DataFrame containing matrix of genera occuring at each site. Saved as class variable.
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame containing site-genus matrix and site information
+        
+        n_site_columns: int
+            The number of columns at the end of DataFrame containing the site information
+
+        Returns:
+        --------
+        None 
+        """
+
         self.site_genus_matrix = df.iloc[:, :-n_site_columns].set_index('SITE_NAME')
 
 
     def __build_site_info(self, df, n_site_columns):
+        """
+        Creates a DataFrame containing information about sites. Saved as class variable.
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame containing site-genus matrix and site information
+        
+        n_site_columns: int
+            The number of columns at the end of DataFrame containing the site information
+
+        Returns:
+        --------
+        None 
+        """
+
         df_site_info = df.set_index('SITE_NAME')
         df_site_info = df_site_info.iloc[:, -n_site_columns:]
         self.site_info = df_site_info
 
 
     def __build_genus_info(self, df):
+        """
+        Creates a DataFrame containing genus information. Saved as class variable.
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame containing genus information
+
+        Returns:
+        --------
+        None 
+        """
+
         # Renaming the first column to genus so merges will work
         self.genus_info = df.rename(columns={df.columns[0]: 'genus'})
 
 
     def __build_genus_related_site_info(self):
+        """
+        Calculates genus related information for sites by calculating means of the genera features from genera that are present at the site. Saved as class variable
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        None 
+        """
+
         genus_info = self.genus_info
         site_genus = self.site_genus_matrix
 
@@ -137,6 +194,18 @@ class ContentBasedFiltering:
 
 
     def __build_genus_info_with_site_info(self):
+        """
+        Adds site related information to genus information by calculating means of the site features from sites that the genus is present. Saved as class variable
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        None 
+        """
+
         site_genus = self.site_genus_matrix
         site_genus = site_genus.stack().reset_index().rename(columns={"level_1": "genus", 0: "presence"})
         site_info = self.site_info
@@ -154,6 +223,22 @@ class ContentBasedFiltering:
 
 
     def __build_site_info_with_genus_info(self, df, n_site_columns):
+        """
+        Adds genus related information for sites by calculating means of the genera features from genera that are present at the site. Saved as class variable
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame containing the site information
+        
+        n_site_columns: int
+            The number of columns at the end of DataFrame containing the site information
+
+        Returns:
+        --------
+        None 
+        """
+
         df_site_info = df.set_index('SITE_NAME')
         df_site_info = df_site_info.iloc[:, -n_site_columns:]
         
@@ -164,14 +249,65 @@ class ContentBasedFiltering:
     
 
     def __normalize_columns_min_max(self, df):
+        """
+        Normalizes the DataFrame columns using min-max method
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame to be normalized
+
+        Returns:
+        --------
+        df: pd.DataFrame
+            The normalized DataFrame
+        """
+
         return (df - df.min()) / (df.max() - df.min())
     
 
     def __normalize_columns_mean(self, df):
+        """
+        Normalizes the DataFrame columns using mean and standard deviation
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame to be normalized
+
+        Returns:
+        --------
+        df: pd.DataFrame
+            The normalized DataFrame
+        """
+
         return (df - df.mean()) / df.std()
 
 
     def __get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix):
+        """
+        Calculates similarity scores to a spesified site
+
+        Parameters:
+        -----------
+        genus_info: pd.DataFrame
+            A Pandas DataFrame containing the info about genuses with info calculated from the sites
+
+        site_name: str
+            The name of the site the recommendations are wanted to be genrated
+
+        site_indices: pd.Seris
+            A Series of indices of the genus_info DataFrame
+
+        genus_site_similarity_matrix: np.array
+            A numpy array containing the similarities of genus-site pairs
+
+        Returns:
+        --------
+        recommended_genus: pd.DataFrame
+            A DataFrame containing the recommendated genera and the similarity scores
+        """
+
         idx = site_indices[site_name]
 
         # Sorted similarity scores
@@ -190,6 +326,22 @@ class ContentBasedFiltering:
         return recommended_genus
     
     def __find_recommendations_for_all_sites(self, df, normalization=None):
+        """
+        Calculates the similarity scores for all the genus-site pairs.
+
+        Parameters:
+        -----------
+        df: pd.DataFrame
+            A Pandas DataFrame containing the site-genus matrix
+
+        normalization: function
+            The function used for the normalization
+
+        Returns:
+        --------
+        None
+        """
+
         genus_info = self.genus_info_with_site_info
         site_info = self.site_info_with_genus_info
         
