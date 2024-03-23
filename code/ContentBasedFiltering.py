@@ -8,24 +8,18 @@ from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 
 class ContentBasedFiltering:
     def __init__(self):
-        self.site_genus_matrix = None
-        self.site_info = None
-        self.genus_info = None
-        self.genus_related_site_info = None
-        self.genus_info_with_site_info = None
-        self.site_info_with_genus_info = None
-        self.recommendation_matrix = None
-        self.recommendations = None
+        pass
 
 
     def fit(self, site_data, genus_data, n_site_columns):
-        self.build_site_genus_matrix(site_data, n_site_columns) #
-        self.build_site_info(site_data, n_site_columns) #
-        self.build_genus_info(genus_data) #
-        self.build_genus_related_site_info() #
-        self.build_genus_info_with_site_info(genus_data) #
-        self.build_site_info_with_genus_info(site_data, n_site_columns)
-        self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max)
+        site_data = site_data.rename(columns={df.columns[0]: 'SITE_NAME'})
+        self.__build_site_info(site_data, n_site_columns) #
+        self.__build_site_genus_matrix(site_data, n_site_columns) #
+        self.__build_genus_info(genus_data) #
+        self.__build_genus_related_site_info() #
+        self.__build_genus_info_with_site_info() #
+        self.__build_site_info_with_genus_info(site_data, n_site_columns) #
+        self.__find_recommendations_for_all_sites(site_data, normalization=self.__normalize_columns_min_max)
     
 
     def get_recommendations(self, matrix_form=True):
@@ -48,22 +42,22 @@ class ContentBasedFiltering:
         return df_test
 
 
-    def build_site_genus_matrix(self, df, n_site_columns):
+    def __build_site_genus_matrix(self, df, n_site_columns):
         self.site_genus_matrix = df.iloc[:, :-n_site_columns].set_index('SITE_NAME')
 
 
-    def build_site_info(self, df, n_site_columns):
+    def __build_site_info(self, df, n_site_columns):
         df_site_info = df.set_index('SITE_NAME')
         df_site_info = df_site_info.iloc[:, -n_site_columns:]
         self.site_info = df_site_info
 
 
-    def build_genus_info(self, df):
+    def __build_genus_info(self, df):
         # Renaming the first column to genus so merges will work
         self.genus_info = df.rename(columns={df.columns[0]: 'genus'})
 
 
-    def build_genus_related_site_info(self):
+    def __build_genus_related_site_info(self):
         genus_info = self.genus_info
         site_genus = self.site_genus_matrix
 
@@ -77,7 +71,7 @@ class ContentBasedFiltering:
         self.genus_related_site_info = site_genus
 
 
-    def build_genus_info_with_site_info(self, df_genus_data):
+    def __build_genus_info_with_site_info(self):
         site_genus = self.site_genus_matrix
         site_genus = site_genus.stack().reset_index().rename(columns={"level_1": "genus", 0: "presence"})
         site_info = self.site_info
@@ -94,7 +88,7 @@ class ContentBasedFiltering:
         self.genus_info_with_site_info = genus_info
 
 
-    def build_site_info_with_genus_info(self, df, n_site_columns):
+    def __build_site_info_with_genus_info(self, df, n_site_columns):
         df_site_info = df.set_index('SITE_NAME')
         df_site_info = df_site_info.iloc[:, -n_site_columns:]
         
@@ -104,15 +98,15 @@ class ContentBasedFiltering:
         self.site_info_with_genus_info = df_site_info
     
 
-    def normalize_columns_min_max(self, df):
+    def __normalize_columns_min_max(self, df):
         return (df - df.min()) / (df.max() - df.min())
     
 
-    def normalize_columns_mean(self, df):
+    def __normalize_columns_mean(self, df):
         return (df - df.mean()) / df.std()
 
 
-    def get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix):
+    def __get_recommendations_for_site(self, genus_info, site_name, site_indices, genus_site_similarity_matrix):
         idx = site_indices[site_name]
 
         # Sorted similarity scores
@@ -130,7 +124,7 @@ class ContentBasedFiltering:
 
         return recommended_genus
     
-    def find_recommendations_for_all_sites(self, df, normalization=None):
+    def __find_recommendations_for_all_sites(self, df, normalization=None):
         genus_info = self.genus_info_with_site_info
         site_info = self.site_info_with_genus_info
         
@@ -152,7 +146,7 @@ class ContentBasedFiltering:
 
         recommendations = []
         for site, idx in site_indices.items():
-            site_recommendations = self.get_recommendations_for_site(
+            site_recommendations = self.__get_recommendations_for_site(
                 genus_info=genus_info,
                 site_name=site,
                 site_indices=site_indices,
@@ -195,6 +189,7 @@ if __name__ == "__main__":
     df_genus_info = df_genus_info.replace({False: 0, True: 1})
 
     # When giving the site-genus matrix, only give dataframe with columns that are used to fit. Spedsify the number of site-info columns at the end.
+    # The first column must be the site name
     df = pd.read_csv(path)
     cols = [
         'ALTITUDE',
