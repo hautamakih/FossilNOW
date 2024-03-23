@@ -37,6 +37,13 @@ class ContentBasedFiltering:
 
         # This has to be edited so that it allways finds recommendations for all
         self.find_recommendations_for_all_sites(site_data, normalization=self.normalize_columns_min_max, n_species_to_recommend=500)
+    
+
+    def get_recommendations(self, matrix_form=True):
+        if matrix_form:
+            return self.recommendation_matrix
+        else:
+            return self.recommendations
 
 
     def predict(self, test_set):
