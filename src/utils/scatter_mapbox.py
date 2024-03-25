@@ -16,16 +16,27 @@ def preprocess_data(df, genera, threshold):
     return gdff
 
 def create_map_figure(gdff, genera):
-    if len(gdff[genera].unique()) <= 8:
-        gdff[genera] = gdff[genera].astype(str)
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, zoom=0, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME")
-    else:
-        fig = px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, zoom=0, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME")
-    fig.update_layout(mapbox_style="open-street-map", coloraxis_colorbar=dict(
-        len=0.5,
-        yanchor='bottom'
-    ))
-    fig.update_traces(marker={'size': 15, 'opacity': 0.6})
+    fig = go.Figure()
+
+    try:
+        if len(gdff[genera].unique()) <= 8:
+            gdff[genera] = gdff[genera].astype(str)
+            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME").data[0])
+        else:
+            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME").data[0])
+    except IndexError:
+        fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x).data[0])
+        fig.update_traces(mode='markers', marker=dict(opacity=0))
+    fig.update_layout(
+        mapbox_style="open-street-map",
+        mapbox_center={"lat": gdff.geometry.y.mean(), "lon": gdff.geometry.x.mean()},
+        mapbox_zoom=0,
+        coloraxis_colorbar=dict(
+            len=0.5,
+            yanchor='bottom'
+        ),
+    )
+    fig.update_traces(marker={'size': 7, 'opacity': 0.6})
     return fig
 
 def add_convex_hull_to_figure(fig, gdff, age_spans):
@@ -63,6 +74,23 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
     )
 
     return errors
+
+def add_top_n(gdff, genera, n, fig):
+    n_highest_df = gdff.sort_values(by=genera, ascending=False).iloc[:n, :]
+
+    try:
+        fig.add_trace(
+            px.scatter_mapbox(
+                n_highest_df,
+                lat=n_highest_df.geometry.y,
+                lon=n_highest_df.geometry.x,
+                color=genera,
+                hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"],
+                hover_name="SITE_NAME"
+            ).update_traces(marker={"size": 25}).data[0]
+        )
+    except IndexError:
+        pass
 
 def create_histo(clickData, species_in_sites, rec_species):
     site_name = clickData['points'][0]['hovertext']
