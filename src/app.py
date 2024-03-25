@@ -1,11 +1,12 @@
 import dash_mantine_components as dmc
+import dash_daq as daq
 import dash
 from dash import Dash, html, dcc, callback, Output, Input
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
 from utils.dataframe import *
-from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo
+from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo, add_top_n
 import numpy as np
 
 
@@ -33,15 +34,22 @@ app.layout = dmc.NotificationsProvider(
             html.Div([
                 html.Label("Genus"),
                 dcc.Dropdown(id='dropdown-species', clearable=False),
-            ], className='one-third-column'),
+            ], className='one-fourth-column'),
             html.Div([
                 html.Label("Age spans"),
                 dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
-            ], className='one-third-column'),
+            ], className='one-fourth-column'),
             html.Div([
                 html.Label("Threshold"),
                 dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
-            ], className='one-third-column'),
+            ], className='one-fourth-column'),
+            html.Div([
+                html.Label("n highest recommendation scores"),
+                daq.NumericInput(
+                    id="n-highest-rec-scores",
+                    value=0
+                )
+            ], className='n-highest')
         ], className='row'),
         html.Div([
             html.Div([dcc.Graph(id='graph-content'), html.Div([], id='site-summary')], className='half-column'),
@@ -67,8 +75,9 @@ def update_options(df):
     Input('threshold', 'value'),
     Input("data", "data"),
     Input("age_span", "value"),
+    Input("n-highest-rec-scores", "value"),
 )
-def update_graph(genera, threshold, df, age_spans):
+def update_graph(genera, threshold, df, age_spans, n):
     if df is None:
         raise PreventUpdate
     
@@ -81,9 +90,14 @@ def update_graph(genera, threshold, df, age_spans):
     # Add convex hull to the map if applicable
     errors = add_convex_hull_to_figure(fig, gdff, age_spans)
     
+    # Add n highest recommendation scores
+
+    if n > 0:
+        add_top_n(gdff, genera, n, fig)
+
     if len(errors) == 0:
         return fig, dash.no_update
-    
+
     return fig, dmc.Notification(
         title='Warning!',
         action='show',
