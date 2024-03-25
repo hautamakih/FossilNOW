@@ -53,7 +53,7 @@ class ContentBasedFiltering:
         None
         """
 
-        site_data = site_data.rename(columns={df.columns[0]: 'SITE_NAME'})
+        site_data = site_data.rename(columns={site_data.columns[0]: 'SITE_NAME'})
         self.__build_site_info(site_data, n_site_columns)
         self.__build_site_genus_matrix(site_data, n_site_columns)
         self.__build_genus_info(genus_data)
@@ -191,7 +191,9 @@ class ContentBasedFiltering:
 
         site_genus = site_genus.merge(genus_info, on="genus", how="left")
         site_genus = site_genus.drop(["genus"], axis=1)
-        site_genus = site_genus.groupby('SITE_NAME').mean().reset_index().set_index("SITE_NAME")
+
+        # Calculate using mean, max, mode, median?
+        site_genus = site_genus.groupby('SITE_NAME').max().reset_index().set_index("SITE_NAME")
         
         self.genus_related_site_info = site_genus
 
@@ -393,9 +395,6 @@ if __name__ == "__main__":
     path = "../data/FossilGenera_MammalMassDiet_Jan24.csv"
     df_mass_diet = pd.read_csv(path, sep=",")
 
-    # Genera and sites
-    path = "../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv"
-
     # With genus info, give the columns you want to use and convert categorical using one-hot-encoding
     genus_info_cols = [
         "Genus",
@@ -416,6 +415,9 @@ if __name__ == "__main__":
     #The genus column must be the first one in genus data
     df_genus_info = pd.get_dummies(df_genus_info, columns=dummy_cols)
     df_genus_info = df_genus_info.replace({False: 0, True: 1})
+
+    # Genera and sites
+    path = "../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv"
 
     # When giving the site-genus matrix, only give dataframe with columns that are used to fit. Spedsify the number of site-info columns at the end.
     # The first column must be the site name
@@ -439,4 +441,5 @@ if __name__ == "__main__":
     cbf = ContentBasedFiltering()
     cbf.fit(df, df_genus_info, n_site_columns=10, normalization='min-max')
 
+    print(cbf.get_recommendations())
 # %%
