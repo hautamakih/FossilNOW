@@ -3,18 +3,18 @@ import pandas as pd
 from scipy import stats
 
 
-def f(df_species: pd.DataFrame):
-    if np.sum(df_species["occurence"]) == 0:
+def f(df_genera: pd.DataFrame):
+    if np.sum(df_genera["occurence"]) == 0:
         return 0
 
-    preferences = df_species["pred"]
+    preferences = df_genera["pred"]
     percentile_rank = 1 - stats.percentileofscore(preferences, preferences) / 100
 
-    expected_rank_species = np.sum(df_species["occurence"] * percentile_rank) / np.sum(
-        df_species["occurence"]
+    expected_rank_genera = np.sum(df_genera["occurence"] * percentile_rank) / np.sum(
+        df_genera["occurence"]
     )
 
-    return expected_rank_species
+    return expected_rank_genera
 
 
 def calc_expected_percentile_rank(df_pred: pd.DataFrame) -> float:
@@ -28,7 +28,7 @@ def calc_expected_percentile_rank(df_pred: pd.DataFrame) -> float:
     """
     expected_ranks = (
         df_pred.sort_values(by="pred")
-        .groupby(by="species")
+        .groupby(by="genus")
         .apply(f, include_groups=False)
     )
     expected_percentile_rank = expected_ranks[expected_ranks > 0].mean()

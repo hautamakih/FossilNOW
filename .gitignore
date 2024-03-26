@@ -190,3 +190,4 @@ Pipfile
 Pipfile.lock
 
 tests
+**/data_processed
