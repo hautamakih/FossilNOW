@@ -189,4 +189,5 @@ cython_debug/
 Pipfile
 Pipfile.lock
 
-*.npy
+tests
+**/data_processed
