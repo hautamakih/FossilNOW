@@ -8,7 +8,7 @@ COLORS = ["rgba(255, 0, 0, 0.3)", "rgba(0, 0, 255, 0.3)", "rgba(255, 255, 0, 0.3
 
 
 def preprocess_data(df, genera, threshold):
-    gdf = create_gdf(pd.DataFrame(df))
+    gdf = create_gdf(df)
     try:
         gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry", "COUNTRY", "NAME", "MIN_AGE", "MAX_AGE"]][gdf[genera] >= threshold]
     except KeyError:

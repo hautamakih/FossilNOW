@@ -1,7 +1,7 @@
 import dash_mantine_components as dmc
 import dash_daq as daq
 import dash
-from dash import Dash, html, dcc, callback, Output, Input
+from dash import Dash, html, dcc, callback, Output, Input, State
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
@@ -22,14 +22,26 @@ app.layout = dmc.NotificationsProvider(
     html.Div([
         html.Div(id='notifications-container'),
         html.H1(children='FossilNOW', style={'textAlign': 'center'}),
-        dcc.Upload(
-            id="upload-data",
-            children=html.Div([
-                "Drag and Drop or ",
-                html.A("Select Files")
-            ]),
-        ),
-        dcc.Store(id="data"),
+        html.Div([
+            dcc.Upload(
+                id="upload-data",
+                children=html.Div([
+                    "Drag and Drop or ",
+                    html.A("Select Files")
+                ]),
+            ),
+            dcc.Dropdown(id="df-dropdown", options=["Genera occurrences at sites", "Genera information"], value="Genera occurrences at sites", clearable=False),
+            dcc.Input(
+                id="n-metacolumns",
+                type="number",
+                placeholder="n-meta data columns",
+                value=0,
+            ),
+        ]),
+        dcc.Store(id="genera-occurrence-data"),
+        dcc.Store(id="genera-info-data"),
+        dcc.Store(id="sites-meta-data"),
+        dcc.Store(id="prediction-data"),
         html.Div([
             html.Div([
                 html.Label("Genus"),
@@ -45,9 +57,10 @@ app.layout = dmc.NotificationsProvider(
             ], className='one-fourth-column'),
             html.Div([
                 html.Label("n highest recommendation scores"),
-                daq.NumericInput(
+                dcc.Input(
                     id="n-highest-rec-scores",
-                    value=0
+                    value=0,
+                    type="number"
                 )
             ], className='n-highest')
         ], className='row'),
@@ -61,7 +74,7 @@ app.layout = dmc.NotificationsProvider(
 @callback(
     Output("dropdown-species", "options"),
     Output("dropdown-species", "value"),
-    Input("data", "data"),
+    Input("genera-occurrence-data", "data"),
     prevent_initial_call=True
 )
 def update_options(df):
@@ -73,16 +86,19 @@ def update_options(df):
     Output('notifications-container', 'children'),
     Input('dropdown-species', 'value'),
     Input('threshold', 'value'),
-    Input("data", "data"),
+    Input("genera-occurrence-data", "data"),
+    Input("sites-meta-data", "data"),
     Input("age_span", "value"),
     Input("n-highest-rec-scores", "value"),
 )
-def update_graph(genera, threshold, df, age_spans, n):
+def update_graph(genera, threshold, df, sites_df, age_spans, n):
     if df is None:
         raise PreventUpdate
     
+    dff = pd.concat([pd.DataFrame(df), pd.DataFrame(sites_df)], axis=1)
+    
     # Preprocess data
-    gdff = preprocess_data(df, genera, threshold)
+    gdff = preprocess_data(dff, genera, threshold)
 
     # Create map figure
     fig = create_map_figure(gdff, genera)
@@ -108,14 +124,28 @@ def update_graph(genera, threshold, df, age_spans, n):
     )
 
 @callback(
-    Output("data", "data"),
-    Input("upload-data", "contents")
+    Output("genera-occurrence-data", "data"),
+    Output("genera-info-data", "data"),
+    Output("sites-meta-data", "data"),
+    Input("upload-data", "contents"),
+    State("df-dropdown", "value"),
+    State("n-metacolumns", "value")
 )
-def update_df(contents_list):
+def update_df(contents_list, df_type, n_meta):
     if contents_list is None:
         raise PreventUpdate
+    
     df = parse_contents(contents_list)
-    return df.to_dict("records")
+
+    if df_type == "Genera occurrences at sites":
+        if n_meta == 0:
+            return df.to_dict("records"), dash.no_update, dash.no_update
+        occ_df = df.iloc[:, :-n_meta]
+        sites_meta_df = df.iloc[:, -n_meta:]
+        return occ_df.to_dict("records"), dash.no_update, sites_meta_df.to_dict("records")
+
+    if df_type == "Genera information":
+        return dash.no_update, df.to_dict("records"), dash.no_update
 
 @callback(
     Output("site-info", "children"),
