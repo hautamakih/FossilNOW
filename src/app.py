@@ -84,6 +84,23 @@ def render_content(tab):
                 html.Div([html.Div(id='site-info')], className='half-column'),
             ], className='row'),
         ])
+    
+    if tab == "recommender-model":
+        return html.Div([
+            html.Div([
+                html.Label("Choose algorithm"),
+                dcc.Dropdown(
+                    id="dropdown-algorithm",
+                    options=[
+                        "Matrix Factorization",
+                        "kNN",
+                        "Content-based Filtering"
+                    ],
+                    value="Matrix Factorization",
+                    clearable=False)
+            ]),
+            html.Div(id="recommender-params")
+        ])
 
 @callback(
     Output("dropdown-species", "options"),
@@ -187,6 +204,32 @@ def update_site_info(clickData):
         dcc.Graph(id='site-bar-plot', figure=mass_bar_fig),
         dcc.Graph(id='site-dent-plot', figure=dent_fig)
     ], recommendations_html
+
+@callback(
+    Output("recommender-params", "children"),
+    Input("dropdown-algorithm", "value")
+)
+def render_params(algorithm):
+    if algorithm == "Matrix Factorization":
+        return html.Div([
+            html.Div([
+                html.Label("Epochs"),
+                dcc.Input(
+                    id="input-mf-epochs",
+                    value=100,
+                    type="number",
+                ),
+            ]),
+            html.Div([
+                html.Label("Output probabilities"),
+                dcc.RadioItems([
+                    "Yes", "No"
+                ], "Yes", id="radio-mf-output-prob")
+            ]),
+            html.Div([
+                html.Button("Run", id="button-mf-run", n_clicks=0)
+            ])
+        ])
 
 if __name__ == '__main__':
     app.run(debug=True, port=8010)
