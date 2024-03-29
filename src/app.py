@@ -43,8 +43,8 @@ app.layout = dmc.NotificationsProvider(
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
         dcc.Tabs(id="tabs", value="visualization", children=[
-            dcc.Tab(label="Tab-viz", value="visualization"),
-            dcc.Tab(label="Tab-model", value="recommender-model")
+            dcc.Tab(label="Visualization", value="visualization"),
+            dcc.Tab(label="Recommender systems", value="recommender-model")
         ]),
         html.Div(id="tab-content"),
     ]), position='top-right'
