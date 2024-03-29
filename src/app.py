@@ -16,7 +16,7 @@ species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 rec_species = pd.read_parquet("../data/rec_species.parquet")
 content_base = pd.read_csv("../data/content-based-filtering.csv")
 
-app = Dash(__name__)
+app = Dash(__name__, suppress_callback_exceptions=True)
 
 app.layout = dmc.NotificationsProvider(
     html.Div([
@@ -42,42 +42,57 @@ app.layout = dmc.NotificationsProvider(
         dcc.Store(id="genera-info-data"),
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
-        html.Div([
-            html.Div([
-                html.Label("Genus"),
-                dcc.Dropdown(id='dropdown-species', clearable=False),
-            ], className='one-fourth-column'),
-            html.Div([
-                html.Label("Age spans"),
-                dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
-            ], className='one-fourth-column'),
-            html.Div([
-                html.Label("Threshold"),
-                dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
-            ], className='one-fourth-column'),
-            html.Div([
-                html.Label("n highest recommendation scores"),
-                dcc.Input(
-                    id="n-highest-rec-scores",
-                    value=0,
-                    type="number"
-                )
-            ], className='n-highest')
-        ], className='row'),
-        html.Div([
-            html.Div([dcc.Graph(id='graph-content'), html.Div([], id='site-summary')], className='half-column'),
-            html.Div([html.Div(id='site-info')], className='half-column'),
-        ], className='row'),
+        dcc.Tabs(id="tabs", value="visualization", children=[
+            dcc.Tab(label="Tab-viz", value="visualization"),
+            dcc.Tab(label="Tab-model", value="recommender-model")
+        ]),
+        html.Div(id="tab-content"),
     ]), position='top-right'
 )
+
+@callback(
+    Output("tab-content", "children"),
+    Input("tabs", "value"),
+)
+def render_content(tab):
+    if tab == "visualization":
+        return html.Div([
+            html.Div([
+                html.Div([
+                    html.Label("Genus"),
+                    dcc.Dropdown(id='dropdown-species', clearable=False),
+                ], className='one-fourth-column'),
+                html.Div([
+                    html.Label("Age spans"),
+                    dcc.Dropdown(options=AGE_SPANS, value=AGE_SPANS[0], multi=True, id="age_span"),
+                ], className='one-fourth-column'),
+                html.Div([
+                    html.Label("Threshold"),
+                    dcc.Slider(min=0, max=1, step=0.1, value=0, id='threshold'),
+                ], className='one-fourth-column'),
+                html.Div([
+                    html.Label("n highest recommendation scores"),
+                    dcc.Input(
+                        id="n-highest-rec-scores",
+                        value=0,
+                        type="number"
+                    )
+                ], className='n-highest')
+            ], className='row'),
+            html.Div([
+                html.Div([dcc.Graph(id='graph-content'), html.Div([], id='site-summary')], className='half-column'),
+                html.Div([html.Div(id='site-info')], className='half-column'),
+            ], className='row'),
+        ])
 
 @callback(
     Output("dropdown-species", "options"),
     Output("dropdown-species", "value"),
     Input("genera-occurrence-data", "data"),
-    prevent_initial_call=True
 )
 def update_options(df):
+    if df is None:
+        raise PreventUpdate
     df = pd.DataFrame(df)
     return list(df.columns), df.columns[7]
 
