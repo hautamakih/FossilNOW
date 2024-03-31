@@ -32,6 +32,7 @@ app.layout = dmc.NotificationsProvider(
                 ]),
             ),
             dcc.Dropdown(id="df-dropdown", options=["Genera occurrences at sites", "Genera information"], value="Genera occurrences at sites", clearable=False),
+            html.Label("N meta data columns from the end of the dataframe:"),
             dcc.Input(
                 id="n-metacolumns",
                 type="number",
