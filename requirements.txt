@@ -4,3 +4,6 @@ geopandas
 plotly
 dash-mantine-components
 dash-daq
+scikit-learn
+scipy
+torch
