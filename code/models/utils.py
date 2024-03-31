@@ -179,7 +179,19 @@ def split_traintest(
         "LONGSTR",
         "n_gen",
     ]
-    df = df.drop(columns=cols_redundant).set_index("NAME")
+    cols_redundant_real = []
+    for col in cols_redundant:
+        if col in df:
+            cols_redundant_real.append(col)
+    df = df.drop(columns=cols_redundant_real)
+
+    # Check if index is already set
+    if df.index.name != "SITE_NAME" or df.index.name != "NAME":
+        for idx_name in ["NAME", "SITE_NAME"]:
+            if idx_name in df:
+                df = df.set_index(idx_name)
+
+                break
 
     # Prepare site and genus encoder
     list_sites = df.index
