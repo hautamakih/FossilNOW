@@ -23,32 +23,33 @@ app.layout = dmc.NotificationsProvider(
     html.Div([
         html.Div(id='notifications-container'),
         html.H1(children='FossilNOW', style={'textAlign': 'center'}),
-        html.Div([
-            dcc.Upload(
-                id="upload-data",
-                children=html.Div([
-                    "Drag and Drop or ",
-                    html.A("Select Files")
-                ]),
-            ),
-            dcc.Dropdown(id="df-dropdown", options=["Genera occurrences at sites", "Genera information"], value="Genera occurrences at sites", clearable=False),
-            html.Label("N meta data columns from the end of the dataframe:"),
-            dcc.Input(
-                id="n-metacolumns",
-                type="number",
-                placeholder="n-meta data columns",
-                value=0,
-            ),
-        ]),
         dcc.Store(id="genera-occurrence-data"),
         dcc.Store(id="genera-info-data"),
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
         dcc.Tabs(id="tabs", value="visualization", children=[
+            dcc.Tab(label="Data", value="data"),
             dcc.Tab(label="Visualization", value="visualization"),
             dcc.Tab(label="Recommender systems", value="recommender-model")
         ]),
         html.Div([
+            html.Div([
+                dcc.Upload(
+                    id="upload-data",
+                    children=html.Div([
+                        "Drag and Drop or ",
+                        html.A("Select Files")
+                    ]),
+                ),
+                dcc.Dropdown(id="df-dropdown", options=["Genera occurrences at sites", "Genera information"], value="Genera occurrences at sites", clearable=False),
+                html.Label("N meta data columns from the end of the dataframe:"),
+                dcc.Input(
+                    id="n-metacolumns",
+                    type="number",
+                    placeholder="n-meta data columns",
+                    value=0,
+                ),
+            ], id="div-data"),
             html.Div([
                 html.Div([
                     html.Div([
@@ -136,16 +137,23 @@ app.layout = dmc.NotificationsProvider(
 )
 
 @callback(
+    Output("div-data", "style"),
     Output("div-visualization", "style"),
     Output("div-recommender", "style"),
     Input("tabs", "value"),
 )
 def render_content(tab):
+    hide = dict(display="none")
+    show = dict(display=True)
+    
+    if tab == "data":
+        return show, hide, hide
+
     if tab == "visualization":
-        return dict(display=True), dict(display="none")
+        return hide, show, hide
     
     if tab == "recommender-model":
-        return dict(display="none"), dict(display=True)
+        return hide, hide, show
 
 @callback(
     Output("dropdown-species", "options"),
