@@ -2,6 +2,7 @@ import dash
 from dash import html, dcc, callback, Output, Input, State, dash_table
 from dash.exceptions import PreventUpdate
 import pandas as pd
+import numpy as np
 import dash_mantine_components as dmc
 from utils.dataframe import *
 from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo, add_top_n
@@ -148,7 +149,7 @@ def register_callbacks():
 
         recommendations_html = [
             html.Div([
-                html.Li(str(index) + " " + str(value)) for index, value in recommendations.items()
+                html.Li(str(index) + " " + str(np.round(value,2))) for index, value in recommendations.items()
             ])
         ]
 
