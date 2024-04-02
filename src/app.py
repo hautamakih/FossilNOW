@@ -13,11 +13,6 @@ from layout import get_layout
 from callback import register_callbacks
 
 
-
-species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
-rec_species = pd.read_parquet("../data/rec_species.parquet")
-content_base = pd.read_csv("../data/content-based-filtering.csv")
-
 app = Dash(__name__, suppress_callback_exceptions=True)
 
 app.layout = get_layout()

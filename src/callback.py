@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, callback, Output, Input, State
+from dash import html, dcc, callback, Output, Input, State, dash_table
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import dash_mantine_components as dmc
@@ -7,6 +7,9 @@ from utils.dataframe import *
 from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo, add_top_n
 from models.models import get_recommend_list_mf, get_recommend_list_knn
 
+species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
+rec_species = pd.read_parquet("../data/rec_species.parquet")
+content_base = pd.read_csv("../data/content-based-filtering.csv")
 
 
 def register_callbacks():
@@ -28,6 +31,28 @@ def register_callbacks():
         
         if tab == "recommender-model":
             return hide, hide, show
+    
+    @callback(
+        Output("div-datatables", "children"),
+        Input("genera-occurrence-data", "data"),
+        Input("genera-info-data", "data"),
+        Input("sites-meta-data", "data"),
+        Input("prediction-data", "data"),
+    )
+    def render_datatables(occ_df, sites_df, meta_df, pred_df):
+        occ_df = pd.DataFrame(occ_df) if occ_df is not None else None
+        sites_df = pd.DataFrame(sites_df) if sites_df is not None else None
+        meta_df = pd.DataFrame(meta_df) if meta_df is not None else None
+        pred_df = pd.DataFrame(pred_df) if pred_df is not None else None
+
+        div_tables = html.Div([
+            dash_table.DataTable(occ_df.to_dict("records"), [{"name": i, "id": i} for i in occ_df.columns[:10]], page_size= 10,) if occ_df is not None else "",
+            dash_table.DataTable(sites_df.to_dict("records"), [{"name": i, "id": i} for i in sites_df.columns[:10]], page_size= 10,) if sites_df is not None else "",
+            dash_table.DataTable(meta_df.to_dict("records"), [{"name": i, "id": i} for i in meta_df.columns[:10]], page_size= 10,) if meta_df is not None else "",
+            dash_table.DataTable(pred_df.to_dict("records"), [{"name": i, "id": i} for i in pred_df.columns[:10]], page_size= 10,) if pred_df is not None else "",
+        ])
+
+        return div_tables
 
     @callback(
         Output("dropdown-species", "options"),
@@ -46,13 +71,13 @@ def register_callbacks():
         Input('dropdown-species', 'value'),
         Input('threshold', 'value'),
         State("prediction-data", "data"),
-        Input("sites-meta-data", "data"),
+        State("sites-meta-data", "data"),
         Input("age_span", "value"),
         Input("n-highest-rec-scores", "value"),
         Input("div-visualization", "style"),
     )
     def update_graph(genera, threshold, df, sites_df, age_spans, n, viz_style):
-        if df is None or viz_style == dict(style="none"):
+        if df is None or sites_df is None or viz_style == dict(style="none"):
             raise PreventUpdate
         
         dff = pd.concat([pd.DataFrame(df), pd.DataFrame(sites_df)], axis=1)
@@ -68,7 +93,7 @@ def register_callbacks():
         
         # Add n highest recommendation scores
 
-        if n > 0:
+        if n and n > 0:
             add_top_n(gdff, genera, n, fig)
 
         if len(errors) == 0:
