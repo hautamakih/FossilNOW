@@ -15,16 +15,19 @@ def get_layout():
         dcc.Tabs(id="tabs", value="data", children=[
             dcc.Tab(label="Data", value="data", children=[
                 html.Div([
+                    #Istructions for data tab:
                     html.H2(children="Instructions", style={'textAlign':'center','font-size': 'medium'}),
                     html.P("Select the number of metadata columns (these should be at the end of the data) and upload data"),
                 ])]),
             dcc.Tab(label="Recommender systems", value="recommender-model", children=[
                 html.Div([
+                    #Instructions for recommender tab:
                     html.H2(children="Instructions", style={'textAlign':'center','font-size': 'medium'}),
                     html.P("Select the wanted recommender system algorithm and the parameters"),
                 ])]),
             dcc.Tab(label="Visualization", value="visualization", children=[
                 html.Div([
+                    #Instructions for visulaization tab:
                 html.H2(children="1. Instructions for the map:", style={'textAlign': 'center', 'font-size': 'medium'}),
                 html.Ul(style={'text-align': 'center','list-style-position': 'inside'}, children=[
                     html.Li("Select the Genus, age spans and threshold."),
