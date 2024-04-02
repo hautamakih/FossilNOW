@@ -14,8 +14,8 @@ def get_layout():
         dcc.Store(id="prediction-data"),
         dcc.Tabs(id="tabs", value="data", children=[
             dcc.Tab(label="Data", value="data"),
+            dcc.Tab(label="Recommender systems", value="recommender-model"),
             dcc.Tab(label="Visualization", value="visualization"),
-            dcc.Tab(label="Recommender systems", value="recommender-model")
         ]),
         html.Div([
             html.Div([
@@ -34,6 +34,7 @@ def get_layout():
                     placeholder="n-meta data columns",
                     value=0,
                 ),
+                html.Div(id="div-datatables")
             ], id="div-data"),
             html.Div([
                 html.Div([
