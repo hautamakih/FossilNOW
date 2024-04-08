@@ -13,9 +13,38 @@ def get_layout():
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
         dcc.Tabs(id="tabs", value="data", children=[
+<<<<<<< HEAD
             dcc.Tab(label="Data", value="data"),
             dcc.Tab(label="Recommender systems", value="recommender-model"),
             dcc.Tab(label="Visualization", value="visualization"),
+=======
+            dcc.Tab(label="Data", value="data", children=[
+                html.Div([
+                    #Istructions for data tab:
+                    html.H2(children="Instructions", style={'textAlign':'center','font-size': 'medium'}),
+                    html.P("Select the number of metadata columns (these should be at the end of the data) and upload data"),
+                ])]),
+            dcc.Tab(label="Recommender systems", value="recommender-model", children=[
+                html.Div([
+                    #Instructions for recommender tab:
+                    html.H2(children="Instructions", style={'textAlign':'center','font-size': 'medium'}),
+                    html.P("Select the wanted recommender system algorithm and the parameters"),
+                ])]),
+            dcc.Tab(label="Visualization", value="visualization", children=[
+                html.Div([
+                    #Instructions for visulaization tab:
+                html.H2(children="1. Instructions for the map:", style={'textAlign': 'center', 'font-size': 'medium'}),
+                html.Ul(style={'text-align': 'center','list-style-position': 'inside'}, children=[
+                    html.Li("Select the Genus, age spans and threshold."),
+                    html.Li("The map will show you convex hulls for each timespan fro the selected genus."),
+                ]),
+                html.H2(children="2. Instructions for the histograms:", style={'textAlign': 'center', 'font-size': 'medium'}),
+                html.Ul(style={'text-align': 'center','list-style-position': 'inside'}, children=[
+                    html.Li("Select a site from the map."),
+                    html.Li("Get histograms about the logmass, hypsodonty, and loph of the true and recommended genera on that site."),
+                ]),
+            ])]),
+>>>>>>> 9f813045dfcce6440541d702e496fa466053d49e
         ]),
         html.Div([
             html.Div([
