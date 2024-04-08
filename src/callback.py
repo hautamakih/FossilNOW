@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, callback, Output, Input, State, dash_table
+from dash import html, dcc, callback, Output, Input, State, dash_table, callback_context
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import numpy as np
@@ -59,23 +59,37 @@ def register_callbacks():
                         html.Label("Occurrence data: "),
                         dash_table.DataTable(
                             occ_df.to_dict("records"),
-                            [{"name": i, "id": i} for i in occ_df.columns[:10]],
+                            [{"name": i, "id": i, "hideable": True} for i in occ_df.columns],
+                            hidden_columns=[i for i in occ_df.columns[10:]],
                             page_size=10,
                         )
                         if occ_df is not None
                         else "empty",
-                    ]
+                    ], style={"margin-bottom": 10}
                 ),
                 html.Div(
                     [
                         html.Label("Sites data: "),
                         dash_table.DataTable(
                             meta_df.to_dict("records"),
-                            [{"name": i, "id": i} for i in meta_df.columns[:10]],
+                            [{"name": i, "id": i, "hideable": True} for i in meta_df.columns],
+                            hidden_columns=[i for i in meta_df.columns[10:]],
                             page_size=10,
                         )
                         if meta_df is not None
                         else "empty",
+                        html.Div([
+                            "Extract N last meta data columns from the occurrence data: ",
+                            dcc.Input(
+                                id="n-metacolumns",
+                                type="number",
+                                placeholder="n-meta data columns",
+                                value=0,
+                            ),
+                            html.Button(
+                                "Extract", id="split-df-button", n_clicks=0,
+                            ), 
+                        ], style={"margin-bottom": 10})
                     ]
                 ),
                 html.Div(
@@ -83,26 +97,28 @@ def register_callbacks():
                         html.Label("Genera data: "),
                         dash_table.DataTable(
                             sites_df.to_dict("records"),
-                            [{"name": i, "id": i} for i in sites_df.columns[:10]],
+                            [{"name": i, "id": i, "hideable": True} for i in sites_df.columns],
+                            hidden_columns=[i for i in sites_df.columns[10:]],
                             page_size=10,
                         )
                         if sites_df is not None
                         else "empty",
-                    ]
+                    ], style={"margin-bottom": 10}
                 ),
                 html.Div(
                     [
                         html.Label("Prediction data: "),
                         dash_table.DataTable(
                             pred_df.to_dict("records"),
-                            [{"name": i, "id": i} for i in pred_df.columns[:10]],
+                            [{"name": i, "id": i, "hideable": True} for i in pred_df.columns],
+                            hidden_columns=[i for i in pred_df.columns[10:]],
                             page_size=10,
                         )
                         if pred_df is not None
                         else "empty",
                     ]
                 ),
-            ]
+            ], id="data_tables"
         )
 
         return div_tables
@@ -166,28 +182,42 @@ def register_callbacks():
         Output("genera-info-data", "data"),
         Output("sites-meta-data", "data"),
         Input("upload-data", "contents"),
-        State("df-dropdown", "value"),
+        Input("split-df-button", "n_clicks"),
         State("n-metacolumns", "value"),
+        State("df-dropdown", "value"),
+        State("genera-occurrence-data", "data"),
     )
-    def update_df(contents_list, df_type, n_meta):
-        if contents_list is None:
+    def update_df(contents_list, n_clicks, n, df_type, occ_df):
+        ctx = callback_context
+        if not ctx.triggered:
             raise PreventUpdate
+        
+        triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        df = parse_contents(contents_list)
+        if triggered_id == "upload-data":
+            if contents_list is None:
+                raise PreventUpdate
 
-        if df_type == "Genera occurrences at sites":
-            if n_meta == 0:
+            df = parse_contents(contents_list)
+
+            if df_type == "Genera occurrences at sites":
                 return df.to_dict("records"), dash.no_update, dash.no_update
-            occ_df = df.iloc[:, :-n_meta]
-            sites_meta_df = df.iloc[:, -n_meta:]
+
+            if df_type == "Genera information":
+                return dash.no_update, df.to_dict("records"), dash.no_update
+
+        elif triggered_id == "split-df-button":
+            if n is None or n == 0 or occ_df is None:
+                raise PreventUpdate
+
+            occ_df = pd.DataFrame(occ_df)
+
             return (
-                occ_df.to_dict("records"),
+                occ_df.iloc[:, :-n].to_dict("records"),
                 dash.no_update,
-                sites_meta_df.to_dict("records"),
+                occ_df.iloc[:, -n:].to_dict("records"),
             )
 
-        if df_type == "Genera information":
-            return dash.no_update, df.to_dict("records"), dash.no_update
 
     @callback(
         Output("site-info", "children"),
