@@ -74,9 +74,15 @@ def get_metrics_knn(
 
 cbf = ContentBasedFiltering()
 def get_recommend_list_content_base(
-    df: pd.DataFrame, genera_df: pd.DataFrame, n_site_info_cols: int
+    df: pd.DataFrame, site_df: pd.DataFrame, genera_df: pd.DataFrame
 ) -> pd.DataFrame:
-    ## Divide data into training and testing
+    n_site_info_cols = site_df.shape[1] - 1
+    df_cols = df.columns.to_list()
+    site_cols = df.columns.to_list()
+
+    df = df.merge(site_df, left_on=df_cols[0], right_on=site_cols[0], how="left")
+
+    # Divide data into training and testing
     df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False)
 
     # Converting the training data into matrix form
