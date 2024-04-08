@@ -29,22 +29,22 @@ class ContentBasedFiltering:
     def __init__(self):
         pass
 
-
-    def fit(self, site_data: pd.DataFrame, genus_data: pd.DataFrame, n_site_columns: int, normalization: str="min-max"):
+    
+    def fit(self, occurences: pd.DataFrame, site_data: pd.DataFrame, genus_data: pd.DataFrame, normalization: str="min-max"):
         """
         Fits the algorithm on given data
 
         Parameters:
         -----------
+        occurences: pd.DataFrame
+            a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+
         site_data: pd.DataFrame
-            a Pandas DataFrame containing occurences of genera at each site in a matrix form. The site information must be included in the same DataFrame as last columns
-
+            a Pandas DataFrame containing the site metadata. The first column must be the site name.
+                
         genus_data: pd.DataFrame
-            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand.
-
-        n_site_columns: int
-            The number of columns in the end of the site_data DataFrame containing the information about sites.
-        
+            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. The first column must be the genus name.
+            
         normalization: str
             The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
 
@@ -53,15 +53,22 @@ class ContentBasedFiltering:
         None
         """
 
-        site_data = site_data.rename(columns={site_data.columns[0]: 'SITE_NAME'})
-        self.__build_site_info(site_data, n_site_columns)
-        self.__build_site_genus_matrix(site_data, n_site_columns)
+        # This is temporary. Originally the implemenation was that the site metadata was included in occurence dataframe. Later this was changed.
+        n_site_columns = site_data.shape[1] - 1
+        occurence_cols = occurences.columns.to_list()
+        site_cols = site_data.columns.to_list()
+
+        occurences = occurences.merge(site_data, left_on=occurence_cols[0], right_on=site_cols[0], how="left")
+        occurences = occurences.rename(columns={occurences.columns[0]: 'SITE_NAME'})
+
+        self.__build_site_info(occurences, n_site_columns)
+        self.__build_site_genus_matrix(occurences, n_site_columns)
         self.__build_genus_info(genus_data)
         self.__build_genus_related_site_info()
         self.__build_genus_info_with_site_info()
-        self.__build_site_info_with_genus_info(site_data, n_site_columns)
-        self.__find_recommendations_for_all_sites(site_data, normalization=normalization)
-    
+        self.__build_site_info_with_genus_info(occurences, n_site_columns)
+        self.__find_recommendations_for_all_sites(occurences, normalization=normalization)
+
 
     def get_recommendations(self, matrix_form:bool=True):
         """
@@ -248,45 +255,55 @@ class ContentBasedFiltering:
         df_site_info = df_site_info.iloc[:, -n_site_columns:]
         
         df_site_info_by_genera = self.genus_related_site_info
-        df_site_info = df_site_info.merge(df_site_info_by_genera, left_index=True, right_on="SITE_NAME", how="left")
-        
+        df_site_info = df_site_info.merge(df_site_info_by_genera, left_index=True, right_index=True, how="left")
+
         self.site_info_with_genus_info = df_site_info
     
 
-    def __normalize_columns_min_max(self, df: pd.DataFrame):
+    @staticmethod
+    def __normalize_columns_min_max(column: pd.Series):
         """
         Normalizes the DataFrame columns using min-max method
 
         Parameters:
         -----------
-        df: pd.DataFrame
-            A Pandas DataFrame to be normalized
+        df: pd.Series
+            A Pandas DataFrame column to be normalized
 
         Returns:
         --------
-        df: pd.DataFrame
-            The normalized DataFrame
+        df: pd.Series
+            The normalized DataFrame column
         """
-
-        return (df - df.min()) / (df.max() - df.min())
+        min_val = column.min()
+        max_val = column.max()
+        if min_val == max_val:
+            return column
+        else:
+            return (column - min_val) / (max_val - min_val)
     
 
-    def __normalize_columns_mean(self, df: pd.DataFrame):
+    @staticmethod
+    def __normalize_columns_mean(column: pd.Series):
         """
         Normalizes the DataFrame columns using mean and standard deviation
 
         Parameters:
         -----------
         df: pd.DataFrame
-            A Pandas DataFrame to be normalized
+            A Pandas DataFrame column to be normalized
 
         Returns:
         --------
         df: pd.DataFrame
-            The normalized DataFrame
+            The normalized DataFrame column
         """
-
-        return (df - df.mean()) / df.std()
+        std = column.std()
+        mean = column.mean()
+        if std == 0:
+            return column
+        else:
+            return (column - mean) / std
 
 
     def __get_recommendations_for_site(self, genus_info: pd.DataFrame, site_name: str, site_indices: pd.Series, genus_site_similarity_matrix: np.array):
@@ -358,8 +375,8 @@ class ContentBasedFiltering:
         else:
             raise ValueError("The normalization must be either 'min-max' or 'mean'.")
 
-        genus_info = normalization(genus_info)
-        site_info = normalization(site_info)
+        genus_info = genus_info.apply(normalization)
+        site_info = site_info.apply(normalization)
         
         # The DataFrames must not contain Nans
         if genus_info.isnull().values.any():
@@ -392,7 +409,7 @@ class ContentBasedFiltering:
 
 #%%
 if __name__ == "__main__":
-    path = "../data/FossilGenera_MammalMassDiet_Jan24.csv"
+    path = "../../../data/FossilGenera_MammalMassDiet_Jan24.csv"
     df_mass_diet = pd.read_csv(path, sep=",")
 
     # With genus info, give the columns you want to use and convert categorical using one-hot-encoding
@@ -417,7 +434,7 @@ if __name__ == "__main__":
     df_genus_info = df_genus_info.replace({False: 0, True: 1})
 
     # Genera and sites
-    path = "../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv"
+    path = "../../../data/AllSites_SiteOccurrences_AllGenera_26.1.24.csv"
 
     # When giving the site-genus matrix, only give dataframe with columns that are used to fit. Spedsify the number of site-info columns at the end.
     # The first column must be the site name
@@ -440,6 +457,9 @@ if __name__ == "__main__":
 
     cbf = ContentBasedFiltering()
     cbf.fit(df, df_genus_info, n_site_columns=10, normalization='min-max')
+
+    print(df)
+    print(df_genus_info)
 
     print(cbf.get_recommendations())
 # %%
