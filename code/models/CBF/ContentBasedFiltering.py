@@ -29,22 +29,22 @@ class ContentBasedFiltering:
     def __init__(self):
         pass
 
-
-    def fit(self, site_data: pd.DataFrame, genus_data: pd.DataFrame, n_site_columns: int, normalization: str="min-max"):
+    
+    def fit(self, occurences: pd.DataFrame, site_data: pd.DataFrame, genus_data: pd.DataFrame, normalization: str="min-max"):
         """
         Fits the algorithm on given data
 
         Parameters:
         -----------
+        occurences: pd.DataFrame
+            a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+
         site_data: pd.DataFrame
-            a Pandas DataFrame containing occurences of genera at each site in a matrix form. The site information must be included in the same DataFrame as last columns
-
+            a Pandas DataFrame containing the site metadata. The first column must be the site name.
+                
         genus_data: pd.DataFrame
-            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand.
-
-        n_site_columns: int
-            The number of columns in the end of the site_data DataFrame containing the information about sites.
-        
+            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. The first column must be the genus name.
+            
         normalization: str
             The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
 
@@ -53,15 +53,22 @@ class ContentBasedFiltering:
         None
         """
 
-        site_data = site_data.rename(columns={site_data.columns[0]: 'SITE_NAME'})
-        self.__build_site_info(site_data, n_site_columns)
-        self.__build_site_genus_matrix(site_data, n_site_columns)
+        # This is temporary. Originally the implemenation was that the site metadata was included in occurence dataframe. Later this was changed.
+        n_site_columns = site_data.shape[1] - 1
+        occurence_cols = occurences.columns.to_list()
+        site_cols = site_data.columns.to_list()
+
+        occurences = occurences.merge(site_data, left_on=occurence_cols[0], right_on=site_cols[0], how="left")
+        occurences = occurences.rename(columns={occurences.columns[0]: 'SITE_NAME'})
+
+        self.__build_site_info(occurences, n_site_columns)
+        self.__build_site_genus_matrix(occurences, n_site_columns)
         self.__build_genus_info(genus_data)
         self.__build_genus_related_site_info()
         self.__build_genus_info_with_site_info()
-        self.__build_site_info_with_genus_info(site_data, n_site_columns)
-        self.__find_recommendations_for_all_sites(site_data, normalization=normalization)
-    
+        self.__build_site_info_with_genus_info(occurences, n_site_columns)
+        self.__find_recommendations_for_all_sites(occurences, normalization=normalization)
+
 
     def get_recommendations(self, matrix_form:bool=True):
         """
