@@ -141,6 +141,7 @@ def split_traintest(
     ratio_traintest: float = 0.8,
     num_sites_per_pack: int = 2,
     num_genera_per_pack: int = 4,
+    remove_n_last: int | None = None,
 ) -> tuple[DataFrame, DataFrame]:
     """Process and split 'df' into 2 train and test dataframes. Data is separated into packs.
     Each pack contains the occurence of 'num_genera_per_pack' genera in 'num_sites_per_pack' sites.\\
@@ -158,6 +159,7 @@ def split_traintest(
         ratio_traintest (float, optional): Train/test data ratio. Defaults to 0.8.
         num_sites_per_pack (int, optional): number of sites in each pack. Defaults to 2.
         num_genera_per_pack (int, optional): number of genera in each pack. Defaults to 4.
+        remove_n_last (int | None, optional): Remove n last redundant columns. Defaults to None.
 
     Returns:
         tuple[DataFrame, DataFrame]: train and test dataframe
@@ -167,6 +169,7 @@ def split_traintest(
         random.seed(1)
         np.random.seed(1)
 
+    # Remove redundant columns
     cols_redundant = [
         "LOC",
         "LIDNUM",
@@ -179,7 +182,30 @@ def split_traintest(
         "LONGSTR",
         "n_gen",
     ]
-    df = df.drop(columns=cols_redundant).set_index("NAME")
+    cols_redundant_real = []
+    for col in cols_redundant:
+        if col in df:
+            cols_redundant_real.append(col)
+
+    if isinstance(remove_n_last, int):
+        cols_redundant = df.columns[-remove_n_last:]
+        cols_redundant_real.extend(cols_redundant)
+    df = df.drop(columns=cols_redundant_real)
+
+    # (Re-)Set index column
+    if df.index.name != "SITE_NAME" or df.index.name != "NAME":
+        found_valid_col_name = False
+        for idx_name in ["NAME", "SITE_NAME"]:
+            if idx_name in df:
+                df = df.set_index(idx_name)
+                found_valid_col_name = True
+
+                break
+
+        if found_valid_col_name is False:
+            # If no valid column name found, use first column as index
+            first_col_name = df.columns[0]
+            df = df.set_index(first_col_name)
 
     # Prepare site and genus encoder
     list_sites = df.index
