@@ -7,3 +7,5 @@ dash-daq
 scikit-learn
 scipy
 torch
+numpy
+scikit-surprise
