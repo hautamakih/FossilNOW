@@ -98,7 +98,6 @@ class ContentBasedFiltering:
             A Pandas DataFrame containing columns SITE_NAME, genus, occurence and (predicted) similarity. 
         """
 
-        print(self.recommendations)
         df_test = test_set.merge(
             self.recommendations, 
             on=["SITE_NAME", "genus"],
