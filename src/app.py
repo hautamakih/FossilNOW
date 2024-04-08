@@ -6,7 +6,13 @@ from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
 from utils.dataframe import *
-from utils.scatter_mapbox import preprocess_data, create_map_figure, add_convex_hull_to_figure, create_histo, add_top_n
+from utils.scatter_mapbox import (
+    preprocess_data,
+    create_map_figure,
+    add_convex_hull_to_figure,
+    create_histo,
+    add_top_n,
+)
 import numpy as np
 from models.models import get_recommend_list_mf, get_recommend_list_knn
 from layout import get_layout
@@ -19,5 +25,5 @@ app.layout = get_layout()
 
 register_callbacks()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True, port=8010)
