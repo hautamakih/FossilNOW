@@ -6,6 +6,16 @@ h1 {
     text-align: center;
 }
 
+h2 {
+    text-align: center;
+    font-size: medium;
+}
+
+p {
+    text-align: center;
+}
+
+
 #upload-data {
     width: 100%;
     height: 60px;
