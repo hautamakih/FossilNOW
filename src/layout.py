@@ -13,11 +13,6 @@ def get_layout():
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
         dcc.Tabs(id="tabs", value="data", children=[
-<<<<<<< HEAD
-            dcc.Tab(label="Data", value="data"),
-            dcc.Tab(label="Recommender systems", value="recommender-model"),
-            dcc.Tab(label="Visualization", value="visualization"),
-=======
             dcc.Tab(label="Data", value="data", children=[
                 html.Div([
                     #Istructions for data tab:
@@ -44,7 +39,6 @@ def get_layout():
                     html.Li("Get histograms about the logmass, hypsodonty, and loph of the true and recommended genera on that site."),
                 ]),
             ])]),
->>>>>>> 9f813045dfcce6440541d702e496fa466053d49e
         ]),
         html.Div([
             html.Div([
