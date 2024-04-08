@@ -4,7 +4,8 @@ geopandas
 plotly
 dash-mantine-components
 dash-daq
-numpy
 scikit-learn
+scipy
+torch
+numpy
 scikit-surprise
-pytorch
