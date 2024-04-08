@@ -9,6 +9,8 @@ COLORS = ["rgba(255, 0, 0, 0.3)", "rgba(0, 0, 255, 0.3)", "rgba(255, 255, 0, 0.3
 
 def preprocess_data(df, genera, threshold):
     gdf = create_gdf(df)
+    lat = "LAT" if "LAT" in gdf.columns else "LATSTR"
+    long = "LONG" if "LONG" in gdf.columns else "LONGSTR"
     try:
         gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry", "COUNTRY", "NAME", "MIN_AGE", "MAX_AGE"]][gdf[genera] >= threshold]
     except KeyError:
@@ -18,12 +20,14 @@ def preprocess_data(df, genera, threshold):
 def create_map_figure(gdff, genera):
     fig = go.Figure()
 
+    site_name = "SITE_NAME" if "SITE_NAME" in gdff.columns else "NAME"
+
     try:
         if len(gdff[genera].unique()) <= 8:
             gdff[genera] = gdff[genera].astype(str)
-            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME").data[0])
+            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name=site_name).data[0])
         else:
-            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name="SITE_NAME").data[0])
+            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name=site_name).data[0])
     except IndexError:
         fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x).data[0])
         fig.update_traces(mode='markers', marker=dict(opacity=0))
