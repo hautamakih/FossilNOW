@@ -28,7 +28,7 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 
 3. Upload the files:
 - a csv file containing the genera occurences at sites in a matrix form (containing 0s and 1s). This file should include also information about the site (longitude, latitude etc) as last columns. The number of site information columns should be spesified in the app. The name of the site should be the first column
-- a csv file containing information about the genera
+- a csv file containing information about the genera. This should contain columns: 'LogMass', 'HYP_Mean' and 'LOP_Mean'
 - For the Content-Based Filtering and the hybrid algorithm the site and genera metadata should be preprocessed so that the categorical columns are one-hot-encoded.
 
 4. Select the recommender algorithm

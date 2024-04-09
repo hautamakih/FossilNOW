@@ -14,6 +14,8 @@ def get_layout():
                 dcc.Store(id="genera-info-data"),
                 dcc.Store(id="sites-meta-data"),
                 dcc.Store(id="prediction-data"),
+                dcc.Store(id="visualize-recommendations-data"),
+                dcc.Store(id="visualize-true-data"),
                 dcc.Tabs(
                     id="tabs",
                     value="data",

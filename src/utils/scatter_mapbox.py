@@ -92,11 +92,62 @@ def add_top_n(gdff, genera, n, fig):
     except IndexError:
         pass
 
+def add_column_and_average(df_to_add, column_name, df):
+    '''
+    input:
+    df_to_add: the dataframe where we will add the column. Should have a list of genera
+    column name: the name of the column that will be added to species_in_sites dataframe
+    df: dataframe where the information to the species_in_sites dataframe will be taken. Should have column: 'Genus'
+    '''
+    list_of_genera = list(df['Genus'])
+    list_to_add = []
+    for ind in df_to_add.index:
+        l = []
+        for genus in df_to_add['genus_list'].iloc[ind]:
+            if genus in list_of_genera:
+                l.append(df[column_name].loc[df['Genus'] == genus].iloc[0])
+            else:
+                l.append(-1)
+        list_to_add.append(l)
+    df_to_add[column_name] = list_to_add
+    #get the average:
+    average = []
+    for ind in df_to_add.index:
+        total = sum(df_to_add[column_name].iloc[ind])
+        num_genera = len(df_to_add['genus_list'].iloc[ind])
+        avg = total / num_genera if num_genera != 0 else 0
+        average.append(avg)
+
+    df_to_add['average_{}'.format(column_name)] = average
+    return df_to_add
+
 def create_histo(clickData, species_in_sites, rec_species):
+    #site data:
     site_name = clickData['points'][0]['hovertext']
-    site_data = species_in_sites[species_in_sites['SITE_NAME'] == site_name].iloc[0]
-    rec_data = rec_species[rec_species['SITE_NAME'] == site_name].iloc[0]
-    
+
+    if 'SITE_NAME' in species_in_sites:
+        site = 'SITE_NAME'
+    elif 'NAME' in species_in_sites:
+        site = 'NAME'
+    #check if empty
+    if len(species_in_sites[species_in_sites[site] == site_name].index) == 0:
+        site_data = species_in_sites[species_in_sites[site] == site_name]
+    else:   
+        site_data = species_in_sites[species_in_sites[site] == site_name].iloc[0]
+
+    # #recommendations:
+    if 'SITE_NAME' in rec_species:
+        site = 'SITE_NAME'
+    elif 'NAME' in rec_species:
+        site = 'NAME'
+    #check if empty:
+    if len(rec_species[rec_species[site] == site_name].index) == 0:
+        rec_data = rec_species[rec_species[site] == site_name]
+    else:
+        rec_data = rec_species[rec_species[site] == site_name].iloc[0]
+
+    # print('site: ', site_data)
+    # print('rec: ', rec_data)
     #LOG MASS:
     mass_bar_fig = go.Figure()
     mass_bar_fig.add_trace(go.Histogram(x=site_data["LogMass"],

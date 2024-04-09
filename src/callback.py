@@ -11,11 +11,12 @@ from utils.scatter_mapbox import (
     add_convex_hull_to_figure,
     create_histo,
     add_top_n,
+    add_column_and_average
 )
 from models.models import get_recommend_list_mf, get_recommend_list_knn
 
-species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
-rec_species = pd.read_parquet("../data/rec_species.parquet")
+#species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
+#rec_species = pd.read_parquet("../data/rec_species.parquet")
 content_base = pd.read_csv("../data/content-based-filtering.csv")
 
 
@@ -190,14 +191,68 @@ def register_callbacks():
             return dash.no_update, df.to_dict("records"), dash.no_update
 
     @callback(
+        Output("visualize-true-data", "data"),
+        Output("visualize-recommendations-data", "data"),
+        Input("genera-occurrence-data", "data"),
+        Input("sites-meta-data","data"),
+        Input("prediction-data", "data"),
+        Input("genera-info-data", "data")
+    )
+
+    def visualization_data(occurences, site_data, recommendations, meta_data):  
+        if occurences is None or site_data is None or recommendations is None or meta_data is None:
+            raise PreventUpdate   
+        #use genera_occurence_data, genera_inof_data and recommendation_data
+        occurences = pd.DataFrame(occurences)
+        site_data = pd.DataFrame(site_data)
+        sites = site_data.iloc[:,-1:]
+        recommendations = pd.DataFrame(recommendations)
+        recommendations.insert(loc=0, column='SITE_NAME', value=sites)
+        meta_data = pd.DataFrame(meta_data)
+        if 'SITE_NAME' in occurences:
+            site = 'SITE_NAME'
+        elif 'NAME' in occurences:
+            site = 'NAME'
+        else:
+            print('no site column')
+        species_in_sites = occurences[[site]].copy()
+        species_in_sites['genus_list'] = occurences.iloc[:, :100].apply(lambda row: list(row.index[row > 0]), axis=1)
+        #meta_data
+        meta_data = meta_data[['Genus', 'LogMass', 'HYP_Mean', 'LOP_Mean']]
+        #mass:
+        species_in_sites = add_column_and_average(species_in_sites,'LogMass', meta_data)
+        #dental info
+        meta_data['HYP_Mean'] = meta_data['HYP_Mean'].fillna(-1)
+        meta_data['LOP_Mean'] = meta_data['LOP_Mean'].fillna(-1)
+        species_in_sites = add_column_and_average(species_in_sites,'HYP_Mean',meta_data)
+        species_in_sites = add_column_and_average(species_in_sites,'LOP_Mean',meta_data)
+        #recommendations:
+        if 'SITE_NAME' in recommendations:
+            site = 'SITE_NAME'
+        elif 'NAME' in recommendations:
+            site = 'NAME'
+        rec_species = recommendations[[site]].copy()
+        rec_species['genus_list'] = recommendations.iloc[:, 1::].apply(lambda row: list(row.index[row > 0.5]), axis=1)
+        rec_species = add_column_and_average(rec_species, 'LogMass', meta_data)
+        rec_species = add_column_and_average(rec_species, 'HYP_Mean', meta_data)
+        rec_species = add_column_and_average(rec_species, 'LOP_Mean', meta_data)
+        rec_species = rec_species[[site, 'genus_list','LogMass','HYP_Mean','LOP_Mean']]
+        return species_in_sites.to_dict("records"), rec_species.to_dict("records")
+
+
+    @callback(
         Output("site-info", "children"),
         Output("site-summary", "children"),
         Input("graph-content", "clickData"),
+        State("visualize-true-data", "data"),
+        State("visualize-recommendations-data", "data")
     )
-    def update_site_info(clickData):
+    def update_site_info(clickData, species_in_sites, rec_species):
         if clickData is None:
             return html.P("Click on a site to view more information."), dash.no_update
 
+        species_in_sites = pd.DataFrame(species_in_sites)
+        rec_species = pd.DataFrame(rec_species)
         site_name, mass_bar_fig, dent_fig = create_histo(
             clickData, species_in_sites, rec_species
         )
