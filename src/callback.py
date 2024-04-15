@@ -194,11 +194,19 @@ def register_callbacks():
             raise PreventUpdate
         
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+<<<<<<< HEAD
 
         if triggered_id == "upload-data":
             if contents_list is None:
                 raise PreventUpdate
 
+=======
+
+        if triggered_id == "upload-data":
+            if contents_list is None:
+                raise PreventUpdate
+
+>>>>>>> 32cf3b59abd7ec0cd30c5e1b628363c27c370203
             df = parse_contents(contents_list)
 
             if df_type == "Genera occurrences at sites":
@@ -219,6 +227,7 @@ def register_callbacks():
                 occ_df.iloc[:, -n:].to_dict("records"),
             )
 
+<<<<<<< HEAD
 
     @callback(
         Output("visualize-true-data", "data"),
@@ -269,6 +278,8 @@ def register_callbacks():
         rec_species = rec_species[[site, 'genus_list','LogMass','HYP_Mean','LOP_Mean']]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
+=======
+>>>>>>> 32cf3b59abd7ec0cd30c5e1b628363c27c370203
 
     @callback(
         Output("site-info", "children"),
