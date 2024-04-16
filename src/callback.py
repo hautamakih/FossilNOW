@@ -380,6 +380,7 @@ def register_callbacks():
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
         State("input-mf-epochs", "value"),
+        State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
         State("radio-knn-output-prob", "value"),
         State("input-knn-k", "value"),
@@ -387,7 +388,7 @@ def register_callbacks():
         State("genera-occurrence-data", "data"),
     )
     def run_recommender(
-        n_clicks_mf, n_clicks_knn, epochs, output_prob_mf, output_prob_knn, k, model, df
+        n_clicks_mf, n_clicks_knn, epochs, dim_hid, output_prob_mf, output_prob_knn, k, model, df
     ):
         if df is None:
             raise PreventUpdate
@@ -396,7 +397,7 @@ def register_callbacks():
         if model == "Matrix Factorization":
             if n_clicks_mf == 0:
                 raise PreventUpdate
-            df_output = get_recommend_list_mf(dff, output_prob_mf, epochs)
+            df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
 
         elif model == "kNN":
             if n_clicks_knn == 0:
