@@ -11,10 +11,9 @@ def preprocess_data(df, genera, threshold):
     gdf = create_gdf(df)
     lat = "LAT" if "LAT" in gdf.columns else "LATSTR"
     long = "LONG" if "LONG" in gdf.columns else "LONGSTR"
-    try:
-        gdff = gdf[[genera, "LATSTR", "LONGSTR", "geometry", "COUNTRY", "NAME", "MIN_AGE", "MAX_AGE"]][gdf[genera] >= threshold]
-    except KeyError:
-        gdff = gdf[[genera, "LAT", "LONG", "geometry", "COUNTRY", "SITE_NAME", "MIN_AGE", "MAX_AGE"]][gdf[genera] >= threshold]
+    site_name = "SITE_NAME" if "SITE_NAME" in gdf.columns else "NAME"
+    gdff = gdf[[site_name, genera, lat, long, "geometry", "COUNTRY", "MIN_AGE", "MAX_AGE"]][gdf[genera] >= threshold]
+
     return gdff
 
 def create_map_figure(gdff, genera):
@@ -23,11 +22,7 @@ def create_map_figure(gdff, genera):
     site_name = "SITE_NAME" if "SITE_NAME" in gdff.columns else "NAME"
 
     try:
-        if len(gdff[genera].unique()) <= 8:
-            gdff[genera] = gdff[genera].astype(str)
-            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name=site_name).data[0])
-        else:
-            fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name=site_name).data[0])
+        fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x, color=genera, hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"], hover_name=site_name).data[0])
     except IndexError:
         fig.add_trace(px.scatter_mapbox(gdff, lat=gdff.geometry.y, lon=gdff.geometry.x).data[0])
         fig.update_traces(mode='markers', marker=dict(opacity=0))
@@ -81,6 +76,7 @@ def add_convex_hull_to_figure(fig, gdff, age_spans):
 
 def add_top_n(gdff, genera, n, fig):
     n_highest_df = gdff.sort_values(by=genera, ascending=False).iloc[:n, :]
+    site_name = "SITE_NAME" if "SITE_NAME" in gdff.columns else "NAME"
 
     try:
         fig.add_trace(
@@ -90,7 +86,7 @@ def add_top_n(gdff, genera, n, fig):
                 lon=n_highest_df.geometry.x,
                 color=genera,
                 hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE"],
-                hover_name="SITE_NAME"
+                hover_name=site_name
             ).update_traces(marker={"size": 25}).data[0]
         )
     except IndexError:

@@ -4,6 +4,7 @@ from dash.exceptions import PreventUpdate
 import pandas as pd
 import numpy as np
 import dash_mantine_components as dmc
+import plotly.express as px
 from utils.dataframe import *
 from utils.scatter_mapbox import (
     preprocess_data,
@@ -142,20 +143,22 @@ def register_callbacks():
         Input("threshold", "value"),
         State("prediction-data", "data"),
         State("sites-meta-data", "data"),
+        State("genera-occurrence-data", "data"),
         Input("age_span", "value"),
         Input("n-highest-rec-scores", "value"),
         Input("div-visualization", "style"),
     )
-    def update_graph(genera, threshold, df, sites_df, age_spans, n, viz_style):
-        if df is None or sites_df is None or viz_style == dict(style="none"):
+    def update_graph(genera, threshold, pred_df, sites_df, occ_df, age_spans, n, viz_style):
+        if pred_df is None or sites_df is None or viz_style == dict(style="none"):
             raise PreventUpdate
 
-        dff = pd.concat([pd.DataFrame(df), pd.DataFrame(sites_df)], axis=1)
+        dff = pd.concat([pd.DataFrame(pred_df), pd.DataFrame(sites_df)], axis=1)
 
         # Preprocess data
         gdff = preprocess_data(dff, genera, threshold)
 
         # Create map figure
+
         fig = create_map_figure(gdff, genera)
 
         # Add convex hull to the map if applicable
@@ -168,6 +171,22 @@ def register_callbacks():
 
         if len(errors) == 0:
             return fig, dash.no_update
+        
+        occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
+
+        occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
+
+        site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
+        
+        fig.add_trace(
+            px.scatter_mapbox(
+                occ_gdff,
+                occ_gdff.geometry.y,
+                occ_gdff.geometry.x,
+                hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE", genera],
+                hover_name=site_name,
+            ).update_traces(marker={"size": 15, "color": "black", "opacity": 0.8}).data[0]
+        )
 
         return fig, dmc.Notification(
             title="Warning!",
@@ -194,19 +213,11 @@ def register_callbacks():
             raise PreventUpdate
         
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
-<<<<<<< HEAD
 
         if triggered_id == "upload-data":
             if contents_list is None:
                 raise PreventUpdate
 
-=======
-
-        if triggered_id == "upload-data":
-            if contents_list is None:
-                raise PreventUpdate
-
->>>>>>> 32cf3b59abd7ec0cd30c5e1b628363c27c370203
             df = parse_contents(contents_list)
 
             if df_type == "Genera occurrences at sites":
@@ -227,7 +238,6 @@ def register_callbacks():
                 occ_df.iloc[:, -n:].to_dict("records"),
             )
 
-<<<<<<< HEAD
 
     @callback(
         Output("visualize-true-data", "data"),
@@ -248,12 +258,13 @@ def register_callbacks():
         recommendations = pd.DataFrame(recommendations)
         recommendations.insert(loc=0, column='SITE_NAME', value=sites)
         meta_data = pd.DataFrame(meta_data)
-        if 'SITE_NAME' in occurences:
+        if 'SITE_NAME' in occurences.columns:
             site = 'SITE_NAME'
-        elif 'NAME' in occurences:
+        elif 'NAME' in occurences.columns:
             site = 'NAME'
         else:
             print('no site column')
+            print(occurences.columns)
         species_in_sites = occurences[[site]].copy()
         species_in_sites['genus_list'] = occurences.iloc[:, :100].apply(lambda row: list(row.index[row > 0]), axis=1)
         #meta_data
@@ -278,8 +289,6 @@ def register_callbacks():
         rec_species = rec_species[[site, 'genus_list','LogMass','HYP_Mean','LOP_Mean']]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
-=======
->>>>>>> 32cf3b59abd7ec0cd30c5e1b628363c27c370203
 
     @callback(
         Output("site-info", "children"),
