@@ -56,10 +56,11 @@ class CbfCfHybrid:
 
         site_data: pd.DataFrame
             a Pandas DataFrame containing the site metadata. The first column must be the site name.
+            Categorical variables must be converted to numberival beforehand.
 
         genus_data: pd.DataFrame
             a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. 
-            The first column must be the genus name.
+            The first column must be the genus name. Categorical variables must be converted to numberival beforehand.
 
         k: int
             The maximum number of neigbours used by the kNN Collaborative filter algorithm
