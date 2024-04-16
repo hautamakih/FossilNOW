@@ -46,10 +46,12 @@ class ContentBasedFiltering:
             a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
 
         site_data: pd.DataFrame
-            a Pandas DataFrame containing the site metadata. The first column must be the site name.
+            a Pandas DataFrame containing the site metadata. The first column must be the site name. 
+            Categorical variables must be converted to numberival beforehand.
 
         genus_data: pd.DataFrame
-            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. The first column must be the genus name.
+            a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. 
+            The first column must be the genus name. Categorical variables must be converted to numberival beforehand.
 
         normalization: str
             The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
@@ -60,22 +62,13 @@ class ContentBasedFiltering:
         """
 
         print("Fitting Content-based filtering algorithm...")
-        # This is temporary. Originally the implemenation was that the site metadata was included in occurence dataframe. Later this was changed.
-        n_site_columns = site_data.shape[1] - 1
-        occurence_cols = occurences.columns.to_list()
-        site_cols = site_data.columns.to_list()
+        self.site_info = site_data.rename(columns={occurences.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
+        self.genus_info = genus_data.rename(columns={genus_data.columns[0]: "genus"}) # Saving the genus data to a class variable and giving name "genus" to the first column
+        self.site_genus_matrix = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}).set_index("SITE_NAME") # Saving the occurences to a class variable and giving name "SITE_NAME" to the first column and assigning it to index
 
-        occurences = occurences.merge(
-            site_data, left_on=occurence_cols[0], right_on=site_cols[0], how="left"
-        )
-        occurences = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"})
-
-        self.__build_site_info(occurences, n_site_columns)
-        self.__build_site_genus_matrix(occurences, n_site_columns)
-        self.__build_genus_info(genus_data)
         self.__build_genus_related_site_info()
         self.__build_genus_info_with_site_info()
-        self.__build_site_info_with_genus_info(occurences, n_site_columns)
+        self.__build_site_info_with_genus_info()
         self.__find_recommendations_for_all_sites(
             occurences, normalization=normalization
         )
@@ -120,63 +113,6 @@ class ContentBasedFiltering:
         ).sort_values(by=["SITE_NAME", "similarity"], ascending=[True, False])
 
         return df_test
-
-    def __build_site_genus_matrix(self, df: pd.DataFrame, n_site_columns: int):
-        """
-        Creates a DataFrame containing matrix of genera occuring at each site. Saved as class variable.
-
-        Parameters:
-        -----------
-        df: pd.DataFrame
-            A Pandas DataFrame containing site-genus matrix and site information
-
-        n_site_columns: int
-            The number of columns at the end of DataFrame containing the site information
-
-        Returns:
-        --------
-        None
-        """
-
-        self.site_genus_matrix = df.iloc[:, :-n_site_columns].set_index("SITE_NAME")
-
-    def __build_site_info(self, df: pd.DataFrame, n_site_columns: int):
-        """
-        Creates a DataFrame containing information about sites. Saved as class variable.
-
-        Parameters:
-        -----------
-        df: pd.DataFrame
-            A Pandas DataFrame containing site-genus matrix and site information
-
-        n_site_columns: int
-            The number of columns at the end of DataFrame containing the site information
-
-        Returns:
-        --------
-        None
-        """
-
-        df_site_info = df.set_index("SITE_NAME")
-        df_site_info = df_site_info.iloc[:, -n_site_columns:]
-        self.site_info = df_site_info
-
-    def __build_genus_info(self, df: pd.DataFrame):
-        """
-        Creates a DataFrame containing genus information. Saved as class variable.
-
-        Parameters:
-        -----------
-        df: pd.DataFrame
-            A Pandas DataFrame containing genus information
-
-        Returns:
-        --------
-        None
-        """
-
-        # Renaming the first column to genus so merges will work
-        self.genus_info = df.rename(columns={df.columns[0]: "genus"})
 
     def __build_genus_related_site_info(self):
         """
@@ -251,25 +187,20 @@ class ContentBasedFiltering:
 
         self.genus_info_with_site_info = genus_info
 
-    def __build_site_info_with_genus_info(self, df: pd.DataFrame, n_site_columns: int):
+    def __build_site_info_with_genus_info(self):
         """
         Adds genus related information for sites by calculating means of the genera features from genera that are present at the site. Saved as class variable
 
         Parameters:
         -----------
-        df: pd.DataFrame
-            A Pandas DataFrame containing the site information
-
-        n_site_columns: int
-            The number of columns at the end of DataFrame containing the site information
+        None
 
         Returns:
         --------
         None
         """
 
-        df_site_info = df.set_index("SITE_NAME")
-        df_site_info = df_site_info.iloc[:, -n_site_columns:]
+        df_site_info = self.site_info.set_index("SITE_NAME")
 
         df_site_info_by_genera = self.genus_related_site_info
         df_site_info = df_site_info.merge(
@@ -456,17 +387,17 @@ if __name__ == "__main__":
         "Family",
         "Massg",
         "Diet",
-    ]
-
+        ]
+        
     df_genus_info = df_mass_diet[genus_info_cols]
 
     dummy_cols = [
         "Order",
         "Family",
         "Diet",
-    ]
+        ]
 
-    # The genus column must be the first one in genus data
+    #The genus column must be the first one in genus data
     df_genus_info = pd.get_dummies(df_genus_info, columns=dummy_cols)
     df_genus_info = df_genus_info.replace({False: 0, True: 1})
 
@@ -477,26 +408,27 @@ if __name__ == "__main__":
     # The first column must be the site name
     df = pd.read_csv(path)
     cols = [
-        "ALTITUDE",
-        "BFA_MAX",
-        "BFA_MAX_ABS",
-        "BFA_MIN",
-        "BFA_MIN_ABS",
-        "COUNTRY",
-        "Total_Gen_Count",
-        "smallperlarge",
-        "smallprop",
-        "DietRatio",
-        "HerbProp",
+        'ALTITUDE',
+        'BFA_MAX',
+        'BFA_MAX_ABS',
+        'BFA_MIN',
+        'BFA_MIN_ABS',
+        'COUNTRY',
+        'Total_Gen_Count',
+        'smallperlarge',
+        'smallprop',
+        'DietRatio',
+        'HerbProp',
     ]
 
     df = df.drop(columns=cols)
 
-    cbf = ContentBasedFiltering()
-    cbf.fit(df, df_genus_info, n_site_columns=10, normalization="min-max")
+    occurences = df.iloc[:,:-10]
+    site_info_cols = ["SITE_NAME"] + df.iloc[:,-10:].columns.to_list()
+    site_info = df[site_info_cols]
 
-    print(df)
-    print(df_genus_info)
+    cbf = ContentBasedFiltering()
+    cbf.fit(occurences, site_info, df_genus_info, normalization="min-max")
 
     print(cbf.get_recommendations())
 # %%
