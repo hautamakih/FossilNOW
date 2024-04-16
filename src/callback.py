@@ -12,12 +12,12 @@ from utils.scatter_mapbox import (
     add_convex_hull_to_figure,
     create_histo,
     add_top_n,
-    add_column_and_average
+    add_column_and_average,
 )
 from models.models import get_recommend_list_mf, get_recommend_list_knn
 
-#species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
-#rec_species = pd.read_parquet("../data/rec_species.parquet")
+# species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
+# rec_species = pd.read_parquet("../data/rec_species.parquet")
 content_base = pd.read_csv("../data/content-based-filtering.csv")
 
 
@@ -61,37 +61,49 @@ def register_callbacks():
                         html.Label("Occurrence data: "),
                         dash_table.DataTable(
                             occ_df.to_dict("records"),
-                            [{"name": i, "id": i, "hideable": True} for i in occ_df.columns],
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in occ_df.columns
+                            ],
                             hidden_columns=[i for i in occ_df.columns[10:]],
                             page_size=10,
                         )
                         if occ_df is not None
                         else "empty",
-                    ], style={"margin-bottom": 10}
+                    ],
+                    style={"margin-bottom": 10},
                 ),
                 html.Div(
                     [
                         html.Label("Sites data: "),
                         dash_table.DataTable(
                             meta_df.to_dict("records"),
-                            [{"name": i, "id": i, "hideable": True} for i in meta_df.columns],
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in meta_df.columns
+                            ],
                             hidden_columns=[i for i in meta_df.columns[10:]],
                             page_size=10,
                         )
                         if meta_df is not None
                         else "empty",
-                        html.Div([
-                            "Extract N last meta data columns from the occurrence data: ",
-                            dcc.Input(
-                                id="n-metacolumns",
-                                type="number",
-                                placeholder="n-meta data columns",
-                                value=0,
-                            ),
-                            html.Button(
-                                "Extract", id="split-df-button", n_clicks=0,
-                            ), 
-                        ], style={"margin-bottom": 10})
+                        html.Div(
+                            [
+                                "Extract N last meta data columns from the occurrence data: ",
+                                dcc.Input(
+                                    id="n-metacolumns",
+                                    type="number",
+                                    placeholder="n-meta data columns",
+                                    value=0,
+                                ),
+                                html.Button(
+                                    "Extract",
+                                    id="split-df-button",
+                                    n_clicks=0,
+                                ),
+                            ],
+                            style={"margin-bottom": 10},
+                        ),
                     ]
                 ),
                 html.Div(
@@ -99,20 +111,27 @@ def register_callbacks():
                         html.Label("Genera data: "),
                         dash_table.DataTable(
                             sites_df.to_dict("records"),
-                            [{"name": i, "id": i, "hideable": True} for i in sites_df.columns],
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in sites_df.columns
+                            ],
                             hidden_columns=[i for i in sites_df.columns[10:]],
                             page_size=10,
                         )
                         if sites_df is not None
                         else "empty",
-                    ], style={"margin-bottom": 10}
+                    ],
+                    style={"margin-bottom": 10},
                 ),
                 html.Div(
                     [
                         html.Label("Prediction data: "),
                         dash_table.DataTable(
                             pred_df.to_dict("records"),
-                            [{"name": i, "id": i, "hideable": True} for i in pred_df.columns],
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in pred_df.columns
+                            ],
                             hidden_columns=[i for i in pred_df.columns[10:]],
                             page_size=10,
                         )
@@ -120,7 +139,8 @@ def register_callbacks():
                         else "empty",
                     ]
                 ),
-            ], id="data_tables"
+            ],
+            id="data_tables",
         )
 
         return div_tables
@@ -148,7 +168,9 @@ def register_callbacks():
         Input("n-highest-rec-scores", "value"),
         Input("div-visualization", "style"),
     )
-    def update_graph(genera, threshold, pred_df, sites_df, occ_df, age_spans, n, viz_style):
+    def update_graph(
+        genera, threshold, pred_df, sites_df, occ_df, age_spans, n, viz_style
+    ):
         if pred_df is None or sites_df is None or viz_style == dict(style="none"):
             raise PreventUpdate
 
@@ -171,13 +193,13 @@ def register_callbacks():
 
         if len(errors) == 0:
             return fig, dash.no_update
-        
+
         occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
 
         occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
 
         site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
-        
+
         fig.add_trace(
             px.scatter_mapbox(
                 occ_gdff,
@@ -185,7 +207,9 @@ def register_callbacks():
                 occ_gdff.geometry.x,
                 hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE", genera],
                 hover_name=site_name,
-            ).update_traces(marker={"size": 15, "color": "black", "opacity": 0.8}).data[0]
+            )
+            .update_traces(marker={"size": 15, "color": "black", "opacity": 0.8})
+            .data[0]
         )
 
         return fig, dmc.Notification(
@@ -211,8 +235,8 @@ def register_callbacks():
         ctx = callback_context
         if not ctx.triggered:
             raise PreventUpdate
-        
-        triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+        triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
         if triggered_id == "upload-data":
             if contents_list is None:
@@ -238,64 +262,78 @@ def register_callbacks():
                 occ_df.iloc[:, -n:].to_dict("records"),
             )
 
-
     @callback(
         Output("visualize-true-data", "data"),
         Output("visualize-recommendations-data", "data"),
         Input("genera-occurrence-data", "data"),
-        Input("sites-meta-data","data"),
+        Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
-        Input("genera-info-data", "data")
+        Input("genera-info-data", "data"),
     )
-
-    def visualization_data(occurences, site_data, recommendations, meta_data):  
-        if occurences is None or site_data is None or recommendations is None or meta_data is None:
-            raise PreventUpdate   
-        #use genera_occurence_data, genera_inof_data and recommendation_data
+    def visualization_data(occurences, site_data, recommendations, meta_data):
+        if (
+            occurences is None
+            or site_data is None
+            or recommendations is None
+            or meta_data is None
+        ):
+            raise PreventUpdate
+        # use genera_occurence_data, genera_inof_data and recommendation_data
         occurences = pd.DataFrame(occurences)
         site_data = pd.DataFrame(site_data)
-        sites = site_data.iloc[:,-1:]
+        sites = site_data.iloc[:, -1:]
         recommendations = pd.DataFrame(recommendations)
-        recommendations.insert(loc=0, column='SITE_NAME', value=sites)
+        recommendations.insert(loc=0, column="SITE_NAME", value=sites)
         meta_data = pd.DataFrame(meta_data)
-        if 'SITE_NAME' in occurences.columns:
-            site = 'SITE_NAME'
-        elif 'NAME' in occurences.columns:
-            site = 'NAME'
+        if "SITE_NAME" in occurences.columns:
+            site = "SITE_NAME"
+        elif "NAME" in occurences.columns:
+            site = "NAME"
         else:
-            print('no site column')
+            print("no site column")
             print(occurences.columns)
         species_in_sites = occurences[[site]].copy()
-        species_in_sites['genus_list'] = occurences.iloc[:, :100].apply(lambda row: list(row.index[row > 0]), axis=1)
-        #meta_data
-        meta_data = meta_data[['Genus', 'LogMass', 'HYP_Mean', 'LOP_Mean']]
-        #mass:
-        species_in_sites = add_column_and_average(species_in_sites,'LogMass', meta_data)
-        #dental info
-        meta_data['HYP_Mean'] = meta_data['HYP_Mean'].fillna(-1)
-        meta_data['LOP_Mean'] = meta_data['LOP_Mean'].fillna(-1)
-        species_in_sites = add_column_and_average(species_in_sites,'HYP_Mean',meta_data)
-        species_in_sites = add_column_and_average(species_in_sites,'LOP_Mean',meta_data)
-        #recommendations:
-        if 'SITE_NAME' in recommendations:
-            site = 'SITE_NAME'
-        elif 'NAME' in recommendations:
-            site = 'NAME'
+        species_in_sites["genus_list"] = occurences.iloc[:, :100].apply(
+            lambda row: list(row.index[row > 0]), axis=1
+        )
+        # meta_data
+        meta_data = meta_data[["Genus", "LogMass", "HYP_Mean", "LOP_Mean"]]
+        # mass:
+        species_in_sites = add_column_and_average(
+            species_in_sites, "LogMass", meta_data
+        )
+        # dental info
+        meta_data["HYP_Mean"] = meta_data["HYP_Mean"].fillna(-1)
+        meta_data["LOP_Mean"] = meta_data["LOP_Mean"].fillna(-1)
+        species_in_sites = add_column_and_average(
+            species_in_sites, "HYP_Mean", meta_data
+        )
+        species_in_sites = add_column_and_average(
+            species_in_sites, "LOP_Mean", meta_data
+        )
+        # recommendations:
+        if "SITE_NAME" in recommendations:
+            site = "SITE_NAME"
+        elif "NAME" in recommendations:
+            site = "NAME"
         rec_species = recommendations[[site]].copy()
-        rec_species['genus_list'] = recommendations.iloc[:, 1::].apply(lambda row: list(row.index[row > 0.5]), axis=1)
-        rec_species = add_column_and_average(rec_species, 'LogMass', meta_data)
-        rec_species = add_column_and_average(rec_species, 'HYP_Mean', meta_data)
-        rec_species = add_column_and_average(rec_species, 'LOP_Mean', meta_data)
-        rec_species = rec_species[[site, 'genus_list','LogMass','HYP_Mean','LOP_Mean']]
+        rec_species["genus_list"] = recommendations.iloc[:, 1::].apply(
+            lambda row: list(row.index[row > 0.5]), axis=1
+        )
+        rec_species = add_column_and_average(rec_species, "LogMass", meta_data)
+        rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
+        rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
+        rec_species = rec_species[
+            [site, "genus_list", "LogMass", "HYP_Mean", "LOP_Mean"]
+        ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
-
 
     @callback(
         Output("site-info", "children"),
         Output("site-summary", "children"),
         Input("graph-content", "clickData"),
         State("visualize-true-data", "data"),
-        State("visualize-recommendations-data", "data")
+        State("visualize-recommendations-data", "data"),
     )
     def update_site_info(clickData, species_in_sites, rec_species):
         if clickData is None:

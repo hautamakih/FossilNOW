@@ -139,11 +139,14 @@ def get_layout():
                                     type="number",
                                     placeholder="n-meta data columns",
                                     value=0,
-                                    style={"display": "none"}
+                                    style={"display": "none"},
                                 ),
                                 html.Div(id="div-datatables"),
                                 html.Button(
-                                    "Extract", id="split-df-button", n_clicks=0, style={"display": "none"}
+                                    "Extract",
+                                    id="split-df-button",
+                                    n_clicks=0,
+                                    style={"display": "none"},
                                 ),
                             ],
                             id="div-data",
