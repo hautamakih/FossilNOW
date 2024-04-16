@@ -258,6 +258,16 @@ def get_layout():
                                                 ),
                                                 html.Div(
                                                     [
+                                                        html.Label("Dim-hid"),
+                                                        dcc.Input(
+                                                            id="input-mf-dim-hid",
+                                                            value=10,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
                                                         html.Label(
                                                             "Output probabilities"
                                                         ),

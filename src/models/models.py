@@ -11,13 +11,14 @@ def get_recommend_list_mf(
     dataframe: DataFrame,
     output_prob: bool = True,
     num_epochs: int = 100,
+    dim_hid: int = 10,
 ) -> DataFrame:
     df_train, df_test = utils.split_traintest(
         dataframe, is_packed=True, is_encoded=True
     )
 
     df_out = mf.trigger_train(
-        df_train, df_test, num_epochs=num_epochs, output_prob=output_prob
+        df_train, df_test, num_epochs=num_epochs, output_prob=output_prob, dim_hid=dim_hid
     )
     return df_out
 
