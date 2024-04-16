@@ -37,6 +37,9 @@ def get_layout():
                                         html.P(
                                             "Select the number of metadata columns (these should be at the end of the data) and upload data"
                                         ),
+                                        html.P(
+                                            "The Genera information data should contain columns: 'Genus', 'LogMass', 'HYP_Mean' and 'LOP_Mean'"
+                                        ),
                                     ]
                                 )
                             ],
