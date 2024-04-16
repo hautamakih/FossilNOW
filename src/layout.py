@@ -134,16 +134,20 @@ def get_layout():
                                     value="Genera occurrences at sites",
                                     clearable=False,
                                 ),
-                                html.Label(
-                                    "N meta data columns from the end of the dataframe:"
-                                ),
                                 dcc.Input(
                                     id="n-metacolumns",
                                     type="number",
                                     placeholder="n-meta data columns",
                                     value=0,
+                                    style={"display": "none"},
                                 ),
                                 html.Div(id="div-datatables"),
+                                html.Button(
+                                    "Extract",
+                                    id="split-df-button",
+                                    n_clicks=0,
+                                    style={"display": "none"},
+                                ),
                             ],
                             id="div-data",
                         ),

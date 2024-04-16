@@ -1,7 +1,7 @@
 import pandas as pd
 from models.knn import knn
 from models.MF import mf
-from models.CBF import ContentBasedFiltering
+from models.CBF.ContentBasedFiltering import ContentBasedFiltering
 from pandas import DataFrame
 
 from . import evaluation, utils
@@ -72,44 +72,55 @@ def get_metrics_knn(
     }
 
 
+cbf = ContentBasedFiltering()
+
+
 def get_recommend_list_content_base(
-    df: pd.DataFrame, genera_df: pd.DataFrame, n_site_info_cols: int
+    df: pd.DataFrame, site_df: pd.DataFrame, genera_df: pd.DataFrame
 ) -> pd.DataFrame:
-    ## Divide data into training and testing
+    # Divide data into training and testing
     df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False)
 
     # Converting the training data into matrix form
     train_cols = df_train.columns.to_list()
-    df_train=pd.pivot(df_train, index=train_cols[0], columns=train_cols[1], values=train_cols[2]).fillna(0).reset_index()
-
-    site_info = pd.merge(df.iloc[:,0],df.iloc[:,-3:], left_index=True, right_index=True, how="inner")
-
-    # Merging site info to column info, name of site must be the first column
-    site_info_cols = site_info.columns.to_list()
-    train_cols = df_train.columns.to_list()
-    df_train = df_train.merge(site_info, "left", left_on=train_cols[0], right_on=site_info_cols[0]).drop(columns=site_info_cols[0])
-
+    df_train = (
+        pd.pivot(
+            df_train, index=train_cols[0], columns=train_cols[1], values=train_cols[2]
+        )
+        .fillna(0)
+        .reset_index()
+    )
 
     ## Train with df_train
-    cbf = ContentBasedFiltering()
-    cbf.fit(df_train, genera_df, n_site_info_cols, normalization="min-max")
+    global cbf
+    cbf.fit(df_train, site_df, genera_df, normalization="min-max")
 
-    ## Predict on entire df
+    ## Predict scores
     df = cbf.get_recommendations()
 
     return df
 
 
-def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool=True) -> dict:
+def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True) -> dict:
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
 
-    predictions = cbf.test(dataframe)
-    predictions = predictions.fillna(0)
+    # Divide data into training and testing
+    df_train, df_test = utils.split_traintest(
+        dataframe, is_packed=False, is_encoded=False
+    )
+
+    df_test = df_test.rename(columns={"site": "SITE_NAME"})
+
+    global cbf
+    predictions = cbf.predict(df_test)
+    predictions = predictions.fillna(0).rename(columns={"similarity": "pred"})
 
     return {
-        "expected_percentile_rank": evaluation.calc_expected_percentile_rank(predictions),
+        "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+            predictions
+        ),
         "true_positive_rate": evaluation.calc_tpr(predictions),
     }
 
