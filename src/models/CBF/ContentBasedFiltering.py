@@ -17,7 +17,7 @@ class ContentBasedFiltering:
 
     Methods
     -------
-    fit(site_data, genus_data, n_site_columns):
+    fit(occurences, site_data, genus_data, normalization):
         Fits the algorithm on given data
 
     get_recommendations(matrix_form=True):
@@ -59,6 +59,7 @@ class ContentBasedFiltering:
         None
         """
 
+        print("Fitting Content-based filtering algorithm...")
         # This is temporary. Originally the implemenation was that the site metadata was included in occurence dataframe. Later this was changed.
         n_site_columns = site_data.shape[1] - 1
         occurence_cols = occurences.columns.to_list()
@@ -78,6 +79,7 @@ class ContentBasedFiltering:
         self.__find_recommendations_for_all_sites(
             occurences, normalization=normalization
         )
+        print("Contend-based filtering fit complete.")
 
     def get_recommendations(self, matrix_form: bool = True):
         """
