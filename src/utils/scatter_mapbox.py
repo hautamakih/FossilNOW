@@ -149,26 +149,18 @@ def create_histo(clickData, species_in_sites, rec_species):
     # site data:
     site_name = clickData["points"][0]["hovertext"]
 
-    if "SITE_NAME" in species_in_sites:
-        site = "SITE_NAME"
-    elif "NAME" in species_in_sites:
-        site = "NAME"
     # check if empty
-    if len(species_in_sites[species_in_sites[site] == site_name].index) == 0:
-        site_data = species_in_sites[species_in_sites[site] == site_name]
+    if len(species_in_sites[species_in_sites['SITE_NAME'] == site_name].index) == 0:
+        site_data = species_in_sites[species_in_sites['SITE_NAME'] == site_name]
     else:
-        site_data = species_in_sites[species_in_sites[site] == site_name].iloc[0]
+        site_data = species_in_sites[species_in_sites['SITE_NAME'] == site_name].iloc[0]
 
     # #recommendations:
-    if "SITE_NAME" in rec_species:
-        site = "SITE_NAME"
-    elif "NAME" in rec_species:
-        site = "NAME"
     # check if empty:
-    if len(rec_species[rec_species[site] == site_name].index) == 0:
-        rec_data = rec_species[rec_species[site] == site_name]
-    else:
-        rec_data = rec_species[rec_species[site] == site_name].iloc[0]
+    # if len(rec_species[rec_species['SITE_NAME'] == site_name].index) == 0:
+    #     rec_data = rec_species[rec_species['SITE_NAME'] == site_name]
+    # else:
+    rec_data = rec_species[rec_species['SITE_NAME'] == site_name].iloc[0]
 
     # print('site: ', site_data)
     # print('rec: ', rec_data)

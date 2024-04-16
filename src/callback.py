@@ -269,31 +269,34 @@ def register_callbacks():
         Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
         Input("genera-info-data", "data"),
+        Input("threshold", "value"),
     )
-    def visualization_data(occurences, site_data, recommendations, meta_data):
+    def visualization_data(occurences, site_data, recommendations, meta_data, threshold):
         if (
             occurences is None
             or site_data is None
             or recommendations is None
             or meta_data is None
+            or threshold is None
         ):
             raise PreventUpdate
         # use genera_occurence_data, genera_inof_data and recommendation_data
         occurences = pd.DataFrame(occurences)
         site_data = pd.DataFrame(site_data)
-        sites = site_data.iloc[:, -1:]
-        recommendations = pd.DataFrame(recommendations)
-        recommendations.insert(loc=0, column="SITE_NAME", value=sites)
-        meta_data = pd.DataFrame(meta_data)
-        if "SITE_NAME" in occurences.columns:
+        if "SITE_NAME" in site_data.columns:
             site = "SITE_NAME"
-        elif "NAME" in occurences.columns:
+        elif "NAME" in site_data.columns:
             site = "NAME"
         else:
             print("no site column")
-            print(occurences.columns)
-        species_in_sites = occurences[[site]].copy()
-        species_in_sites["genus_list"] = occurences.iloc[:, :100].apply(
+        sites = site_data[[site]]
+        recommendations = pd.DataFrame(recommendations)
+        recommendations.insert(loc=0, column="SITE_NAME", value=sites)
+        occurences.insert(loc=0, column='SITE_NAME', value=sites)
+        meta_data = pd.DataFrame(meta_data)
+            #print(occurences.columns)
+        species_in_sites = occurences[['SITE_NAME']].copy()
+        species_in_sites["genus_list"] = occurences.iloc[:, 1:].apply(
             lambda row: list(row.index[row > 0]), axis=1
         )
         # meta_data
@@ -312,19 +315,15 @@ def register_callbacks():
             species_in_sites, "LOP_Mean", meta_data
         )
         # recommendations:
-        if "SITE_NAME" in recommendations:
-            site = "SITE_NAME"
-        elif "NAME" in recommendations:
-            site = "NAME"
-        rec_species = recommendations[[site]].copy()
+        rec_species = recommendations[['SITE_NAME']].copy()
         rec_species["genus_list"] = recommendations.iloc[:, 1::].apply(
-            lambda row: list(row.index[row > 0.5]), axis=1
+            lambda row: list(row.index[row > threshold]), axis=1
         )
         rec_species = add_column_and_average(rec_species, "LogMass", meta_data)
         rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
         rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
         rec_species = rec_species[
-            [site, "genus_list", "LogMass", "HYP_Mean", "LOP_Mean"]
+            ['SITE_NAME', "genus_list", "LogMass", "HYP_Mean", "LOP_Mean"]
         ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
@@ -341,18 +340,19 @@ def register_callbacks():
 
         species_in_sites = pd.DataFrame(species_in_sites)
         rec_species = pd.DataFrame(rec_species)
+        # print(species_in_sites.head())
+        # print(rec_species.head())
         site_name, mass_bar_fig, dent_fig = create_histo(
             clickData, species_in_sites, rec_species
         )
 
-        i = content_base[content_base["SITE_NAME"] == site_name].index.tolist()[0]
-        recommendations = content_base.iloc[i, 1:].T.sort_values(ascending=False)[:10]
-
+        i = rec_species[rec_species["SITE_NAME"] == site_name].index.tolist()[0]
+        recommendations = rec_species.loc[i, 'genus_list']#.T.sort_values(ascending=False)[:10]
         recommendations_html = [
             html.Div(
                 [
-                    html.Li(str(index) + " " + str(np.round(value, 2)))
-                    for index, value in recommendations.items()
+                    html.Li(rec)
+                    for rec in recommendations
                 ]
             )
         ]
