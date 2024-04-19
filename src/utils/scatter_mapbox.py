@@ -189,28 +189,28 @@ def create_histo(clickData, species_in_sites, rec_species):
         title="Masses (log) of genera in {}".format(site_name), bargap=0.2
     )
 
-    mass_bar_fig.add_annotation(
-        text="Genus (True): {}".format(site_data["genus_list"]),
-        align="right",
-        showarrow=False,
-        xref="paper",
-        yref="paper",
-        x=0,
-        y=1.17,
-        bordercolor="black",
-        borderwidth=1,
-    )
-    mass_bar_fig.add_annotation(
-        text="Genus (Rec): {}".format(rec_data["genus_list"]),
-        align="right",
-        showarrow=False,
-        xref="paper",
-        yref="paper",
-        x=0,
-        y=1.1,
-        bordercolor="black",
-        borderwidth=1,
-    )
+    # mass_bar_fig.add_annotation(
+    #     text="Genus (True): {}".format(site_data["genus_list"]),
+    #     align="right",
+    #     showarrow=False,
+    #     xref="paper",
+    #     yref="paper",
+    #     x=0,
+    #     y=1.17,
+    #     bordercolor="black",
+    #     borderwidth=1,
+    # )
+    # mass_bar_fig.add_annotation(
+    #     text="Genus (Rec): {}".format(rec_data["genus_list"]),
+    #     align="right",
+    #     showarrow=False,
+    #     xref="paper",
+    #     yref="paper",
+    #     x=0,
+    #     y=1.1,
+    #     bordercolor="black",
+    #     borderwidth=1,
+    # )
 
     # DENTAL DATA:
     dent_fig = make_subplots(rows=1, cols=2)
@@ -267,4 +267,4 @@ def create_histo(clickData, species_in_sites, rec_species):
         title="Mean Hypsodonty and loph of genera in {}".format(site_name), bargap=0.2
     )
 
-    return site_name, mass_bar_fig, dent_fig
+    return site_name, mass_bar_fig, dent_fig, site_data["genus_list"], rec_data["scores"]

@@ -35,10 +35,13 @@ def get_layout():
                                             },
                                         ),
                                         html.P(
-                                            "Select the number of metadata columns (these should be at the end of the data) and upload data"
+                                            "Upload data and select the number of metadata columns (these should be at the end of the data)"
                                         ),
                                         html.P(
                                             "The Genera information data should contain columns: 'Genus', 'LogMass', 'HYP_Mean' and 'LOP_Mean'"
+                                        ),
+                                        html.P(
+                                            "Categorical values in Site and Genera information data should be one-hot-encoded (dummy variables)"
                                         ),
                                     ]
                                 )

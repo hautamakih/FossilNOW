@@ -319,11 +319,14 @@ def register_callbacks():
         rec_species["genus_list"] = recommendations.iloc[:, 1::].apply(
             lambda row: list(row.index[row > threshold]), axis=1
         )
+        def score_tuples(row):
+            return [(col, score) for col, score in row.items() if score > threshold]
+        rec_species["scores"] = recommendations.iloc[:, 1:].apply(score_tuples, axis=1)
         rec_species = add_column_and_average(rec_species, "LogMass", meta_data)
         rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
         rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
         rec_species = rec_species[
-            ['SITE_NAME', "genus_list", "LogMass", "HYP_Mean", "LOP_Mean"]
+            ['SITE_NAME', "genus_list", "scores","LogMass", "HYP_Mean", "LOP_Mean"]
         ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
@@ -331,32 +334,49 @@ def register_callbacks():
         Output("site-info", "children"),
         Output("site-summary", "children"),
         Input("graph-content", "clickData"),
-        State("visualize-true-data", "data"),
-        State("visualize-recommendations-data", "data"),
+        Input("visualize-true-data", "data"),
+        Input("visualize-recommendations-data", "data"),
     )
     def update_site_info(clickData, species_in_sites, rec_species):
+        if (
+            species_in_sites is None
+            or rec_species is None):
+            raise PreventUpdate
         if clickData is None:
             return html.P("Click on a site to view more information."), dash.no_update
 
         species_in_sites = pd.DataFrame(species_in_sites)
         rec_species = pd.DataFrame(rec_species)
         # print(species_in_sites.head())
-        # print(rec_species.head())
-        site_name, mass_bar_fig, dent_fig = create_histo(
+        #print(rec_species.columns)
+        site_name, mass_bar_fig, dent_fig, true_occ, rec_occ = create_histo(
             clickData, species_in_sites, rec_species
         )
 
-        i = rec_species[rec_species["SITE_NAME"] == site_name].index.tolist()[0]
-        recommendations = rec_species.loc[i, 'genus_list']#.T.sort_values(ascending=False)[:10]
+        #i = rec_species[rec_species["SITE_NAME"] == site_name].index.tolist()[0]
+        #recommendations = rec_species.loc[i, 'genus_list']#.T.sort_values(ascending=False)[:10]
         recommendations_html = [
-            html.Div(
-                [
-                    html.Li(rec)
-                    for rec in recommendations
-                ]
-            )
-        ]
-
+        html.Div(
+            children=[
+                html.P("Recommendations and scores and true occurences", style={"text-align": "center"}),
+                html.Div(
+                    children=[
+                        html.Li(str(gen) + " " + str(np.round(scr, 2)))
+                        for gen, scr in rec_occ
+                    ],
+                    style={"width": "50%", "float": "left"}
+                ),
+                #html.P("True occurrences", style={"margin-left": "50%"}),
+                html.Div(
+                    children=[
+                        html.Li(str(gen))
+                        for gen in true_occ
+                    ],
+                    style={"margin-left": "50%"}
+                )
+            ]
+        )
+    ]
         return [
             html.H3(f"Site: {site_name}"),
             dcc.Graph(id="site-bar-plot", figure=mass_bar_fig),
