@@ -15,9 +15,18 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 
 ## Instructions
 
-1. Install packages by running:
+1. Install packages with pip by running:
 
-   `conda install --file requirements.txt` or `pip install -r requirements.txt`
+    `pip install -r requirements.txt`
+
+    or with conda by running:
+
+    `conda env create -f environment.yml`
+
+    and activate the environment with:
+
+    `conda activate FossilNOW`
+
 
 2. Go to the source directory `src` and run locally:
 
