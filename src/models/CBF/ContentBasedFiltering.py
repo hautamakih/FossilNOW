@@ -30,8 +30,7 @@ class ContentBasedFiltering:
     def __init__(self):
         pass
 
-    def fit(
-        self,
+    def fit(self,
         occurences: pd.DataFrame,
         site_data: pd.DataFrame,
         genus_data: pd.DataFrame,
@@ -62,9 +61,10 @@ class ContentBasedFiltering:
         """
 
         print("Fitting Content-based filtering algorithm...")
-        self.site_info = site_data.rename(columns={occurences.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
+        self.site_info = site_data.rename(columns={site_data.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
         self.genus_info = genus_data.rename(columns={genus_data.columns[0]: "genus"}) # Saving the genus data to a class variable and giving name "genus" to the first column
         self.site_genus_matrix = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}).set_index("SITE_NAME") # Saving the occurences to a class variable and giving name "SITE_NAME" to the first column and assigning it to index
+        occurences = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}) # Renaming the first column to site name
 
         self.__build_genus_related_site_info()
         self.__build_genus_info_with_site_info()
