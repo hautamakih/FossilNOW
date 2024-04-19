@@ -1,8 +1,8 @@
 #%%
 import sys
-sys.path.append("..")
+# sys.path.append("..")
 
-from CBF.ContentBasedFiltering import ContentBasedFiltering
+from models.CBF.ContentBasedFiltering import ContentBasedFiltering
 from surprise import KNNBasic, Dataset, Reader
 
 import numpy as np
@@ -92,6 +92,9 @@ class CbfCfHybrid:
         -------
         None
         """
+        site_data = site_data.rename(columns={site_data.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
+        genus_data = genus_data.rename(columns={genus_data.columns[0]: "genus"}) # Saving the genus data to a class variable and giving name "genus" to the first column
+        occurences = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}) # Renaming the first column to site name
 
         print("Fitting the hybrid algorithm...")
         self.__fit_content_based(occurences, site_data, genus_data, normalization)
