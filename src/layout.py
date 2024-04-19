@@ -242,6 +242,8 @@ def get_layout():
                                                 "Matrix Factorization",
                                                 "kNN",
                                                 "Content-based Filtering",
+                                                "Collaborative Filtering",
+                                                "Hybrid: Content-based x Collaborative"
                                             ],
                                             value="Matrix Factorization",
                                             clearable=False,
@@ -331,6 +333,134 @@ def get_layout():
                                                 ),
                                             ],
                                             id="div-knn",
+                                        ),
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.Label(
+                                                            "Output probabilities"
+                                                        ),
+                                                        dcc.RadioItems(
+                                                            ["Yes", "No"],
+                                                            "Yes",
+                                                            id="radio-content-output-prob",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Button(
+                                                            "Run",
+                                                            id="button-content-run",
+                                                            n_clicks=0,
+                                                        )
+                                                    ]
+                                                ),
+                                            ],
+                                            id="div-content",
+                                        ),
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.Label("Top k"),
+                                                        dcc.Input(
+                                                            id="input-collab-k",
+                                                            value=15,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label("Min k"),
+                                                        dcc.Input(
+                                                            id="input-collab-min_k",
+                                                            value=2,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label(
+                                                            "Output probabilities"
+                                                        ),
+                                                        dcc.RadioItems(
+                                                            ["Yes", "No"],
+                                                            "Yes",
+                                                            id="radio-collab-output-prob",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Button(
+                                                            "Run",
+                                                            id="button-collab-run",
+                                                            n_clicks=0,
+                                                        )
+                                                    ]
+                                                ),
+                                            ],
+                                            id="div-collab",
+                                        ),
+                                    html.Div(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        html.Label("Method"),
+                                                        dcc.RadioItems(
+                                                            ['average', 'filter','filter_average'],
+                                                            "average",
+                                                            id="method-hybrid",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label("Weight"),
+                                                        dcc.Input(
+                                                            id="input-hybrid-weight",
+                                                            value=0.5,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label("Threshold"),
+                                                        dcc.Input(
+                                                            id="input-hybrid-threshold",
+                                                            value=0.01,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label(
+                                                            "Output probabilities"
+                                                        ),
+                                                        dcc.RadioItems(
+                                                            ["Yes", "No"],
+                                                            "Yes",
+                                                            id="radio-hybrid-output-prob",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Button(
+                                                            "Run",
+                                                            id="button-hybrid-run",
+                                                            n_clicks=0,
+                                                        )
+                                                    ]
+                                                ),
+                                            ],
+                                            id="div-hybrid",
                                         ),
                                     ],
                                     id="recommender-params",

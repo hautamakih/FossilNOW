@@ -386,14 +386,25 @@ def register_callbacks():
     @callback(
         Output("div-mf", "style"),
         Output("div-knn", "style"),
+        Output("div-content", "style"),
+        Output("div-collab", "style"),
+        Output("div-hybrid", "style"),
         Input("dropdown-algorithm", "value"),
     )
     def render_params(algorithm):
+        hide = dict(display="none")
+        show = dict(display=True)
         if algorithm == "Matrix Factorization":
-            return dict(display=True), dict(display="none")
+            return show, hide, hide, hide, hide
 
         if algorithm == "kNN":
-            return dict(display="none"), dict(display=True)
+            return hide, show, hide, hide, hide
+        if algorithm == "Content-based Filtering":
+            return hide, hide, show, hide, hide
+        if algorithm == "Collaborative Filtering":
+            return hide, hide, hide, show, hide
+        if algorithm == "Hybrid: Content-based x Collaborative":
+            return hide, hide, hide, hide, show
 
     @callback(
         Output("prediction-data", "data"),
@@ -423,5 +434,14 @@ def register_callbacks():
             if n_clicks_knn == 0:
                 raise PreventUpdate
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
+
+        elif model == "Content-based Filtering":
+            pass
+
+        elif model == "Collaborative Filtering":
+            pass
+
+        elif model == "Hybrid: Content-based x Collaborative":
+            pass
 
         return df_output.to_dict("records")
