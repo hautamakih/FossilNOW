@@ -174,12 +174,12 @@ class ContentBasedFiltering:
         genus_info = genus_info[genus_info["presence"] == 1]
 
         genus_info = genus_info.drop(["SITE_NAME", "presence"], axis=1)
-        genus_info = genus_info.groupby("genus").mean().reset_index().set_index("genus")
+        genus_info = genus_info.groupby("genus").mean().reset_index()
 
         df_genus_data = self.genus_info
         genus_info = (
             genus_info.merge(
-                df_genus_data, left_index=True, right_on="genus", how="left"
+                df_genus_data, on="genus", how="left"
             )
             .reset_index(drop=True)
             .set_index("genus")
