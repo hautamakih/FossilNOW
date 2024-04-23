@@ -14,7 +14,7 @@ from utils.scatter_mapbox import (
     add_top_n,
     add_column_and_average,
 )
-from models.models import get_recommend_list_mf, get_recommend_list_knn
+from models.models import get_recommend_list_mf, get_recommend_list_knn, get_recommend_list_content_base
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 # rec_species = pd.read_parquet("../data/rec_species.parquet")
@@ -410,20 +410,26 @@ def register_callbacks():
         Output("prediction-data", "data"),
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
+        Input("button-content-run", "n_clicks"),
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
         State("radio-knn-output-prob", "value"),
+        State("radio-content-output-prob", "value"),
         State("input-knn-k", "value"),
         State("dropdown-algorithm", "value"),
         State("genera-occurrence-data", "data"),
+        State("genera-info-data", "data"),
+        State("sites-meta-data", "data"),
     )
     def run_recommender(
-        n_clicks_mf, n_clicks_knn, epochs, dim_hid, output_prob_mf, output_prob_knn, k, model, df
+        n_clicks_mf, n_clicks_knn, n_clicks_content, epochs, dim_hid, output_prob_mf, output_prob_knn, output_prob_content, k, model, df, genera, sites
     ):
-        if df is None:
+        if df is None or genera is None or sites is None:
             raise PreventUpdate
         dff = pd.DataFrame(df)
+        genera = pd.DataFrame(genera)
+        sites = pd.DataFrame(sites)
 
         if model == "Matrix Factorization":
             if n_clicks_mf == 0:
@@ -436,7 +442,10 @@ def register_callbacks():
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
 
         elif model == "Content-based Filtering":
-            pass
+            if n_clicks_content == 0:
+                raise PreventUpdate
+            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            df_output = get_recommend_list_content_base(dff, sites,genera)
 
         elif model == "Collaborative Filtering":
             pass
