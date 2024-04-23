@@ -130,10 +130,10 @@ cbf = ContentBasedFiltering()
 
 
 def get_recommend_list_content_base(
-    df: pd.DataFrame, site_df: pd.DataFrame, genera_df: pd.DataFrame
+    df: pd.DataFrame, site_df: pd.DataFrame, genera_df: pd.DataFrame, occurence_threshold: float = 0.8, train_size=0.8
 ) -> pd.DataFrame:
     # Divide data into training and testing
-    df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False)
+    df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False, ratio_traintest=train_size)
 
     # Converting the training data into matrix form
     train_cols = df_train.columns.to_list()
@@ -147,7 +147,7 @@ def get_recommend_list_content_base(
 
     ## Train with df_train
     global cbf
-    cbf.fit(df_train, site_df, genera_df, normalization="min-max")
+    cbf.fit(df_train, site_df, genera_df, normalization="min-max", occurence_threshold=occurence_threshold)
 
     ## Predict scores
     df = cbf.get_recommendations()
@@ -155,14 +155,14 @@ def get_recommend_list_content_base(
     return df
 
 
-def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True) -> dict:
+def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
-        dataframe, is_packed=False, is_encoded=False
+        dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
 
     df_test = df_test.rename(columns={"site": "SITE_NAME"})
@@ -183,9 +183,10 @@ def get_recommend_list_colab(
     k=5,
     min_k=1,
     sim_options={"name": "MSD", "user_based": True},
+    train_size=0.8,
 ) -> pd.DataFrame:
     df_train, df_test = utils.split_traintest(
-        dataframe, is_packed=False, is_encoded=False
+        dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
 
     occurences = df_train.rename(columns={df_train.columns[0]: "SITE_NAME"})
@@ -221,14 +222,14 @@ def get_recommend_list_colab(
     return knn_scores_pivot
 
 
-def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True) -> dict:
+def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
-        dataframe, is_packed=False, is_encoded=False
+        dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
 
     df_test = df_test.rename(columns={df_train.columns[0]: "SITE_NAME"})
@@ -260,10 +261,12 @@ def get_recommend_list_hybrid(
     content_based_weight: float = 0.5,
     filter_threshold: float = 0.01,
     normalization: str = "min-max",
+    occurence_threshold: float = 0.8,
     sim_options: dict = {"name": "MSD", "user_based": True},
+    train_size=0.8,
 ) -> pd.DataFrame:
     # Divide data into training and testing
-    df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False)
+    df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False, ratio_traintest=train_size)
 
     # Converting the training data into matrix form
     train_cols = df_train.columns.to_list()
@@ -287,6 +290,7 @@ def get_recommend_list_hybrid(
         content_based_weight=content_based_weight,
         filter_threshold=filter_threshold,
         normalization=normalization,
+        occurence_threshold=occurence_threshold,
         sim_options=sim_options,
     )
 
@@ -296,14 +300,14 @@ def get_recommend_list_hybrid(
     return df
 
 
-def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True) -> dict:
+def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
-        dataframe, is_packed=False, is_encoded=False
+        dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
 
     df_test = df_test.rename(columns={"site": "SITE_NAME"})

@@ -35,6 +35,7 @@ class ContentBasedFiltering:
         site_data: pd.DataFrame,
         genus_data: pd.DataFrame,
         normalization: str = "min-max",
+        occurence_threshold: float = 0.8
     ):
         """
         Fits the algorithm on given data
@@ -54,6 +55,10 @@ class ContentBasedFiltering:
 
         normalization: str
             The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
+        
+        occurence_threshold: float
+            A threshold value that tells the algorithm which values are handled as occurences in the occurence data. This is needed if your occurence data has values between 0 and 1 (not just 0s and 1s).
+            The algorithm cannot handle uncertancies in the data and hence values over or equal to the threshold are handled as occurence. The default value is 0.8.
 
         Returns
         -------
@@ -61,6 +66,12 @@ class ContentBasedFiltering:
         """
 
         print("Fitting Content-based filtering algorithm...")
+        # Changing occurence values above threshold to ones.
+        numerical_cols = occurences.select_dtypes(include='number').columns
+        occurences.loc[:, numerical_cols] = occurences.loc[:, numerical_cols].apply(lambda x: x.mask(x > occurence_threshold, 1))
+
+
+        
         self.site_info = site_data.rename(columns={site_data.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
         self.genus_info = genus_data.rename(columns={genus_data.columns[0]: "genus"}) # Saving the genus data to a class variable and giving name "genus" to the first column
         self.site_genus_matrix = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}).set_index("SITE_NAME") # Saving the occurences to a class variable and giving name "SITE_NAME" to the first column and assigning it to index
@@ -74,7 +85,7 @@ class ContentBasedFiltering:
         )
         print("Contend-based filtering fit complete.")
 
-    def get_recommendations(self, matrix_form: bool = True):
+    def get_recommendations(self, matrix_form: bool = True) -> pd.DataFrame:
         """
         Gives the similarity scores for all the genus-site pairs
 
@@ -93,7 +104,7 @@ class ContentBasedFiltering:
         else:
             return self.recommendations
 
-    def predict(self, test_set: pd.DataFrame):
+    def predict(self, test_set: pd.DataFrame) -> pd.DataFrame:
         """
         Gives a DataFrame with true values of the test set and predicted values from the fit
 
