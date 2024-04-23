@@ -7,6 +7,9 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
+## This list contains the names that can be the index name (storing the site name)
+NAMES_INDEX = ["loc_name", "SITE_NAME", "name"]
+
 
 class Paths:
     def __init__(self, root: str = "data_processed") -> None:
@@ -169,6 +172,8 @@ def split_traintest(
 
     cols_redundant = [
         "LOC",
+        "LAT",
+        "LONG",
         "LIDNUM",
         # 'NAME',
         "COUNTRY",
@@ -178,6 +183,18 @@ def split_traintest(
         "LATSTR",
         "LONGSTR",
         "n_gen",
+        "ALTITUDE",
+        "BFA_MAX",
+        "BFA_MAX_ABS",
+        "BFA_MIN",
+        "BFA_MIN_ABS",
+        "CHRON",
+        "COUNTRY",
+        "age_range",
+        "Gen_Count",
+        "N_Herb",
+        "N_NonHerb",
+        "PropHerb",
     ]
     cols_redundant_real = []
     for col in cols_redundant:
@@ -186,8 +203,8 @@ def split_traintest(
     df = df.drop(columns=cols_redundant_real)
 
     # Check if index is already set
-    if df.index.name != "SITE_NAME" or df.index.name != "NAME":
-        for idx_name in ["NAME", "SITE_NAME"]:
+    if df.index.name not in NAMES_INDEX:
+        for idx_name in NAMES_INDEX:
             if idx_name in df:
                 df = df.set_index(idx_name)
 
@@ -265,3 +282,56 @@ def split_traintest(
         df_test = pd.DataFrame.from_records(data_test)
 
     return df_train, df_test
+
+
+def create_test_tnr(
+    df: DataFrame,
+    num_sites_per_pack: int = 2,
+    num_genera_per_pack: int = 4,
+) -> DataFrame:
+    """Create testing data only from input dataframe for testing True Negative Rate only
+
+    Args:
+        df (DataFrame): Input dataframe
+
+    Returns:
+        DataFrame: testing data
+    """
+
+    # Load encoding of genus and site
+    assert paths.encoding_genera.exists(), f"Path {paths.encoding_genera} not existed. Please run train with this datafile first."
+    assert paths.encoding_genera.exists(), f"Path {paths.encoding_sites} not existed. Please run train with this datafile first."
+
+    enc_genus = CategoryDict.from_file(paths.encoding_genera)
+    enc_site = CategoryDict.from_file(paths.encoding_sites)
+
+    # Start looping over dataframe
+    list_sites = list(df.index)
+    list_genera = list(df.columns)
+
+    data = []
+    for sites, genera in itertools.product(
+        _iterate_pack(list_sites, num_sites_per_pack),
+        _iterate_pack(list_genera, num_genera_per_pack),
+    ):
+        occurence = df.loc[sites, genera].to_numpy().astype(np.float32)
+
+        # Encode
+        sites_encoded = enc_site.names2ids(sites)
+        genera_encoded = enc_genus.names2ids(genera)
+
+        if (
+            len(sites_encoded) == num_sites_per_pack
+            and len(genera_encoded) == num_genera_per_pack
+        ):
+            data.append(
+                {
+                    "occurence": occurence,
+                    "site": sites_encoded,
+                    "genus": genera_encoded,
+                }
+            )
+
+    df_test = pd.DataFrame.from_records(data)
+
+    return df_test
