@@ -44,6 +44,7 @@ class CbfCfHybrid:
             content_based_weight: float=0.5,
             filter_threshold: float=0.01, 
             normalization: str="min-max", 
+            occurence_threshold: float = 0.8,
             sim_options: dict={'name': "MSD",'user_based': True}
         ):
         """
@@ -87,17 +88,28 @@ class CbfCfHybrid:
 
         sim_options: dict
             The similarity parameters used by the kNN Collaborative filtering. See the Surprise documentation if you want to change this.
+        
+        occurence_threshold: float
+            A threshold value that tells the algorithm which values are handled as occurences in the occurence data. This is needed if your occurence data has values between 0 and 1 (not just 0s and 1s).
+            The algorithm cannot handle uncertancies in the data and hence values over or equal to the threshold are handled as occurence. The default value is 0.8.
 
         Returns
         -------
         None
+
+        References:
+        -----------
+        Surprise documentation for similarity options:
+            https://surprise.readthedocs.io/en/stable/similarities.html
         """
+
+
         site_data = site_data.rename(columns={site_data.columns[0]: "SITE_NAME"}) # Saving the site data to a class variable and giving name "SITE_NAME" to the first column
         genus_data = genus_data.rename(columns={genus_data.columns[0]: "genus"}) # Saving the genus data to a class variable and giving name "genus" to the first column
         occurences = occurences.rename(columns={occurences.columns[0]: "SITE_NAME"}) # Renaming the first column to site name
 
         print("Fitting the hybrid algorithm...")
-        self.__fit_content_based(occurences, site_data, genus_data, normalization)
+        self.__fit_content_based(occurences, site_data, genus_data, normalization, occurence_threshold)
         self.__fit_kNN(occurences, k=k, min_k=min_k, sim_options=sim_options)
 
         if method == "average":
@@ -116,7 +128,8 @@ class CbfCfHybrid:
             occurences: pd.DataFrame, 
             site_data: pd.DataFrame, 
             genus_data: pd.DataFrame, 
-            normalization: str
+            normalization: str,
+            occurence_threshold: float
         ):
         """
         Fits the Content-based filtering on the given data
@@ -134,6 +147,10 @@ class CbfCfHybrid:
 
         normalization: str
             The type of normalization used to normalize columns before calculating the similarity scores. Possible values: ["min-max", "mean"]. The default value is min-max.
+ 
+        occurence_threshold: float
+            A threshold value that tells the algorithm which values are handled as occurences in the occurence data. This is needed if your occurence data has values between 0 and 1 (not just 0s and 1s).
+            The algorithm cannot handle uncertancies in the data and hence values over or equal to the threshold are handled as occurence. The default value is 0.8.
 
         Returns
         -------
@@ -145,7 +162,8 @@ class CbfCfHybrid:
             occurences = occurences,
             site_data = site_data,
             genus_data = genus_data, 
-            normalization = normalization
+            normalization = normalization,
+            occurence_threshold = occurence_threshold
         )
 
         self.cbf_scores = cbf.get_recommendations(matrix_form=True)
@@ -279,7 +297,7 @@ class CbfCfHybrid:
         self.hybrid_scores = self.scores.pivot(index="SITE_NAME", columns="genus", values="hybrid_similarity")
 
 
-    def get_recommendations(self, matrix_form:bool=True):
+    def get_recommendations(self, matrix_form:bool=True) -> pd.DataFrame:
         """
         Gives the similarity scores for all the genus-site pairs
 
@@ -299,7 +317,7 @@ class CbfCfHybrid:
             return self.cbf_scores
 
 
-    def predict(self, test_set: pd.DataFrame):
+    def predict(self, test_set: pd.DataFrame) -> pd.DataFrame:
         """
         Gives a DataFrame with true values of the test set and predicted values from the fit
 
