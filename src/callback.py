@@ -13,6 +13,7 @@ from utils.scatter_mapbox import (
     create_histo,
     add_top_n,
     add_column_and_average,
+    add_true_occurrences
 )
 from models.models import get_recommend_list_mf, get_recommend_list_knn, get_recommend_list_content_base
 
@@ -191,26 +192,10 @@ def register_callbacks():
         if n and n > 0:
             add_top_n(gdff, genera, n, fig)
 
+        add_true_occurrences(fig, occ_df, sites_df, genera)
+
         if len(errors) == 0:
             return fig, dash.no_update
-
-        occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
-
-        occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
-
-        site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
-
-        fig.add_trace(
-            px.scatter_mapbox(
-                occ_gdff,
-                occ_gdff.geometry.y,
-                occ_gdff.geometry.x,
-                hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE", genera],
-                hover_name=site_name,
-            )
-            .update_traces(marker={"size": 15, "color": "black", "opacity": 0.8})
-            .data[0]
-        )
 
         return fig, dmc.Notification(
             title="Warning!",
