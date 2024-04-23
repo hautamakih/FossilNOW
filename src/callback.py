@@ -439,6 +439,11 @@ def register_callbacks():
         dff = pd.DataFrame(df)
         genera = pd.DataFrame(genera)
         sites = pd.DataFrame(sites)
+        site_name = "SITE_NAME" if "SITE_NAME" in sites.columns else "NAME"
+        if sites.columns[0] != site_name:
+            site_name_data = sites[site_name]
+            sites = sites.drop([site_name], axis=1)
+            sites.insert(loc=0, column=site_name, value=site_name_data)
 
         if model == "Matrix Factorization":
             if n_clicks_mf == 0:
@@ -453,7 +458,7 @@ def register_callbacks():
         elif model == "Content-based Filtering":
             if n_clicks_content == 0:
                 raise PreventUpdate
-            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             #if 'COUNTRY' in sites.columns:
             sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
@@ -462,13 +467,13 @@ def register_callbacks():
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
                 raise PreventUpdate
-            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab)
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0:
                 raise PreventUpdate
-            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid)
 

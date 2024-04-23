@@ -43,6 +43,9 @@ def get_layout():
                                         html.P(
                                             "Categorical values in Site and Genera information data should be one-hot-encoded (dummy variables)"
                                         ),
+                                        html.P(
+                                            "When using Conten-based or hybrid algorithm, the occurence data should not contain any extra data apart for the columns that are used for the predictions."
+                                        ),
                                     ]
                                 )
                             ],
@@ -113,6 +116,7 @@ def get_layout():
                                                 html.Li(
                                                     "Get histograms about the logmass, hypsodonty, and loph of the true and recommended genera on that site."
                                                 ),
+                                                html.Li("-1 values in histograms represents missing values in the genera data")
                                             ],
                                         ),
                                     ]
