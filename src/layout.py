@@ -440,6 +440,26 @@ def get_layout():
                                                 ),
                                                 html.Div(
                                                     [
+                                                        html.Label("Top k"),
+                                                        dcc.Input(
+                                                            id="input-hybrid-k",
+                                                            value=15,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label("Min k"),
+                                                        dcc.Input(
+                                                            id="input-hybrid-min_k",
+                                                            value=2,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
                                                         html.Label(
                                                             "Output probabilities"
                                                         ),

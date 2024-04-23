@@ -14,7 +14,7 @@ from utils.scatter_mapbox import (
     add_top_n,
     add_column_and_average,
 )
-from models.models import get_recommend_list_mf, get_recommend_list_knn, get_recommend_list_content_base
+from models.models import get_recommend_list_mf, get_recommend_list_knn, get_recommend_list_content_base, get_recommend_list_colab, get_recommend_list_hybrid
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 # rec_species = pd.read_parquet("../data/rec_species.parquet")
@@ -411,19 +411,31 @@ def register_callbacks():
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
         Input("button-content-run", "n_clicks"),
+        Input("button-collab-run", "n_clicks"),
+        Input("button-hybrid-run", "n_clicks"),
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
         State("radio-knn-output-prob", "value"),
         State("radio-content-output-prob", "value"),
         State("input-knn-k", "value"),
+        State("input-collab-k", "value"),
+        State("input-collab-min_k", "value"),
+        State("input-hybrid-k", "value"),
+        State("input-hybrid-min_k", "value"),
+        State("input-hybrid-weight", "value"),
+        State("input-hybrid-threshold", "value"),
+        State("method-hybrid", "value"),
         State("dropdown-algorithm", "value"),
         State("genera-occurrence-data", "data"),
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
     )
     def run_recommender(
-        n_clicks_mf, n_clicks_knn, n_clicks_content, epochs, dim_hid, output_prob_mf, output_prob_knn, output_prob_content, k, model, df, genera, sites
+        n_clicks_mf, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, epochs, dim_hid, 
+        output_prob_mf, output_prob_knn, output_prob_content, 
+        k,k_collab,min_k_collab,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
+        model, df, genera, sites
     ):
         if df is None or genera is None or sites is None:
             raise PreventUpdate
@@ -445,12 +457,22 @@ def register_callbacks():
             if n_clicks_content == 0:
                 raise PreventUpdate
             dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            #if 'COUNTRY' in sites.columns:
+            sites = sites.drop(['COUNTRY'], axis=1)
+            #print(sites.columns)
             df_output = get_recommend_list_content_base(dff, sites,genera)
 
         elif model == "Collaborative Filtering":
-            pass
+            if n_clicks_collab == 0:
+                raise PreventUpdate
+            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            df_output = get_recommend_list_colab(dff,k_collab, min_k_collab)
 
         elif model == "Hybrid: Content-based x Collaborative":
-            pass
+            if n_clicks_hybrid == 0:
+                raise PreventUpdate
+            dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
+            sites = sites.drop(['COUNTRY'], axis=1)
+            df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid)
 
         return df_output.to_dict("records")
