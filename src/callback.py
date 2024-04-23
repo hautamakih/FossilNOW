@@ -410,11 +410,11 @@ def register_callbacks():
         Input("button-content-run", "n_clicks"),
         Input("button-collab-run", "n_clicks"),
         Input("button-hybrid-run", "n_clicks"),
+        State("test-train-split", "value"),
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
         State("radio-knn-output-prob", "value"),
-        State("radio-content-output-prob", "value"),
         State("input-knn-k", "value"),
         State("input-collab-k", "value"),
         State("input-collab-min_k", "value"),
@@ -429,8 +429,8 @@ def register_callbacks():
         State("sites-meta-data", "data"),
     )
     def run_recommender(
-        n_clicks_mf, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, epochs, dim_hid, 
-        output_prob_mf, output_prob_knn, output_prob_content, 
+        n_clicks_mf, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
+        output_prob_mf, output_prob_knn, 
         k,k_collab,min_k_collab,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
         model, df, genera, sites
     ):

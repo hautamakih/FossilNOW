@@ -254,6 +254,12 @@ def get_layout():
                                         ),
                                     ]
                                 ),
+                                html.Div([
+                                    html.Label("Fraction of test data"),
+                                    dcc.Input(id="test-train-split",
+                                              value=0.8,
+                                              type="number")
+                                ]),
                                 html.Div(
                                     [
                                         html.Div(
@@ -342,18 +348,6 @@ def get_layout():
                                             [
                                                 html.Div(
                                                     [
-                                                        html.Label(
-                                                            "Output probabilities"
-                                                        ),
-                                                        dcc.RadioItems(
-                                                            ["Yes", "No"],
-                                                            "Yes",
-                                                            id="radio-content-output-prob",
-                                                        ),
-                                                    ]
-                                                ),
-                                                html.Div(
-                                                    [
                                                         html.Button(
                                                             "Run",
                                                             id="button-content-run",
@@ -383,18 +377,6 @@ def get_layout():
                                                             id="input-collab-min_k",
                                                             value=2,
                                                             type="number",
-                                                        ),
-                                                    ]
-                                                ),
-                                                html.Div(
-                                                    [
-                                                        html.Label(
-                                                            "Output probabilities"
-                                                        ),
-                                                        dcc.RadioItems(
-                                                            ["Yes", "No"],
-                                                            "Yes",
-                                                            id="radio-collab-output-prob",
                                                         ),
                                                     ]
                                                 ),
@@ -459,18 +441,6 @@ def get_layout():
                                                             id="input-hybrid-min_k",
                                                             value=2,
                                                             type="number",
-                                                        ),
-                                                    ]
-                                                ),
-                                                html.Div(
-                                                    [
-                                                        html.Label(
-                                                            "Output probabilities"
-                                                        ),
-                                                        dcc.RadioItems(
-                                                            ["Yes", "No"],
-                                                            "Yes",
-                                                            id="radio-hybrid-output-prob",
                                                         ),
                                                     ]
                                                 ),
