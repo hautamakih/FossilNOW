@@ -347,18 +347,15 @@ def register_callbacks():
 
         species_in_sites = pd.DataFrame(species_in_sites)
         rec_species = pd.DataFrame(rec_species)
-        # print(species_in_sites.head())
-        #print(rec_species.columns)
         site_name, mass_bar_fig, dent_fig, true_occ, rec_occ = create_histo(
             clickData, species_in_sites, rec_species
         )
 
-        #i = rec_species[rec_species["SITE_NAME"] == site_name].index.tolist()[0]
-        #recommendations = rec_species.loc[i, 'genus_list']#.T.sort_values(ascending=False)[:10]
+        rec_occ = sorted(rec_occ, key=lambda x: x[1], reverse=True)
         recommendations_html = [
         html.Div(
             children=[
-                html.P("Recommendations and scores and true occurences", style={"text-align": "center"}),
+                html.P("Recommendation scores and true occurences", style={"text-align": "center"}),
                 html.Div(
                     children=[
                         html.Li(str(gen) + " " + str(np.round(scr, 2)))
