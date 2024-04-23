@@ -51,3 +51,20 @@ def calc_tpr(pred: pd.DataFrame, thres_occ: float = 0.5) -> float:
     pred_all1 = pred[pred["occurence"] == 1]["pred"]
 
     return (np.sum(pred_all1 >= thres_occ) * 1.0 / len(pred)).item()
+
+
+def calc_tnr(pred: pd.DataFrame, thres_occ: float = 0.5) -> float:
+    """Calculate the True Negative Rate as treating the problem as one-class classification
+
+    Args:
+        pred (list | np.ndarray | Series): predicted probabbility
+        thres_occ (float, optional): probability threshold of occurence. Defaults to 0.5.
+
+    Returns:
+        float: result
+    """
+    assert "occurence" in pred and "pred" in pred
+
+    pred_all1 = pred[pred["occurence"] == 0]["pred"]
+
+    return (np.sum(pred_all1 < thres_occ) * 1.0 / len(pred)).item()

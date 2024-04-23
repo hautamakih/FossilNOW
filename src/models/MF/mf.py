@@ -11,7 +11,7 @@ from torch.nn import Module
 from torch.optim import AdamW, Optimizer, lr_scheduler
 from torch.utils.data import DataLoader, Dataset
 
-from ..evaluation import calc_expected_percentile_rank, calc_tpr
+from ..evaluation import calc_expected_percentile_rank, calc_tnr, calc_tpr
 from ..utils import CategoryDict, paths
 
 EPS = 1e-6
@@ -215,7 +215,10 @@ def trigger_train(
     # Load necessary things
     enc_genera = CategoryDict.from_file(paths.encoding_genera)
     enc_site = CategoryDict.from_file(paths.encoding_sites)
-    dataset_train, dataset_val = FossilNOW(df_train), FossilNOW(df_test)
+    dataset_train, dataset_val = (
+        FossilNOW(df_train, device=device),
+        FossilNOW(df_test, device=device),
+    )
 
     loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True)
     loader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=False)
@@ -253,7 +256,7 @@ def trigger_train(
         else:
             break
 
-        print(f"Loss val: {loss_val}")
+        print(f"Loss val: {loss_val:.4f}")
 
     # Save embedding and model
     if output_prob is True:
@@ -307,6 +310,7 @@ def trigger_test(
     output_prob: bool = False,
     num_sites_per_pack: int = 2,
     num_genera_per_pack: int = 4,
+    include_tnr: bool = False,
 ):
     # Load model and other things
     enc_genera = CategoryDict.from_file(paths.encoding_genera)
@@ -327,7 +331,9 @@ def trigger_test(
 
     criterion = torch_nn.MSELoss(reduction="none")
 
-    loader_val = DataLoader(FossilNOW(df_test), batch_size=batch_size, shuffle=False)
+    loader_val = DataLoader(
+        FossilNOW(df_test, device=device), batch_size=batch_size, shuffle=False
+    )
 
     # Start validate
     _, preds = validate(mf, loader_val, criterion)
@@ -351,12 +357,15 @@ def trigger_test(
     # Calculate metrics
     df_pred = pd.DataFrame.from_records(list_preds)
 
+    tpr, tnr = -1, -1
     if output_prob is True:
         tpr = calc_tpr(df_pred)
-    else:
-        tpr = -1
+
+        if include_tnr is True:
+            tnr = calc_tnr(df_pred)
 
     return {
         "expected_percentile_rank": calc_expected_percentile_rank(df_pred),
         "true_positive_rate": tpr,
+        "true_negative_rate": tnr,
     }
