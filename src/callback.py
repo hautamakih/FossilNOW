@@ -1,3 +1,4 @@
+import uuid
 import dash
 from dash import html, dcc, callback, Output, Input, State, dash_table, callback_context
 from dash.exceptions import PreventUpdate
@@ -390,12 +391,61 @@ def register_callbacks():
             return hide, hide, hide, show, hide
         if algorithm == "Hybrid: Content-based x Collaborative":
             return hide, hide, hide, hide, show
-
+    
     @callback(
-        Output("prediction-data", "data"),
+        Output("button-mf-run", "value"),
+        #Output("button-knn-run", "value"),
+        #Output("button-content-run", "value"),
+        Output("notification-mf", "children"),
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
         Input("button-content-run", "n_clicks"),
+        State("recommender-compute-done", "children"),
+        State("button-mf-run", "value"),
+    )
+    def start_recommender(
+        n_clicks_mf, 
+        n_clicks_knn,
+        n_clicks_content,
+        done,
+        doing,
+    ):
+        if n_clicks_mf == 0 and n_clicks_knn == 0 and n_clicks_content == 0:
+            raise PreventUpdate
+        if done != doing:
+            return dash.no_update, dmc.Notification(
+                id=str(uuid.uuid4()),
+                color="yellow",
+                title="Warning",
+                message=(
+                    "The recommender system computing has not yet finished."
+                ),
+                action="show",
+                autoClose=10000,
+            )
+        
+        process_id = str(uuid.uuid4())
+
+        message = "The recommender system process has started."
+
+        return process_id, dmc.Notification(
+                id=process_id,
+                color="blue",
+                title="Processing",
+                message=message,
+                action="show",
+                loading=True,
+                autoClose=False,
+                disallowClose=True,
+            )
+
+    @callback(
+        Output("prediction-data", "data"),
+        Output("recommender-compute-done", "children"),
+        Output("notification-mf-done", "children"),
+        Input("button-mf-run", "value"),
+        Input("button-knn-run", "value"),
+        Input("button-content-run", "value"),
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
@@ -407,18 +457,15 @@ def register_callbacks():
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
     )
-    def run_recommender(
-        n_clicks_mf, n_clicks_knn, n_clicks_content, epochs, dim_hid, output_prob_mf, output_prob_knn, output_prob_content, k, model, df, genera, sites
+    def set_recommender(
+        process_id, n_clicks_knn, n_clicks_content, epochs, dim_hid, output_prob_mf, output_prob_knn, output_prob_content, k, model, df, genera, sites
     ):
-        if df is None or genera is None or sites is None:
+        if df is None or sites is None:
             raise PreventUpdate
         dff = pd.DataFrame(df)
-        genera = pd.DataFrame(genera)
         sites = pd.DataFrame(sites)
 
         if model == "Matrix Factorization":
-            if n_clicks_mf == 0:
-                raise PreventUpdate
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
 
         elif model == "kNN":
@@ -427,8 +474,9 @@ def register_callbacks():
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
 
         elif model == "Content-based Filtering":
-            if n_clicks_content == 0:
+            if n_clicks_content == 0 or genera is None:
                 raise PreventUpdate
+            genera = pd.DataFrame(genera)
             dff.insert(loc=0, column="SITE_NAME", value=sites[sites.columns[0]])
             df_output = get_recommend_list_content_base(dff, sites,genera)
 
@@ -438,4 +486,12 @@ def register_callbacks():
         elif model == "Hybrid: Content-based x Collaborative":
             pass
 
-        return df_output.to_dict("records")
+        return df_output.to_dict("records"), process_id, dmc.Notification(
+                id=process_id or str(uuid.uuid4()),
+                color="green",
+                title="Success",
+                message="The recommendation scores computed successfully!",
+                action="update" if process_id else "show",
+                autoClose=5000,
+                disallowClose=False,
+            )
