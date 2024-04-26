@@ -38,6 +38,9 @@ def get_layout():
                                             "Upload data and select the number of metadata columns (these should be at the end of the data)"
                                         ),
                                         html.P(
+                                            "The site name column should be named as 'SITE_NAME' or 'NAME'"
+                                        ),
+                                        html.P(
                                             "The Genera information data should contain columns: 'Genus', 'LogMass', 'HYP_Mean' and 'LOP_Mean'"
                                         ),
                                         html.P(
@@ -255,7 +258,7 @@ def get_layout():
                                     ]
                                 ),
                                 html.Div([
-                                    html.Label("Fraction of test data"),
+                                    html.Label("Size of train data"),
                                     dcc.Input(id="test-train-split",
                                               value=0.8,
                                               type="number")
@@ -348,6 +351,16 @@ def get_layout():
                                             [
                                                 html.Div(
                                                     [
+                                                        html.Label("Occurence threshold"),
+                                                        dcc.Input(
+                                                            id="input-content-oc-threshold",
+                                                            value=0.8,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
                                                         html.Button(
                                                             "Run",
                                                             id="button-content-run",
@@ -394,6 +407,16 @@ def get_layout():
                                         ),
                                     html.Div(
                                             [
+                                                html.Div(
+                                                    [
+                                                        html.Label("Occurence threshold"),
+                                                        dcc.Input(
+                                                            id="input-hybrid-oc-threshold",
+                                                            value=0.8,
+                                                            type="number",
+                                                        ),
+                                                    ]
+                                                ),
                                                 html.Div(
                                                     [
                                                         html.Label("Method"),

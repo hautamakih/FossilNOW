@@ -416,8 +416,10 @@ def register_callbacks():
         State("radio-mf-output-prob", "value"),
         State("radio-knn-output-prob", "value"),
         State("input-knn-k", "value"),
+        State("input-content-oc-threshold", "value"),
         State("input-collab-k", "value"),
         State("input-collab-min_k", "value"),
+        State("input-hybrid-oc-threshold", "value"),
         State("input-hybrid-k", "value"),
         State("input-hybrid-min_k", "value"),
         State("input-hybrid-weight", "value"),
@@ -431,7 +433,8 @@ def register_callbacks():
     def run_recommender(
         n_clicks_mf, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
         output_prob_mf, output_prob_knn, 
-        k,k_collab,min_k_collab,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
+        k, oc_threshold_content, k_collab,min_k_collab,
+        oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
         model, df, genera, sites
     ):
         if df is None or genera is None or sites is None:
@@ -462,19 +465,19 @@ def register_callbacks():
             #if 'COUNTRY' in sites.columns:
             sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
-            df_output = get_recommend_list_content_base(dff, sites,genera)
+            df_output = get_recommend_list_content_base(dff, sites,genera,occurence_threshold=oc_threshold_content, train_size=test_train_split)
 
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
                 raise PreventUpdate
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
-            df_output = get_recommend_list_colab(dff,k_collab, min_k_collab)
+            df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0:
                 raise PreventUpdate
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             sites = sites.drop(['COUNTRY'], axis=1)
-            df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid)
+            df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
 
         return df_output.to_dict("records")
