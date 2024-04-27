@@ -60,12 +60,14 @@ def register_callbacks():
         Input("genera-info-data", "data"),
         Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
+        Input("true-negative-data", "data"),
     )
-    def render_datatables(occ_df, sites_df, meta_df, pred_df):
+    def render_datatables(occ_df, sites_df, meta_df, pred_df, true_neg_df):
         occ_df = pd.DataFrame(occ_df) if occ_df is not None else None
         sites_df = pd.DataFrame(sites_df) if sites_df is not None else None
         meta_df = pd.DataFrame(meta_df) if meta_df is not None else None
         pred_df = pd.DataFrame(pred_df) if pred_df is not None else None
+        true_neg_df = pd.DataFrame(true_neg_df) if true_neg_df is not None else None
 
         div_tables = html.Div(
             [
@@ -132,6 +134,23 @@ def register_callbacks():
                             page_size=10,
                         )
                         if sites_df is not None
+                        else "empty",
+                    ],
+                    style={"margin-bottom": 10},
+                ),
+                html.Div(
+                    [
+                        html.Label("True negative data: "),
+                        dash_table.DataTable(
+                            true_neg_df.to_dict("records"),
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in true_neg_df.columns
+                            ],
+                            hidden_columns=[i for i in true_neg_df.columns[10:]],
+                            page_size=10,
+                        )
+                        if true_neg_df is not None
                         else "empty",
                     ],
                     style={"margin-bottom": 10},
@@ -222,6 +241,7 @@ def register_callbacks():
         Output("genera-occurrence-data", "data"),
         Output("genera-info-data", "data"),
         Output("sites-meta-data", "data"),
+        Output("true-negative-data", "data"),
         Input("upload-data", "contents"),
         Input("split-df-button", "n_clicks"),
         State("n-metacolumns", "value"),
@@ -242,10 +262,13 @@ def register_callbacks():
             df = parse_contents(contents_list)
 
             if df_type == "Genera occurrences at sites":
-                return df.to_dict("records"), dash.no_update, dash.no_update
+                return df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update
 
             if df_type == "Genera information":
-                return dash.no_update, df.to_dict("records"), dash.no_update
+                return dash.no_update, df.to_dict("records"), dash.no_update, dash.no_update
+            
+            if df_type == "True negatives":
+                return dash.no_update, dash.no_update, dash.no_update, df.to_dict("records")
 
         elif triggered_id == "split-df-button":
             if n is None or n == 0 or occ_df is None:
@@ -257,6 +280,7 @@ def register_callbacks():
                 occ_df.iloc[:, :-n].to_dict("records"),
                 dash.no_update,
                 occ_df.iloc[:, -n:].to_dict("records"),
+                dash.no_update,
             )
 
     @callback(
