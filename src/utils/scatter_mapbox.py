@@ -268,3 +268,22 @@ def create_histo(clickData, species_in_sites, rec_species):
     )
 
     return site_name, mass_bar_fig, dent_fig, site_data["genus_list"], rec_data["scores"]
+
+def add_true_occurrences(fig, occ_df, sites_df, genera):
+    occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
+
+    occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
+
+    site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
+
+    fig.add_trace(
+        px.scatter_mapbox(
+            occ_gdff,
+            occ_gdff.geometry.y,
+            occ_gdff.geometry.x,
+            hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE", genera],
+            hover_name=site_name,
+        )
+        .update_traces(marker={"size": 9, "color": "black", "opacity": 0.8})
+        .data[0]
+    )

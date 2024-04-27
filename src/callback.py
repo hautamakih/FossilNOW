@@ -1,3 +1,4 @@
+import uuid
 import dash
 from dash import html, dcc, callback, Output, Input, State, dash_table, callback_context
 from dash.exceptions import PreventUpdate
@@ -13,8 +14,15 @@ from utils.scatter_mapbox import (
     create_histo,
     add_top_n,
     add_column_and_average,
+    add_true_occurrences,
 )
-from models.models import get_recommend_list_mf, get_recommend_list_knn, get_recommend_list_content_base, get_recommend_list_colab, get_recommend_list_hybrid
+from models.models import (
+    get_recommend_list_mf,
+    get_recommend_list_knn,
+    get_recommend_list_content_base,
+    get_recommend_list_colab,
+    get_recommend_list_hybrid,
+)
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 # rec_species = pd.read_parquet("../data/rec_species.parquet")
@@ -191,26 +199,10 @@ def register_callbacks():
         if n and n > 0:
             add_top_n(gdff, genera, n, fig)
 
+        add_true_occurrences(fig, occ_df, sites_df, genera)
+
         if len(errors) == 0:
             return fig, dash.no_update
-
-        occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
-
-        occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
-
-        site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
-
-        fig.add_trace(
-            px.scatter_mapbox(
-                occ_gdff,
-                occ_gdff.geometry.y,
-                occ_gdff.geometry.x,
-                hover_data=["COUNTRY", "MIN_AGE", "MAX_AGE", genera],
-                hover_name=site_name,
-            )
-            .update_traces(marker={"size": 15, "color": "black", "opacity": 0.8})
-            .data[0]
-        )
 
         return fig, dmc.Notification(
             title="Warning!",
@@ -271,7 +263,9 @@ def register_callbacks():
         Input("genera-info-data", "data"),
         Input("threshold", "value"),
     )
-    def visualization_data(occurences, site_data, recommendations, meta_data, threshold):
+    def visualization_data(
+        occurences, site_data, recommendations, meta_data, threshold
+    ):
         if (
             occurences is None
             or site_data is None
@@ -292,10 +286,10 @@ def register_callbacks():
         sites = site_data[[site]]
         recommendations = pd.DataFrame(recommendations)
         recommendations.insert(loc=0, column="SITE_NAME", value=sites)
-        occurences.insert(loc=0, column='SITE_NAME', value=sites)
+        occurences.insert(loc=0, column="SITE_NAME", value=sites)
         meta_data = pd.DataFrame(meta_data)
-            #print(occurences.columns)
-        species_in_sites = occurences[['SITE_NAME']].copy()
+        # print(occurences.columns)
+        species_in_sites = occurences[["SITE_NAME"]].copy()
         species_in_sites["genus_list"] = occurences.iloc[:, 1:].apply(
             lambda row: list(row.index[row > 0]), axis=1
         )
@@ -315,18 +309,20 @@ def register_callbacks():
             species_in_sites, "LOP_Mean", meta_data
         )
         # recommendations:
-        rec_species = recommendations[['SITE_NAME']].copy()
+        rec_species = recommendations[["SITE_NAME"]].copy()
         rec_species["genus_list"] = recommendations.iloc[:, 1::].apply(
             lambda row: list(row.index[row > threshold]), axis=1
         )
+
         def score_tuples(row):
             return [(col, score) for col, score in row.items() if score > threshold]
+
         rec_species["scores"] = recommendations.iloc[:, 1:].apply(score_tuples, axis=1)
         rec_species = add_column_and_average(rec_species, "LogMass", meta_data)
         rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
         rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
         rec_species = rec_species[
-            ['SITE_NAME', "genus_list", "scores","LogMass", "HYP_Mean", "LOP_Mean"]
+            ["SITE_NAME", "genus_list", "scores", "LogMass", "HYP_Mean", "LOP_Mean"]
         ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
@@ -338,9 +334,7 @@ def register_callbacks():
         Input("visualize-recommendations-data", "data"),
     )
     def update_site_info(clickData, species_in_sites, rec_species):
-        if (
-            species_in_sites is None
-            or rec_species is None):
+        if species_in_sites is None or rec_species is None:
             raise PreventUpdate
         if clickData is None:
             return html.P("Click on a site to view more information."), dash.no_update
@@ -353,27 +347,27 @@ def register_callbacks():
 
         rec_occ = sorted(rec_occ, key=lambda x: x[1], reverse=True)
         recommendations_html = [
-        html.Div(
-            children=[
-                html.P("Recommendation scores and true occurences", style={"text-align": "center"}),
-                html.Div(
-                    children=[
-                        html.Li(str(gen) + " " + str(np.round(scr, 2)))
-                        for gen, scr in rec_occ
-                    ],
-                    style={"width": "50%", "float": "left"}
-                ),
-                #html.P("True occurrences", style={"margin-left": "50%"}),
-                html.Div(
-                    children=[
-                        html.Li(str(gen))
-                        for gen in true_occ
-                    ],
-                    style={"margin-left": "50%"}
-                )
-            ]
-        )
-    ]
+            html.Div(
+                children=[
+                    html.P(
+                        "Recommendation scores and true occurences",
+                        style={"text-align": "center"},
+                    ),
+                    html.Div(
+                        children=[
+                            html.Li(str(gen) + " " + str(np.round(scr, 2)))
+                            for gen, scr in rec_occ
+                        ],
+                        style={"width": "50%", "float": "left"},
+                    ),
+                    # html.P("True occurrences", style={"margin-left": "50%"}),
+                    html.Div(
+                        children=[html.Li(str(gen)) for gen in true_occ],
+                        style={"margin-left": "50%"},
+                    ),
+                ]
+            )
+        ]
         return [
             html.H3(f"Site: {site_name}"),
             dcc.Graph(id="site-bar-plot", figure=mass_bar_fig),
@@ -402,14 +396,71 @@ def register_callbacks():
             return hide, hide, hide, show, hide
         if algorithm == "Hybrid: Content-based x Collaborative":
             return hide, hide, hide, hide, show
-
+    
     @callback(
-        Output("prediction-data", "data"),
+        Output("button-mf-run", "value"),
+        #Output("button-knn-run", "value"),
+        #Output("button-content-run", "value"),
+        Output("notification-mf", "children"),
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
         Input("button-content-run", "n_clicks"),
         Input("button-collab-run", "n_clicks"),
         Input("button-hybrid-run", "n_clicks"),
+        State("recommender-compute-done", "children"),
+        State("button-mf-run", "value"),
+    )
+    def start_recommender(
+        n_clicks_mf,
+        n_clicks_knn,
+        n_clicks_content,
+        n_clicks_collab,
+        n_clicks_hybrid,
+        done,
+        doing,
+    ):
+        if (
+            n_clicks_mf == 0
+            and n_clicks_knn == 0
+            and n_clicks_content == 0
+            and n_clicks_collab == 0
+            and n_clicks_hybrid == 0
+        ):
+            raise PreventUpdate
+        if done != doing:
+            return dash.no_update, dmc.Notification(
+                id=str(uuid.uuid4()),
+                color="yellow",
+                title="Warning",
+                message=("The recommender system computing has not yet finished."),
+                action="show",
+                autoClose=10000,
+            )
+
+        process_id = str(uuid.uuid4())
+
+        message = "The recommender system process has started."
+
+        return process_id, dmc.Notification(
+            id=process_id,
+            color="blue",
+            title="Processing",
+            message=message,
+            action="show",
+            loading=True,
+            autoClose=False,
+            disallowClose=True,
+        )
+
+    @callback(
+        Output("prediction-data", "data"),
+        Output("recommender-compute-done", "children"),
+        Output("notification-mf-done", "children"),
+        Input("button-mf-run", "value"),
+        Input("button-knn-run", "value"),
+        Input("button-content-run", "value"),
+        Input("button-collab-run", "value"),
+        Input("button-hybrid-run", "value"),
         State("test-train-split", "value"),
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
@@ -431,16 +482,15 @@ def register_callbacks():
         State("sites-meta-data", "data"),
     )
     def run_recommender(
-        n_clicks_mf, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
+        process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
         output_prob_mf, output_prob_knn, 
         k, oc_threshold_content, k_collab,min_k_collab,
         oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
         model, df, genera, sites
     ):
-        if df is None or genera is None or sites is None:
+        if df is None or sites is None:
             raise PreventUpdate
         dff = pd.DataFrame(df)
-        genera = pd.DataFrame(genera)
         sites = pd.DataFrame(sites)
         site_name = "SITE_NAME" if "SITE_NAME" in sites.columns else "NAME"
         if sites.columns[0] != site_name:
@@ -449,8 +499,6 @@ def register_callbacks():
             sites.insert(loc=0, column=site_name, value=site_name_data)
 
         if model == "Matrix Factorization":
-            if n_clicks_mf == 0:
-                raise PreventUpdate
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
 
         elif model == "kNN":
@@ -459,8 +507,10 @@ def register_callbacks():
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
 
         elif model == "Content-based Filtering":
-            if n_clicks_content == 0:
+            if n_clicks_content == 0 or genera is None:
                 raise PreventUpdate
+            genera = pd.DataFrame(genera)
+
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             #if 'COUNTRY' in sites.columns:
             sites = sites.drop(['COUNTRY'], axis=1)
@@ -480,4 +530,16 @@ def register_callbacks():
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
 
-        return df_output.to_dict("records")
+        return (
+            df_output.to_dict("records"),
+            process_id,
+            dmc.Notification(
+                id=process_id or str(uuid.uuid4()),
+                color="green",
+                title="Success",
+                message="The recommendation scores computed successfully!",
+                action="update" if process_id else "show",
+                autoClose=5000,
+                disallowClose=False,
+            ),
+        )
