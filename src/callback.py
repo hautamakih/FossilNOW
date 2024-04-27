@@ -396,11 +396,11 @@ def register_callbacks():
             return hide, hide, hide, show, hide
         if algorithm == "Hybrid: Content-based x Collaborative":
             return hide, hide, hide, hide, show
-
+    
     @callback(
         Output("button-mf-run", "value"),
-        # Output("button-knn-run", "value"),
-        # Output("button-content-run", "value"),
+        #Output("button-knn-run", "value"),
+        #Output("button-content-run", "value"),
         Output("notification-mf", "children"),
         Input("button-mf-run", "n_clicks"),
         Input("button-knn-run", "n_clicks"),
