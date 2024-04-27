@@ -9,6 +9,9 @@ def get_layout():
         html.Div(
             [
                 html.Div(id="notifications-container"),
+                html.Div(id="notification-mf"),
+                html.Div(id="notification-mf-done"),
+                html.Div(id="recommender-compute-done", style={"display": "none"}),
                 html.H1(children="FossilNOW", style={"textAlign": "center"}),
                 dcc.Store(id="genera-occurrence-data"),
                 dcc.Store(id="genera-info-data"),
