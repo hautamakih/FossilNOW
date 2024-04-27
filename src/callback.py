@@ -28,6 +28,7 @@ from models.models import (
     get_metrics_hybrid,
     get_metrics_colab
 )
+from models.utils import create_test_tnr
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 # rec_species = pd.read_parquet("../data/rec_species.parquet")
@@ -495,6 +496,7 @@ def register_callbacks():
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
+        State("radio-mf-true-neg", "value"),
         State("radio-knn-output-prob", "value"),
         State("input-knn-k", "value"),
         State("input-content-oc-threshold", "value"),
@@ -510,14 +512,15 @@ def register_callbacks():
         State("genera-occurrence-data", "data"),
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
+        State("true-negative-data", "data"),
         State("recommender-metrics", "children"),
     )
     def run_recommender(
         process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
-        output_prob_mf, output_prob_knn, 
+        output_prob_mf, include_tn_mf, output_prob_knn, 
         k, oc_threshold_content, k_collab,min_k_collab,
         oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
-        model, df, genera, sites, metrics_div
+        model, df, genera, sites, tn_df, metrics_div
     ):
         if df is None or sites is None:
             raise PreventUpdate
@@ -534,7 +537,15 @@ def register_callbacks():
 
         if model == "Matrix Factorization":
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
-            metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
+            if include_tn_mf == "Yes" and tn_df:
+                tn_df = pd.DataFrame(tn_df)\
+                    .rename(columns={'Unnamed: 0': 'loc_name'})\
+                    .set_index('loc_name')\
+                    .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
+                tnr_df = create_test_tnr(tn_df)
+                metrics = "MF metrics: " + str(get_metrics_mf(tnr_df, output_prob=output_prob_mf, dim_hid=dim_hid, include_tnr=True))
+            else:
+                metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
 
         elif model == "kNN":
             if n_clicks_knn == 0:

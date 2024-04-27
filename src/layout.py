@@ -306,6 +306,18 @@ def get_layout():
                                                 ),
                                                 html.Div(
                                                     [
+                                                        html.Label(
+                                                            "Include true negatives"
+                                                        ),
+                                                        dcc.RadioItems(
+                                                            ["Yes", "No"],
+                                                            "No",
+                                                            id="radio-mf-true-neg",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
                                                         html.Button(
                                                             "Run",
                                                             id="button-mf-run",
