@@ -524,8 +524,10 @@ def register_callbacks():
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
 
         elif model == "Hybrid: Content-based x Collaborative":
-            if n_clicks_hybrid == 0:
+            if n_clicks_hybrid == 0  or genera is None:
                 raise PreventUpdate
+            genera = pd.DataFrame(genera)
+            
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
