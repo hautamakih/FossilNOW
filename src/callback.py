@@ -22,6 +22,11 @@ from models.models import (
     get_recommend_list_content_base,
     get_recommend_list_colab,
     get_recommend_list_hybrid,
+    get_metrics_mf,
+    get_metrics_knn,
+    get_metrics_content_base,
+    get_metrics_hybrid,
+    get_metrics_colab
 )
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
@@ -456,6 +461,7 @@ def register_callbacks():
         Output("prediction-data", "data"),
         Output("recommender-compute-done", "children"),
         Output("notification-mf-done", "children"),
+        Output("recommender-metrics", "children"),
         Input("button-mf-run", "value"),
         Input("button-knn-run", "value"),
         Input("button-content-run", "value"),
@@ -480,13 +486,14 @@ def register_callbacks():
         State("genera-occurrence-data", "data"),
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
+        State("recommender-metrics", "children"),
     )
     def run_recommender(
         process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
         output_prob_mf, output_prob_knn, 
         k, oc_threshold_content, k_collab,min_k_collab,
         oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
-        model, df, genera, sites
+        model, df, genera, sites, metrics_div
     ):
         if df is None or sites is None:
             raise PreventUpdate
@@ -498,13 +505,18 @@ def register_callbacks():
             sites = sites.drop([site_name], axis=1)
             sites.insert(loc=0, column=site_name, value=site_name_data)
 
+        if metrics_div is None:
+            metrics_div = []
+
         if model == "Matrix Factorization":
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
+            metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
 
         elif model == "kNN":
             if n_clicks_knn == 0:
                 raise PreventUpdate
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
+            metrics = "kNN metrics: " + str(get_metrics_knn(dff, output_prob_knn, k))
 
         elif model == "Content-based Filtering":
             if n_clicks_content == 0 or genera is None:
@@ -516,21 +528,26 @@ def register_callbacks():
             sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
             df_output = get_recommend_list_content_base(dff, sites,genera,occurence_threshold=oc_threshold_content, train_size=test_train_split)
+            metrics = "CBF metrics: " + str(get_metrics_content_base(dff, train_size=test_train_split))
 
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
                 raise PreventUpdate
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
+            metrics = "CF metrics: " + str(get_metrics_colab(dff, train_size=test_train_split))
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0  or genera is None:
                 raise PreventUpdate
             genera = pd.DataFrame(genera)
-            
+
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
+            metrics = "Hybrid metrics: " + str(get_metrics_hybrid(dff, train_size=test_train_split))
+
+        metrics_div.append(html.Div([str(metrics)]))
 
         return (
             df_output.to_dict("records"),
@@ -544,4 +561,5 @@ def register_callbacks():
                 autoClose=5000,
                 disallowClose=False,
             ),
+            metrics_div
         )

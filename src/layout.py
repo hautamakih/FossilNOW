@@ -485,6 +485,7 @@ def get_layout():
                                     ],
                                     id="recommender-params",
                                 ),
+                                html.Div(id="recommender-metrics")
                             ],
                             id="div-recommender",
                         ),
