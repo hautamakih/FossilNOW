@@ -329,8 +329,10 @@ def register_callbacks():
             print("no site column")
         sites = site_data[[site]]
         recommendations = pd.DataFrame(recommendations)
-        recommendations.insert(loc=0, column="SITE_NAME", value=sites)
-        occurences.insert(loc=0, column="SITE_NAME", value=sites)
+        if not get_site_name(recommendations):
+            recommendations.insert(loc=0, column="SITE_NAME", value=sites)
+        if not get_site_name(occurences):
+            occurences.insert(loc=0, column="SITE_NAME", value=sites)
         meta_data = pd.DataFrame(meta_data)
         # print(occurences.columns)
         species_in_sites = occurences[["SITE_NAME"]].copy()
@@ -590,8 +592,8 @@ def register_callbacks():
                 dff = dff.drop(columns=["NAME"])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
 
-            #if 'COUNTRY' in sites.columns:
-            sites = sites.drop(['COUNTRY'], axis=1)
+            if 'COUNTRY' in sites.columns:
+                sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
             df_output = get_recommend_list_content_base(dff, sites,genera,occurence_threshold=oc_threshold_content, train_size=test_train_split)
 
