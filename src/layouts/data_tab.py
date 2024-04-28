@@ -15,6 +15,7 @@ def get_data_tab_components():
                 options=[
                     "Genera occurrences at sites",
                     "Genera information",
+                    "Genera dental traits",
                     "True negatives",
                 ],
                 value="Genera occurrences at sites",

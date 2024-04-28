@@ -11,6 +11,7 @@ def get_data_stores():
     return html.Div([
         dcc.Store(id="genera-occurrence-data"),
         dcc.Store(id="genera-info-data"),
+        dcc.Store(id="genera-dental-data"),
         dcc.Store(id="sites-meta-data"),
         dcc.Store(id="prediction-data"),
         dcc.Store(id="visualize-recommendations-data"),
