@@ -543,6 +543,17 @@ def register_callbacks():
                     .set_index('loc_name')\
                     .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
                 tnr_df = create_test_tnr(tn_df)
+
+                path_tnr = "../data/AllSites_truenegatives_Feb24.csv"
+                df_tnr_raw = pd.read_csv(path_tnr)
+
+                df_tnr = df_tnr_raw\
+                    .rename(columns={'Unnamed: 0': 'loc_name'})\
+                    .set_index('loc_name')\
+                    .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
+
+                tnr_df = create_test_tnr(df_tnr)
+
                 metrics = "MF metrics: " + str(get_metrics_mf(tnr_df, output_prob=output_prob_mf, dim_hid=dim_hid, include_tnr=True))
             else:
                 metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
