@@ -62,13 +62,15 @@ def register_callbacks():
         Output("div-datatables", "children"),
         Input("genera-occurrence-data", "data"),
         Input("genera-info-data", "data"),
+        Input("genera-dental-data", "data"),
         Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
         Input("true-negative-data", "data"),
     )
-    def render_datatables(occ_df, sites_df, meta_df, pred_df, true_neg_df):
+    def render_datatables(occ_df, sites_df, dental_df, meta_df, pred_df, true_neg_df):
         occ_df = pd.DataFrame(occ_df) if occ_df is not None else None
         sites_df = pd.DataFrame(sites_df) if sites_df is not None else None
+        dental_df = pd.DataFrame(dental_df) if dental_df is not None else None
         meta_df = pd.DataFrame(meta_df) if meta_df is not None else None
         pred_df = pd.DataFrame(pred_df) if pred_df is not None else None
         true_neg_df = pd.DataFrame(true_neg_df) if true_neg_df is not None else None
@@ -138,6 +140,23 @@ def register_callbacks():
                             page_size=10,
                         )
                         if sites_df is not None
+                        else "empty",
+                    ],
+                    style={"margin-bottom": 10},
+                ),
+                html.Div(
+                    [
+                        html.Label("Genera dental traits data: "),
+                        dash_table.DataTable(
+                            dental_df.to_dict("records"),
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in dental_df.columns
+                            ],
+                            hidden_columns=[i for i in dental_df.columns[10:]],
+                            page_size=10,
+                        )
+                        if dental_df is not None
                         else "empty",
                     ],
                     style={"margin-bottom": 10},
@@ -245,6 +264,7 @@ def register_callbacks():
     @callback(
         Output("genera-occurrence-data", "data"),
         Output("genera-info-data", "data"),
+        Output("genera-dental-data", "data"),
         Output("sites-meta-data", "data"),
         Output("true-negative-data", "data"),
         Input("upload-data", "contents"),
@@ -270,14 +290,17 @@ def register_callbacks():
                 site_name = get_site_name(df)
                 site_name_col = df.pop(site_name)
 
-                df.insert(0, site_name, site_name_col)
-                return df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update
+                df.insert(0, "SITE_NAME", site_name_col)
+                return df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update, dash.no_update
 
             if df_type == "Genera information":
-                return dash.no_update, df.to_dict("records"), dash.no_update, dash.no_update
+                return dash.no_update, df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update
             
+            if df_type == "Genera dental traits":
+                return dash.no_update, dash.no_update, df.to_dict("records"), dash.no_update, dash.no_update
+
             if df_type == "True negatives":
-                return dash.no_update, dash.no_update, dash.no_update, df.to_dict("records")
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update, df.to_dict("records")
 
         elif triggered_id == "split-df-button":
             if n is None or n == 0 or occ_df is None:
@@ -294,6 +317,7 @@ def register_callbacks():
             return (
                 occ_df.iloc[:, :-n].to_dict("records"),
                 dash.no_update,
+                dash.no_update,
                 site_meta_df.to_dict("records"),
                 dash.no_update,
             )
@@ -304,7 +328,7 @@ def register_callbacks():
         Input("genera-occurrence-data", "data"),
         Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
-        Input("genera-info-data", "data"),
+        Input("genera-dental-data", "data"),
         Input("threshold", "value"),
     )
     def visualization_data(
@@ -321,12 +345,7 @@ def register_callbacks():
         # use genera_occurence_data, genera_inof_data and recommendation_data
         occurences = pd.DataFrame(occurences)
         site_data = pd.DataFrame(site_data)
-        if "SITE_NAME" in site_data.columns:
-            site = "SITE_NAME"
-        elif "NAME" in site_data.columns:
-            site = "NAME"
-        else:
-            print("no site column")
+        site = get_site_name(site_data)
         sites = site_data[[site]]
         recommendations = pd.DataFrame(recommendations)
         if not get_site_name(recommendations):
@@ -335,7 +354,7 @@ def register_callbacks():
             occurences.insert(loc=0, column="SITE_NAME", value=sites)
         meta_data = pd.DataFrame(meta_data)
         # print(occurences.columns)
-        species_in_sites = occurences[["SITE_NAME"]].copy()
+        species_in_sites = occurences[[get_site_name(occurences)]].copy()
         species_in_sites["genus_list"] = occurences.iloc[:, 1:].apply(
             lambda row: list(row.index[row > 0]), axis=1
         )
@@ -355,7 +374,7 @@ def register_callbacks():
             species_in_sites, "LOP_Mean", meta_data
         )
         # recommendations:
-        rec_species = recommendations[["SITE_NAME"]].copy()
+        rec_species = recommendations[[get_site_name(recommendations)]].copy()
         rec_species["genus_list"] = recommendations.iloc[:, 1::].apply(
             lambda row: list(row.index[row > threshold]), axis=1
         )
@@ -368,7 +387,7 @@ def register_callbacks():
         rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
         rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
         rec_species = rec_species[
-            ["SITE_NAME", "genus_list", "scores", "LogMass", "HYP_Mean", "LOP_Mean"]
+            [get_site_name(rec_species), "genus_list", "scores", "LogMass", "HYP_Mean", "LOP_Mean"]
         ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 
@@ -545,7 +564,7 @@ def register_callbacks():
             raise PreventUpdate
         dff = pd.DataFrame(df)
         sites = pd.DataFrame(sites)
-        site_name = "SITE_NAME" if "SITE_NAME" in sites.columns else "NAME"
+        site_name = get_site_name(sites)
         if sites.columns[0] != site_name:
             site_name_data = sites[site_name]
             sites = sites.drop([site_name], axis=1)
@@ -586,10 +605,7 @@ def register_callbacks():
             include_tn_content = True if include_tn_content == "Yes" else False
 
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
-            if "SITE_NAME" in dff.columns:
-                dff = dff.drop(columns=["SITE_NAME"])
-            if "NAME" in dff.columns:
-                dff = dff.drop(columns=["NAME"])
+            dff = dff.drop(columns=[get_site_name(dff)])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
 
             if 'COUNTRY' in sites.columns:
@@ -613,10 +629,7 @@ def register_callbacks():
             include_tn_collab = True if include_tn_collab == "Yes" else False
             
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
-            if "SITE_NAME" in dff.columns:
-                dff = dff.drop(columns=["SITE_NAME"])
-            if "NAME" in dff.columns:
-                dff = dff.drop(columns=["NAME"])
+            dff = dff.drop(columns=[get_site_name(dff)])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
@@ -638,10 +651,7 @@ def register_callbacks():
             include_tn_hybrid = True if include_tn_hybrid == "Yes" else False
             
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
-            if "SITE_NAME" in dff.columns:
-                dff = dff.drop(columns=["SITE_NAME"])
-            if "NAME" in dff.columns:
-                dff = dff.drop(columns=["NAME"])
+            dff = dff.drop(columns=[get_site_name(dff)])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
 
             sites = sites.drop(['COUNTRY'], axis=1)
