@@ -514,14 +514,17 @@ def register_callbacks():
         State("radio-knn-output-prob", "value"),
         State("input-knn-k", "value"),
         State("input-content-oc-threshold", "value"),
+        State("radio-content-true-neg", "value"),
         State("input-collab-k", "value"),
         State("input-collab-min_k", "value"),
+        State("radio-collab-true-neg", "value"),
         State("input-hybrid-oc-threshold", "value"),
         State("input-hybrid-k", "value"),
         State("input-hybrid-min_k", "value"),
         State("input-hybrid-weight", "value"),
         State("input-hybrid-threshold", "value"),
         State("method-hybrid", "value"),
+        State("radio-hybrid-true-neg", "value"),
         State("dropdown-algorithm", "value"),
         State("genera-occurrence-data", "data"),
         State("genera-info-data", "data"),
@@ -532,8 +535,8 @@ def register_callbacks():
     def run_recommender(
         process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
         output_prob_mf, include_tn_mf, output_prob_knn, 
-        k, oc_threshold_content, k_collab,min_k_collab,
-        oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
+        k, oc_threshold_content, include_tn_content, k_collab,min_k_collab, include_tn_collab,
+        oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method, include_tn_hybrid,
         model, df, genera, sites, tn_df, metrics_div
     ):
         if df is None or sites is None:
@@ -578,6 +581,8 @@ def register_callbacks():
                 raise PreventUpdate
             genera = pd.DataFrame(genera)
 
+            include_tn_content = True if include_tn_content == "Yes" else False
+
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
             if "SITE_NAME" in dff.columns:
                 dff = dff.drop(columns=["SITE_NAME"])
@@ -589,11 +594,21 @@ def register_callbacks():
             sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
             df_output = get_recommend_list_content_base(dff, sites,genera,occurence_threshold=oc_threshold_content, train_size=test_train_split)
-            metrics = "CBF metrics: " + str(get_metrics_content_base(dff, train_size=test_train_split))
+
+            tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
+            if include_tn_content:
+                if tn_df:
+                    metrics = "CBF metrics: " + str(get_metrics_content_base(tn_dff, train_size=test_train_split, include_tnr=True))
+                else:
+                    raise ValueError("The True Negative Matrix was not uploaded.")
+            else:
+                metrics = "CBF metrics: " + str(get_metrics_content_base(dff, train_size=test_train_split, include_tnr=False))
 
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
                 raise PreventUpdate
+            
+            include_tn_collab = True if include_tn_collab == "Yes" else False
             
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
             if "SITE_NAME" in dff.columns:
@@ -603,12 +618,22 @@ def register_callbacks():
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
             
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
-            metrics = "CF metrics: " + str(get_metrics_colab(dff, train_size=test_train_split))
+
+            tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
+            if include_tn_collab:
+                if tn_df:
+                    metrics = "CF metrics: " + str(get_metrics_colab(tn_dff, train_size=test_train_split, include_tnr=True))
+                else:
+                    raise ValueError("The True Negative Matrix was not uploaded.")
+            else:
+                metrics = "CF metrics: " + str(get_metrics_colab(dff, train_size=test_train_split, include_tnr=False))
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0  or genera is None:
                 raise PreventUpdate
             genera = pd.DataFrame(genera)
+
+            include_tn_hybrid = True if include_tn_hybrid == "Yes" else False
             
             # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
             if "SITE_NAME" in dff.columns:
@@ -619,7 +644,15 @@ def register_callbacks():
 
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
-            metrics = "Hybrid metrics: " + str(get_metrics_hybrid(dff, train_size=test_train_split))
+            
+            tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
+            if include_tn_hybrid:
+                if tn_df:
+                    metrics = "Hybrid metrics: " + str(get_metrics_hybrid(tn_dff, train_size=test_train_split, include_tnr=True))
+                else:
+                    raise ValueError("The True Negative Matrix was not uploaded.")
+            else:
+                metrics = "Hybrid metrics: " + str(get_metrics_hybrid(dff, train_size=test_train_split, include_tnr=False))
 
         metrics_div.append(html.Div([str(metrics)]))
 

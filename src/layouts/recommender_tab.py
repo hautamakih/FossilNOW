@@ -137,6 +137,18 @@ def get_recommender_tab_components():
                             ),
                             html.Div(
                                 [
+                                    html.Label(
+                                        "Include true negatives"
+                                    ),
+                                    dcc.RadioItems(
+                                        ["Yes", "No"],
+                                        "No",
+                                        id="radio-content-true-neg",
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                [
                                     html.Button(
                                         "Run",
                                         id="button-content-run",
@@ -166,6 +178,18 @@ def get_recommender_tab_components():
                                         id="input-collab-min_k",
                                         value=2,
                                         type="number",
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                [
+                                    html.Label(
+                                        "Include true negatives"
+                                    ),
+                                    dcc.RadioItems(
+                                        ["Yes", "No"],
+                                        "No",
+                                        id="radio-collab-true-neg",
                                     ),
                                 ]
                             ),
@@ -240,6 +264,18 @@ def get_recommender_tab_components():
                                         id="input-hybrid-min_k",
                                         value=2,
                                         type="number",
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                [
+                                    html.Label(
+                                        "Include true negatives"
+                                    ),
+                                    dcc.RadioItems(
+                                        ["Yes", "No"],
+                                        "No",
+                                        id="radio-hybrid-true-neg",
                                     ),
                                 ]
                             ),
