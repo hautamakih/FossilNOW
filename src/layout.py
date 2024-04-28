@@ -19,6 +19,7 @@ def get_layout():
                 dcc.Store(id="prediction-data"),
                 dcc.Store(id="visualize-recommendations-data"),
                 dcc.Store(id="visualize-true-data"),
+                dcc.Store(id="true-negative-data"),
                 dcc.Tabs(
                     id="tabs",
                     value="data",
@@ -146,6 +147,7 @@ def get_layout():
                                     options=[
                                         "Genera occurrences at sites",
                                         "Genera information",
+                                        "True negatives",
                                     ],
                                     value="Genera occurrences at sites",
                                     clearable=False,
@@ -299,6 +301,18 @@ def get_layout():
                                                             ["Yes", "No"],
                                                             "Yes",
                                                             id="radio-mf-output-prob",
+                                                        ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    [
+                                                        html.Label(
+                                                            "Include true negatives"
+                                                        ),
+                                                        dcc.RadioItems(
+                                                            ["Yes", "No"],
+                                                            "No",
+                                                            id="radio-mf-true-neg",
                                                         ),
                                                     ]
                                                 ),

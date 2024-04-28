@@ -6,7 +6,10 @@ import pandas as pd
 import numpy as np
 import dash_mantine_components as dmc
 import plotly.express as px
-from utils.dataframe import *
+from utils.dataframe import (
+    parse_contents,
+    get_site_name,
+)
 from utils.scatter_mapbox import (
     preprocess_data,
     create_map_figure,
@@ -28,6 +31,7 @@ from models.models import (
     get_metrics_hybrid,
     get_metrics_colab
 )
+from models.utils import create_test_tnr
 
 # species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
 # rec_species = pd.read_parquet("../data/rec_species.parquet")
@@ -60,12 +64,14 @@ def register_callbacks():
         Input("genera-info-data", "data"),
         Input("sites-meta-data", "data"),
         Input("prediction-data", "data"),
+        Input("true-negative-data", "data"),
     )
-    def render_datatables(occ_df, sites_df, meta_df, pred_df):
+    def render_datatables(occ_df, sites_df, meta_df, pred_df, true_neg_df):
         occ_df = pd.DataFrame(occ_df) if occ_df is not None else None
         sites_df = pd.DataFrame(sites_df) if sites_df is not None else None
         meta_df = pd.DataFrame(meta_df) if meta_df is not None else None
         pred_df = pd.DataFrame(pred_df) if pred_df is not None else None
+        true_neg_df = pd.DataFrame(true_neg_df) if true_neg_df is not None else None
 
         div_tables = html.Div(
             [
@@ -132,6 +138,23 @@ def register_callbacks():
                             page_size=10,
                         )
                         if sites_df is not None
+                        else "empty",
+                    ],
+                    style={"margin-bottom": 10},
+                ),
+                html.Div(
+                    [
+                        html.Label("True negative data: "),
+                        dash_table.DataTable(
+                            true_neg_df.to_dict("records"),
+                            [
+                                {"name": i, "id": i, "hideable": True}
+                                for i in true_neg_df.columns
+                            ],
+                            hidden_columns=[i for i in true_neg_df.columns[10:]],
+                            page_size=10,
+                        )
+                        if true_neg_df is not None
                         else "empty",
                     ],
                     style={"margin-bottom": 10},
@@ -222,6 +245,7 @@ def register_callbacks():
         Output("genera-occurrence-data", "data"),
         Output("genera-info-data", "data"),
         Output("sites-meta-data", "data"),
+        Output("true-negative-data", "data"),
         Input("upload-data", "contents"),
         Input("split-df-button", "n_clicks"),
         State("n-metacolumns", "value"),
@@ -242,10 +266,17 @@ def register_callbacks():
             df = parse_contents(contents_list)
 
             if df_type == "Genera occurrences at sites":
-                return df.to_dict("records"), dash.no_update, dash.no_update
+                site_name = get_site_name(df)
+                site_name_col = df.pop(site_name)
+
+                df.insert(0, site_name, site_name_col)
+                return df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update
 
             if df_type == "Genera information":
-                return dash.no_update, df.to_dict("records"), dash.no_update
+                return dash.no_update, df.to_dict("records"), dash.no_update, dash.no_update
+            
+            if df_type == "True negatives":
+                return dash.no_update, dash.no_update, dash.no_update, df.to_dict("records")
 
         elif triggered_id == "split-df-button":
             if n is None or n == 0 or occ_df is None:
@@ -253,10 +284,17 @@ def register_callbacks():
 
             occ_df = pd.DataFrame(occ_df)
 
+            site_meta_df = occ_df.iloc[:, -n:]
+            site_name = get_site_name(occ_df)
+            site_name_col = occ_df[site_name]
+            
+            site_meta_df.insert(0, site_name, site_name_col)
+
             return (
                 occ_df.iloc[:, :-n].to_dict("records"),
                 dash.no_update,
-                occ_df.iloc[:, -n:].to_dict("records"),
+                site_meta_df.to_dict("records"),
+                dash.no_update,
             )
 
     @callback(
@@ -471,6 +509,7 @@ def register_callbacks():
         State("input-mf-epochs", "value"),
         State("input-mf-dim-hid", "value"),
         State("radio-mf-output-prob", "value"),
+        State("radio-mf-true-neg", "value"),
         State("radio-knn-output-prob", "value"),
         State("input-knn-k", "value"),
         State("input-content-oc-threshold", "value"),
@@ -486,14 +525,15 @@ def register_callbacks():
         State("genera-occurrence-data", "data"),
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
+        State("true-negative-data", "data"),
         State("recommender-metrics", "children"),
     )
     def run_recommender(
         process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
-        output_prob_mf, output_prob_knn, 
+        output_prob_mf, include_tn_mf, output_prob_knn, 
         k, oc_threshold_content, k_collab,min_k_collab,
         oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method,
-        model, df, genera, sites, metrics_div
+        model, df, genera, sites, tn_df, metrics_div
     ):
         if df is None or sites is None:
             raise PreventUpdate
@@ -509,12 +549,26 @@ def register_callbacks():
             metrics_div = []
 
         if model == "Matrix Factorization":
+            include_tn_mf = True if include_tn_mf == "Yes" else False
+            output_prob_mf = True if output_prob_mf == "Yes" else False
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
-            metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
+
+            if include_tn_mf and tn_df:
+                tn_df = pd.DataFrame(tn_df)\
+                    .rename(columns={'Unnamed: 0': 'loc_name'})\
+                    .set_index('loc_name')\
+                    .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
+                tnr_df = create_test_tnr(tn_df)
+
+                metrics = "MF metrics (tn): " + str(get_metrics_mf(tnr_df, output_prob_mf, dim_hid, include_tn_mf))
+            else:
+                metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
 
         elif model == "kNN":
             if n_clicks_knn == 0:
                 raise PreventUpdate
+
+            output_prob_knn = True if output_prob_knn == "Yes" else False
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
             metrics = "kNN metrics: " + str(get_metrics_knn(dff, output_prob_knn, k))
 
