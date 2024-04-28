@@ -132,6 +132,35 @@ cbf = ContentBasedFiltering()
 def get_recommend_list_content_base(
     df: pd.DataFrame, site_df: pd.DataFrame, genera_df: pd.DataFrame, occurence_threshold: float = 0.8, train_size=0.8
 ) -> pd.DataFrame:
+    """
+    Fits the Content Based Filtering algorithm on given data and makes predictions.
+
+    Parameters:
+    -----------
+    df: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+
+    site_df: pd.DataFrame
+        a Pandas DataFrame containing the site metadata. The first column must be the site name. 
+        Categorical variables must be converted to numerical beforehand.
+
+    genera_df: pd.DataFrame
+        a Pandas DataFrame containing the information about the genera. Categorical features must be converted using one-hot-encoding beforehand. 
+        The first column must be the genus name. Categorical variables must be converted to numberical beforehand.
+    
+    occurence_threshold: float
+        A threshold value that tells the algorithm which values are handled as occurences in the occurence data. This is needed if your occurence data has values between 0 and 1 (not just 0s and 1s).
+        The algorithm cannot handle uncertancies in the data and hence values over or equal to the threshold are handled as occurence. The default value is 0.8.
+    
+    train_size: float
+        The size of the data set used for training. The default is 0.8.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the prediction values (between 0 and 1) for each site-genus pair.
+    """
+
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False, ratio_traintest=train_size)
 
@@ -156,6 +185,26 @@ def get_recommend_list_content_base(
 
 
 def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+    """
+    Calculates the metrics for the Content Based Filtering
+
+    Parameters:
+    -----------
+    dataframe: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+    
+    output_prob: bool
+        Included for consistency but not implemented.
+    
+    train_size: float
+        The size of the data set used for training. The value must be the same as the one that was used for fitting.
+
+    Returns:
+    --------
+    dictionary
+        A dictionary containing the expected percentile rank and true postive rate
+    """
+
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
@@ -188,6 +237,36 @@ def get_recommend_list_colab(
     df_train, df_test = utils.split_traintest(
         dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
+    """
+    Fits the knn Collaborative Filtering algorithm on given data and makes predictions
+
+    Parameters:
+    -----------
+    dataframe: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+
+    k: int
+        The maximum number of neigbours used by the kNN Collaborative filter algorithm
+
+    min_k: int
+        The minimum number of neigbours used by the kNN Collaborative filter algorithm
+
+    sim_options: dict
+        The similarity parameters used by the kNN Collaborative filtering. See the Surprise documentation if you want to change this.
+    
+    train_size: float
+        The size of the data set used for training. The default is 0.8.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the prediction values (between 0 and 1) for each site-genus pair.
+
+    References:
+    -----------
+    Surprise documentation for similarity options:
+        https://surprise.readthedocs.io/en/stable/similarities.html
+    """
 
     occurences = df_train.rename(columns={df_train.columns[0]: "SITE_NAME"})
 
@@ -223,6 +302,25 @@ def get_recommend_list_colab(
 
 
 def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+    """
+    Calculates the metrics for the knn Collaborative Filtering
+
+    Parameters:
+    -----------
+    dataframe: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+    
+    output_prob: bool
+        Included for consistency but not implemented.
+    
+    train_size: float
+        The size of the data set used for training. The value must be the same as the one that was used for fitting.
+
+    Returns:
+    --------
+    dictionary
+        A dictionary containing the expected percentile rank and true postive rate
+    """
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
@@ -265,6 +363,66 @@ def get_recommend_list_hybrid(
     sim_options: dict = {"name": "MSD", "user_based": True},
     train_size=0.8,
 ) -> pd.DataFrame:
+    """
+    Fits the Hybrid algorithm on given data and makes predictions
+
+    Parameters:
+    -----------
+    df: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+
+    site_df: pd.DataFrame
+        a Pandas DataFrame containing the site metadata. The first column must be the site name.
+        Categorical variables must be converted to numberival beforehand.
+
+    genera_df: pd.DataFrame
+        a Pandas DataFrame containing the information about genera. Categorical features must be converted using one-hot-encoding beforehand. 
+        The first column must be the genus name. Categorical variables must be converted to numberival beforehand.
+
+    k: int
+        The maximum number of neigbours used by the kNN Collaborative filter algorithm
+
+    min_k: int
+        The minimum number of neigbours used by the kNN Collaborative filter algorithm
+
+    method: str
+        The method used to combine the scores of the two predictor algorithms. Can be 'average', 'filter' or 'filter_average'. 
+        The 'average' calculates the average similarity of the two prediction algorithms. 
+        The 'filter' uses the content-based filtering similarity scores if the kNN result is above a given threshold. 
+        The 'filter_average' combines both by first filtering and then calculating the average for those values that are above the threshold.
+    
+    content_based_weight: float
+        A weight of content-based similarity values in hybrid results. Must be between 0 and 1. This is used if method is either 'average' or 'filter_average'.
+    
+    filter_threshold: float
+        A threshold value for kNN Collaborative filtering similarity score. Values below the threshold are assigned to 0 in hybrid similarity if using
+        'filter' or 'filter_average' method.
+
+    normalization: str
+        The type of normalization used to normalize columns before calculating the similarity scores. 
+        Possible values: ["min-max", "mean"]. The default value is min-max.
+    
+    occurence_threshold: float
+        A threshold value that tells the algorithm which values are handled as occurences in the occurence data. This is needed if your occurence data has values between 0 and 1 (not just 0s and 1s).
+        The algorithm cannot handle uncertancies in the data and hence values over or equal to the threshold are handled as occurence. The default value is 0.8.
+
+    sim_options: dict
+        The similarity parameters used by the kNN Collaborative filtering. See the Surprise documentation if you want to change this.
+
+    train_size: float
+        The size of the data set used for training. The default is 0.8.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the prediction values (between 0 and 1) for each site-genus pair.
+
+    References:
+    -----------
+    Surprise documentation for similarity options:
+        https://surprise.readthedocs.io/en/stable/similarities.html
+    """
+
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(df, is_packed=False, is_encoded=False, ratio_traintest=train_size)
 
@@ -301,6 +459,25 @@ def get_recommend_list_hybrid(
 
 
 def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+    """
+    Calculates the metrics for the Hybrid algorithm
+
+    Parameters:
+    -----------
+    dataframe: pd.DataFrame
+        a Pandas DataFrame containing occurences of genera at each site in a matrix form. The first column must be the site name.
+    
+    output_prob: bool
+        Included for consistency but not implemented.
+    
+    train_size: float
+        The size of the data set used for training. The value must be the same as the one that was used for fitting.
+
+    Returns:
+    --------
+    dictionary
+        A dictionary containing the expected percentile rank and true postive rate
+    """
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
