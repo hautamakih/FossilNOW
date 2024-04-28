@@ -1,8 +1,9 @@
-from utils.dataframe import create_gdf
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from utils.dataframe import create_gdf, get_site_name
+
 
 COLORS = [
     "rgba(255, 0, 0, 0.3)",
@@ -270,11 +271,15 @@ def create_histo(clickData, species_in_sites, rec_species):
     return site_name, mass_bar_fig, dent_fig, site_data["genus_list"], rec_data["scores"]
 
 def add_true_occurrences(fig, occ_df, sites_df, genera):
-    occ_df = pd.concat([pd.DataFrame(occ_df), pd.DataFrame(sites_df)], axis=1)
+    occ_df = pd.DataFrame(occ_df)
+    sites_df = pd.DataFrame(sites_df)
+    site_name = get_site_name(occ_df)
+
+    sites_df.pop(site_name)
+
+    occ_df = pd.concat([occ_df, sites_df], axis=1)
 
     occ_gdff = preprocess_data(occ_df, genera, threshold=0.7)
-
-    site_name = "SITE_NAME" if "SITE_NAME" in occ_gdff.columns else "NAME"
 
     fig.add_trace(
         px.scatter_mapbox(
