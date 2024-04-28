@@ -580,9 +580,8 @@ def register_callbacks():
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
 
             if include_tn_mf and tn_df:
-                tn_df = pd.DataFrame(tn_df)\
-                    .rename(columns={'Unnamed: 0': 'loc_name'})\
-                    .set_index('loc_name')\
+                tn_df = pd.DataFrame(tn_df)
+                tn_df = tn_df.set_index(get_site_name(tn_df))\
                     .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
                 tnr_df = create_test_tnr(tn_df)
 
