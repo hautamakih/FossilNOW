@@ -184,7 +184,7 @@ def get_recommend_list_content_base(
     return df
 
 
-def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8, include_tnr: bool = False) -> dict:
     """
     Calculates the metrics for the Content Based Filtering
 
@@ -199,10 +199,13 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
     train_size: float
         The size of the data set used for training. The value must be the same as the one that was used for fitting.
 
+    include_tnr: bool
+        Whether calculating True Negative Rate. Default value is False. When True, True Positive Rate and Expected Percentile Rank are not calculated
+
     Returns:
     --------
     dictionary
-        A dictionary containing the expected percentile rank and true postive rate
+        A dictionary containing the expected percentile rank, true postive rate and true negative rate
     """
 
     # Get predictions for all user-item pairs
@@ -219,12 +222,18 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
     predictions = cbf.predict(df_test)
     predictions = predictions.fillna(0).rename(columns={"similarity": "pred"})
 
-    return {
-        "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-            predictions
-        ),
-        "true_positive_rate": evaluation.calc_tpr(predictions),
-    }
+    if include_tnr:
+        # For tnr to work the certain non-occurences must be 0s and other values 1s
+        predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
+        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+    
+    else:
+        return {
+            "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+        }
 
 
 def get_recommend_list_colab(
@@ -301,7 +310,7 @@ def get_recommend_list_colab(
     return knn_scores_pivot
 
 
-def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8, include_tnr = False) -> dict:
     """
     Calculates the metrics for the knn Collaborative Filtering
 
@@ -316,10 +325,13 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
     train_size: float
         The size of the data set used for training. The value must be the same as the one that was used for fitting.
 
+    include_tnr: bool
+        Whether calculating True Negative Rate. Default value is False. When True, True Positive Rate and Expected Percentile Rank are not calculated
+
     Returns:
     --------
     dictionary
-        A dictionary containing the expected percentile rank and true postive rate
+        A dictionary containing the expected percentile rank, true postive rate and true negative rate
     """
     # Get predictions for all user-item pairs
     if not output_prob:
@@ -338,12 +350,18 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
 
     predictions = predictions.fillna(0).rename(columns={"similarity": "pred"})
 
-    return {
-        "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-            predictions
-        ),
-        "true_positive_rate": evaluation.calc_tpr(predictions),
-    }
+    if include_tnr:
+        # For tnr to work the certain non-occurences must be 0s and other values 1s
+        predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
+        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+    
+    else:
+        return {
+            "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+        }
 
 
 hybrid = CbfCfHybrid()
@@ -458,7 +476,7 @@ def get_recommend_list_hybrid(
     return df
 
 
-def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8) -> dict:
+def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_size=0.8, include_tnr: bool = False) -> dict:
     """
     Calculates the metrics for the Hybrid algorithm
 
@@ -473,10 +491,13 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
     train_size: float
         The size of the data set used for training. The value must be the same as the one that was used for fitting.
 
+    include_tnr: bool
+        Whether calculating True Negative Rate. Default value is False. When True, True Positive Rate and Expected Percentile Rank are not calculated
+
     Returns:
     --------
     dictionary
-        A dictionary containing the expected percentile rank and true postive rate
+        A dictionary containing the expected percentile rank, true postive rate and true negative rate
     """
     # Get predictions for all user-item pairs
     if not output_prob:
@@ -492,13 +513,18 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
     predictions = hybrid.predict(df_test)
     predictions = predictions.fillna(0).rename(columns={"similarity": "pred"})
 
-    return {
-        "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-            predictions
-        ),
-        "true_positive_rate": evaluation.calc_tpr(predictions),
-    }
-
+    if include_tnr:
+        # For tnr to work the certain non-occurences must be 0s and other values 1s
+        predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
+        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+    
+    else:
+        return {
+            "expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+        }
 
 # 2 input files:
 # - DentalTraits_Genus_PPPA
