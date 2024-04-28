@@ -578,7 +578,13 @@ def register_callbacks():
                 raise PreventUpdate
             genera = pd.DataFrame(genera)
 
+            # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
+            if "SITE_NAME" in dff.columns:
+                dff = dff.drop(columns=["SITE_NAME"])
+            if "NAME" in dff.columns:
+                dff = dff.drop(columns=["NAME"])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
+
             #if 'COUNTRY' in sites.columns:
             sites = sites.drop(['COUNTRY'], axis=1)
             #print(sites.columns)
@@ -588,7 +594,14 @@ def register_callbacks():
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
                 raise PreventUpdate
+            
+            # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
+            if "SITE_NAME" in dff.columns:
+                dff = dff.drop(columns=["SITE_NAME"])
+            if "NAME" in dff.columns:
+                dff = dff.drop(columns=["NAME"])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
+            
             df_output = get_recommend_list_colab(dff,k_collab, min_k_collab, train_size=test_train_split)
             metrics = "CF metrics: " + str(get_metrics_colab(dff, train_size=test_train_split))
 
@@ -597,7 +610,13 @@ def register_callbacks():
                 raise PreventUpdate
             genera = pd.DataFrame(genera)
             
+            # Checking if there is SITE_NAME or NAME in columns. If found, dropping the column and inserting it back as the first column
+            if "SITE_NAME" in dff.columns:
+                dff = dff.drop(columns=["SITE_NAME"])
+            if "NAME" in dff.columns:
+                dff = dff.drop(columns=["NAME"])
             dff.insert(loc=0, column="SITE_NAME", value=sites[site_name])
+
             sites = sites.drop(['COUNTRY'], axis=1)
             df_output = get_recommend_list_hybrid(dff, sites, genera, k=k_hybrid,min_k=min_k_hybrid, method=hybrid_method,content_based_weight=weight_hybrid, filter_threshold=threshold_hybrid,occurence_threshold=oc_threshold_hybrid, train_size=test_train_split)
             metrics = "Hybrid metrics: " + str(get_metrics_hybrid(dff, train_size=test_train_split))
