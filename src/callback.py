@@ -190,7 +190,8 @@ def register_callbacks():
         if df is None:
             raise PreventUpdate
         df = pd.DataFrame(df)
-        return list(df.columns), df.columns[0]
+        numerical_columns = list(df.select_dtypes(include=['int', 'float']))
+        return numerical_columns, numerical_columns[0]
 
     @callback(
         Output("graph-content", "figure"),
