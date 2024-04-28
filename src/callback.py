@@ -189,6 +189,7 @@ def register_callbacks():
                             ],
                             hidden_columns=[i for i in pred_df.columns[10:]],
                             page_size=10,
+                            export_format="csv",
                         )
                         if pred_df is not None
                         else "empty",
