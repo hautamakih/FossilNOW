@@ -6,7 +6,10 @@ import pandas as pd
 import numpy as np
 import dash_mantine_components as dmc
 import plotly.express as px
-from utils.dataframe import *
+from utils.dataframe import (
+    parse_contents,
+    get_site_name,
+)
 from utils.scatter_mapbox import (
     preprocess_data,
     create_map_figure,
@@ -263,6 +266,10 @@ def register_callbacks():
             df = parse_contents(contents_list)
 
             if df_type == "Genera occurrences at sites":
+                site_name = get_site_name(df)
+                site_name_col = df.pop(site_name)
+
+                df.insert(0, site_name, site_name_col)
                 return df.to_dict("records"), dash.no_update, dash.no_update, dash.no_update
 
             if df_type == "Genera information":
@@ -277,10 +284,16 @@ def register_callbacks():
 
             occ_df = pd.DataFrame(occ_df)
 
+            site_meta_df = occ_df.iloc[:, -n:]
+            site_name = get_site_name(occ_df)
+            site_name_col = occ_df[site_name]
+            
+            site_meta_df.insert(0, site_name, site_name_col)
+
             return (
                 occ_df.iloc[:, :-n].to_dict("records"),
                 dash.no_update,
-                occ_df.iloc[:, -n:].to_dict("records"),
+                site_meta_df.to_dict("records"),
                 dash.no_update,
             )
 
@@ -536,31 +549,26 @@ def register_callbacks():
             metrics_div = []
 
         if model == "Matrix Factorization":
+            include_tn_mf = True if include_tn_mf == "Yes" else False
+            output_prob_mf = True if output_prob_mf == "Yes" else False
             df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
-            if include_tn_mf == "Yes" and tn_df:
+
+            if include_tn_mf and tn_df:
                 tn_df = pd.DataFrame(tn_df)\
                     .rename(columns={'Unnamed: 0': 'loc_name'})\
                     .set_index('loc_name')\
                     .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
                 tnr_df = create_test_tnr(tn_df)
 
-                path_tnr = "../data/AllSites_truenegatives_Feb24.csv"
-                df_tnr_raw = pd.read_csv(path_tnr)
-
-                df_tnr = df_tnr_raw\
-                    .rename(columns={'Unnamed: 0': 'loc_name'})\
-                    .set_index('loc_name')\
-                    .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
-
-                tnr_df = create_test_tnr(df_tnr)
-
-                metrics = "MF metrics: " + str(get_metrics_mf(tnr_df, output_prob=output_prob_mf, dim_hid=dim_hid, include_tnr=True))
+                metrics = "MF metrics (tn): " + str(get_metrics_mf(tnr_df, output_prob_mf, dim_hid, include_tn_mf))
             else:
                 metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
 
         elif model == "kNN":
             if n_clicks_knn == 0:
                 raise PreventUpdate
+
+            output_prob_knn = True if output_prob_knn == "Yes" else False
             df_output = get_recommend_list_knn(dff, output_prob_knn, k)
             metrics = "kNN metrics: " + str(get_metrics_knn(dff, output_prob_knn, k))
 

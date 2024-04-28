@@ -44,3 +44,8 @@ def parse_contents(contents):
         print(e)
 
     return df
+
+def get_site_name(df):
+    for site_acceptable_name in ["SITE_NAME", "NAME", "loc_name"]:
+        if site_acceptable_name in df.columns:
+            return site_acceptable_name
