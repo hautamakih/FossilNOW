@@ -211,6 +211,9 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
+    
+    if include_tnr:
+        train_size=0
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
@@ -225,10 +228,8 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-                predictions
-            ),
-            "true_positive_rate": evaluation.calc_tpr(predictions),
+        return {"expected_percentile_rank": -1,
+            "true_positive_rate": -1,
             "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
@@ -341,6 +342,9 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
+    
+    if include_tnr:
+        train_size=0
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
@@ -358,10 +362,8 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-                predictions
-            ),
-            "true_positive_rate": evaluation.calc_tpr(predictions),
+        return {"expected_percentile_rank": -1,
+            "true_positive_rate": -1,
             "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
@@ -512,6 +514,9 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
     # Get predictions for all user-item pairs
     if not output_prob:
         raise NotImplementedError()
+    
+    if include_tnr:
+        train_size=0
 
     # Divide data into training and testing
     df_train, df_test = utils.split_traintest(
@@ -526,10 +531,8 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
-                predictions
-            ),
-            "true_positive_rate": evaluation.calc_tpr(predictions),
+        return {"expected_percentile_rank": -1,
+            "true_positive_rate": -1,
             "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
