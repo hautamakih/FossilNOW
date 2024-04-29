@@ -351,7 +351,7 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
         dataframe, is_packed=False, is_encoded=False, ratio_traintest=train_size
     )
 
-    df_test = df_test.rename(columns={df_train.columns[0]: "SITE_NAME"})
+    df_test = df_test.rename(columns={"site": "SITE_NAME"})
 
     predictions = df_test.merge(
         knn_scores, on=["SITE_NAME", "genus"], how="left"
