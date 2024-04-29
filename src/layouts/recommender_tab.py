@@ -1,4 +1,4 @@
-from dash import html, dcc
+from dash import html, dcc, dash_table
 
 
 def get_recommender_tab_components():
@@ -294,7 +294,9 @@ def get_recommender_tab_components():
                 ],
                 id="recommender-params",
             ),
-            html.Div(id="recommender-metrics")
+            #html.Div(id="recommender-metrics"),
+            html.Label("Metrics: "),
+            dash_table.DataTable(id="recommender-metrics"),
         ],
         id="div-recommender",
         style={"display": "none"},

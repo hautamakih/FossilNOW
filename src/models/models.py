@@ -225,7 +225,11 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
         return {
@@ -233,6 +237,7 @@ def get_metrics_content_base(dataframe: pd.DataFrame, output_prob: bool = True, 
                 predictions
             ),
             "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": -1,
         }
 
 
@@ -353,7 +358,11 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
         return {
@@ -361,6 +370,7 @@ def get_metrics_colab(dataframe: pd.DataFrame, output_prob: bool = True, train_s
                 predictions
             ),
             "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": -1,
         }
 
 
@@ -516,7 +526,11 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
     if include_tnr:
         # For tnr to work the certain non-occurences must be 0s and other values 1s
         predictions['occurence'] = predictions['occurence'].apply(lambda x: 1 if x == 0 else 0)
-        return {"true negative_rate": evaluation.calc_tnr(predictions)}
+        return {"expected_percentile_rank": evaluation.calc_expected_percentile_rank(
+                predictions
+            ),
+            "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": evaluation.calc_tnr(predictions)}
     
     else:
         return {
@@ -524,7 +538,9 @@ def get_metrics_hybrid(dataframe: pd.DataFrame, output_prob: bool = True, train_
                 predictions
             ),
             "true_positive_rate": evaluation.calc_tpr(predictions),
+            "true negative_rate": -1,
         }
+
 
 # 2 input files:
 # - DentalTraits_Genus_PPPA

@@ -522,7 +522,7 @@ def register_callbacks():
         Output("prediction-data", "data"),
         Output("recommender-compute-done", "children"),
         Output("notification-mf-done", "children"),
-        Output("recommender-metrics", "children"),
+        Output("recommender-metrics", "data"),
         Input("button-mf-run", "value"),
         Input("button-knn-run", "value"),
         Input("button-content-run", "value"),
@@ -552,14 +552,14 @@ def register_callbacks():
         State("genera-info-data", "data"),
         State("sites-meta-data", "data"),
         State("true-negative-data", "data"),
-        State("recommender-metrics", "children"),
+        State("recommender-metrics", "data"),
     )
     def run_recommender(
         process_id, n_clicks_knn, n_clicks_content, n_clicks_collab, n_clicks_hybrid, test_train_split, epochs, dim_hid, 
         output_prob_mf, include_tn_mf, output_prob_knn, 
         k, oc_threshold_content, include_tn_content, k_collab,min_k_collab, include_tn_collab,
         oc_threshold_hybrid,k_hybrid,min_k_hybrid, weight_hybrid, threshold_hybrid,hybrid_method, include_tn_hybrid,
-        model, df, genera, sites, tn_df, metrics_div
+        model, df, genera, sites, tn_df, metrics_list
     ):
         if df is None or sites is None:
             raise PreventUpdate
@@ -571,31 +571,34 @@ def register_callbacks():
             sites = sites.drop([site_name], axis=1)
             sites.insert(loc=0, column=site_name, value=site_name_data)
 
-        if metrics_div is None:
-            metrics_div = []
+        if metrics_list is None:
+            metrics_list = []
 
         if model == "Matrix Factorization":
-            include_tn_mf = True if include_tn_mf == "Yes" else False
-            output_prob_mf = True if output_prob_mf == "Yes" else False
-            df_output = get_recommend_list_mf(dff, output_prob_mf, epochs, dim_hid)
+            include_tn = True if include_tn_mf == "Yes" else False
+            output_prob = True if output_prob_mf == "Yes" else False
+            df_output = get_recommend_list_mf(dff, output_prob, epochs, dim_hid)
 
-            if include_tn_mf and tn_df:
+            if include_tn and tn_df:
                 tn_df = pd.DataFrame(tn_df)
                 tn_df = tn_df.set_index(get_site_name(tn_df))\
                     .map(lambda x: 1 - x)   # Convert non-occurence from 1 to 0 to match with the code in function calc_tnr()
                 tnr_df = create_test_tnr(tn_df)
 
-                metrics = "MF metrics (tn): " + str(get_metrics_mf(tnr_df, output_prob_mf, dim_hid, include_tn_mf))
+                metrics = get_metrics_mf(tnr_df, output_prob, dim_hid, include_tn)
+                metrics = {"Model": "MF with true negatives", "Parameters": str([test_train_split, epochs, dim_hid, output_prob_mf, include_tn_mf]),**metrics}
             else:
-                metrics = "MF metrics: " + str(get_metrics_mf(dff, output_prob_mf, dim_hid))
+                metrics = get_metrics_mf(dff, output_prob, dim_hid)
+                metrics = {"Model": "MF", "Parameters": str([test_train_split, epochs, dim_hid, output_prob_mf, include_tn_mf]),**metrics}
 
         elif model == "kNN":
             if n_clicks_knn == 0:
                 raise PreventUpdate
 
-            output_prob_knn = True if output_prob_knn == "Yes" else False
-            df_output = get_recommend_list_knn(dff, output_prob_knn, k)
-            metrics = "kNN metrics: " + str(get_metrics_knn(dff, output_prob_knn, k))
+            output_prob = True if output_prob_knn == "Yes" else False
+            df_output = get_recommend_list_knn(dff, output_prob, k)
+            metrics = get_metrics_knn(dff, output_prob, k)
+            metrics = {"Model": "kNN", "Parameters": str([test_train_split, k, output_prob_knn]),**metrics}
 
         elif model == "Content-based Filtering":
             if n_clicks_content == 0 or genera is None:
@@ -616,11 +619,13 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_content:
                 if tn_df:
-                    metrics = "CBF metrics: " + str(get_metrics_content_base(tn_dff, train_size=test_train_split, include_tnr=True))
+                    metrics = get_metrics_content_base(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics = {"Model": "CBF with true negatives", "Parameters": str([test_train_split, oc_threshold_content, include_tn_content]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
             else:
-                metrics = "CBF metrics: " + str(get_metrics_content_base(dff, train_size=test_train_split, include_tnr=False))
+                metrics = get_metrics_content_base(dff, train_size=test_train_split, include_tnr=False)
+                metrics = {"Model": "CBF", "Parameters": str([test_train_split, oc_threshold_content, include_tn_content]),**metrics}
 
         elif model == "Collaborative Filtering":
             if n_clicks_collab == 0:
@@ -637,11 +642,13 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_collab:
                 if tn_df:
-                    metrics = "CF metrics: " + str(get_metrics_colab(tn_dff, train_size=test_train_split, include_tnr=True))
+                    metrics = get_metrics_colab(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics = metrics = {"Model": "CF with true negatives", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
             else:
-                metrics = "CF metrics: " + str(get_metrics_colab(dff, train_size=test_train_split, include_tnr=False))
+                metrics = get_metrics_colab(dff, train_size=test_train_split, include_tnr=False)
+                metrics = metrics = {"Model": "CF with true negatives", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0  or genera is None:
@@ -660,13 +667,15 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_hybrid:
                 if tn_df:
-                    metrics = "Hybrid metrics: " + str(get_metrics_hybrid(tn_dff, train_size=test_train_split, include_tnr=True))
+                    metrics = get_metrics_hybrid(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics = metrics = {"Model": "Hybrid with true negatives", "Parameters": str([test_train_split, oc_threshold_hybrid, hybrid_method, weight_hybrid, threshold_hybrid, k_hybrid, min_k_hybrid, include_tn_hybrid]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
             else:
-                metrics = "Hybrid metrics: " + str(get_metrics_hybrid(dff, train_size=test_train_split, include_tnr=False))
+                metrics = get_metrics_hybrid(dff, train_size=test_train_split, include_tnr=False)
+                metrics = metrics = {"Model": "Hybrid", "Parameters": str([test_train_split, oc_threshold_hybrid, hybrid_method, weight_hybrid, threshold_hybrid, k_hybrid, min_k_hybrid, include_tn_hybrid]),**metrics}
 
-        metrics_div.append(html.Div([str(metrics)]))
+        metrics_list.append(metrics)
 
         return (
             df_output.to_dict("records"),
@@ -680,5 +689,5 @@ def register_callbacks():
                 autoClose=5000,
                 disallowClose=False,
             ),
-            metrics_div
+            metrics_list
         )
