@@ -9,13 +9,16 @@ We consider this recommendation problem is *postive-only rating* (i.e. we only k
 FossilNow supports different recommendation algorithms for genera-site recommendation such as:
 
 - Content-based filtering
+  - Uses the site and genera metadata to find the most similar genera to each site.
 - Matrix Factorization
   - Estimate the embedding matrix of genera and site; available in both mode `output_probability = True` and `output_probability = False`, the predicted score is obtained by multiplying 2 embedding matrices.
 2 modes correspond to two way of considering the values in the training dataframe. If we consider cells' value is the probability of occurence, then it corresponds to the mode `output_probability = True`. On the contrary, if the cells' value only indicate the bare occurence, it corresponds to the mode `output_probability = False`
 - KNN
   - Use the learned embeddings from **Matrix Factorization** to filter the similar genera and average the know occurences of similar genera to predict the occurence of the given genus.
 - kNN Collaborative Filtering
+  - Finds the k most similar sites to each site and uses their occurences to predict the missing genera.
 - Content-based Filtering and kNN Collaborative Filtering hybrid algorithm
+  - Combines the Content-based Filtering and Collaborative filtering algorithms
 
 
 ## Instructions
@@ -41,17 +44,68 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 
 
 3. Upload the files:
-- a csv file containing the genera occurences at sites in a matrix form (containing 0s and 1s). This file should include also information about the site (longitude, latitude etc) as last columns. The number of site information columns should be spesified in the app. The name of the site should be the first column
-- a csv file containing information about the genera. This should contain columns: 'Genus','LogMass', 'HYP_Mean' and 'LOP_Mean'
-- For the Content-Based Filtering and the hybrid algorithm the site and genera metadata should be preprocessed so that the categorical columns are one-hot-encoded.
+- a csv file containing the genera occurences at sites in a matrix form (containing 0s and 1s or float value between). This file should include also information about the site (longitude, latitude etc) as last columns. The number of site information columns should be spesified in the app. The name of the site should be the first column. It is important to extract the site information from this data in the app or otherwise the algorithms will not work as intended. This file must always include longitude, latitude and country for the visualizations to work.
+- a csv file containing the dental traits and log masses ('Genus','LogMass', 'HYP_Mean' and 'LOP_Mean'). This is needed for the visualizations
+- a csv file containing information about the genera. The first column of the data should be 'Genus'. (optional, used by the content-based filtering and the hybrid)
+- a csv file containing the true negatives (optional. Needed if true negative rate is wanted to be calculated)
+
+
+  **Important note about the data!:**
+
+
+  The categorical values in csv files containing the occurences (and site metadata) and the genera metadata should be one-hot-encoded as dummy variables. If there are any columns that are not numerical (either integer or float) the content-based filtering and the hybrid algorithms will not work.
 
 4. Select the recommender algorithm
 
-5. Check the validation results
+  - The paramters each algorithm uses are described below.
 
-6. Visualize the results
+6. Check the validation results
 
-7. Evaluation metrics
+7. Visualize the results
+
+## Parameters of the algorithms
+
+- Common paramters
+  - Size of the train data
+    - Spesifies the share of the train set size. The occurence data is randomly split into train and test datasets according to this value. If the size of the train data is set to 1, all the data is used for training but evaluation metrics cannot be calculated. Note, that true negatives are not used for training and if they are calculated, the whole data is always used for that.
+   - Include true negatives (not implemented for kNN)
+     - Tells the app whether the true negative rates are calculated. Please set this to 'No' if the true negative rate csv has not been given as an input.
+- Algorithm spesific parameters
+  - Matrix Factorization
+    - Epochs
+    - Dim-hid
+    - Output probabilities
+  - kNN
+    - Top k
+    - Output probabilities
+  - Content-based filtering
+    - Occurence threshold
+      - Values above this are counted as occured. Content-based filtering implementation cannot handle uncertain occurences which is why this has to be spesified if the occurence matrix contains other values than 0s and 1s.
+  - kNN Collaborative filtering
+    - Top k
+      - The max number of neighbours (sites) taken into account.
+    - Min k
+      - The min number of neighbours (sites) taken into account. 
+  - Hybrid
+    - Occurence threshold
+      - Values above this are counted as occured. Content-based filtering implementation cannot handle uncertain occurences which is why this has to be spesified if the occurence matrix contains other values. Used by the content-based filtering part.
+    - Method
+      - average
+        - Calculates the weighted average of the both algorithm predictions.
+      - filter
+        - Filters the predictions of the content-based filtering predictions by the predictions of the collaborative filtering. If the collaborative filtering prediction is under the spesified threshold, the prediction value is zero, otherwise the prediction of content-based filtering is used.
+      - filter_average
+        - Combines the above two methods. First calculates the averages and the filters as described above.
+    - Weight
+      - The weight of content-based similarity values in hybrid results. Must be between 0 and 1. This is used if method is either 'average' or 'filter_average'.
+    - Threshold
+      - A threshold value for kNN Collaborative filtering similarity score. Values below the threshold are assigned to 0 in hybrid similarity if using 'filter' or 'filter_average' method.
+    - Top k
+      - The max number of neighbours (sites) taken into account.
+    - Min k
+      - The min number of neighbours (sites) taken into account. 
+
+## Evaluation metrics
 
 As we consider the problem as *postive-only rating* recommendation, we employ 3 methods for evaluation:
     1. Expected Percentile Rank: 
