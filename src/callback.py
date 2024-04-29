@@ -619,7 +619,12 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_content:
                 if tn_df:
-                    metrics = get_metrics_content_base(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics_tn = get_metrics_content_base(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics_tp = get_metrics_content_base(dff, train_size=test_train_split, include_tnr=False)
+                    metrics = {
+                        "expected_percentile_rank": metrics_tp["expected_percentile_rank"],
+                        "true_positive_rate": metrics_tp["true_positive_rate"],
+                        "true negative_rate": metrics_tn["true negative_rate"]}
                     metrics = {"Model": "CBF with true negatives", "Parameters": str([test_train_split, oc_threshold_content, include_tn_content]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
@@ -642,7 +647,12 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_collab:
                 if tn_df:
-                    metrics = get_metrics_colab(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics_tn = get_metrics_colab(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics_tp = get_metrics_colab(dff, train_size=test_train_split, include_tnr=False)
+                    metrics = {
+                        "expected_percentile_rank": metrics_tp["expected_percentile_rank"],
+                        "true_positive_rate": metrics_tp["true_positive_rate"],
+                        "true negative_rate": metrics_tn["true negative_rate"]}
                     metrics = metrics = {"Model": "CF with true negatives", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
@@ -667,8 +677,13 @@ def register_callbacks():
             tn_dff = pd.DataFrame(tn_df).rename(columns={'Unnamed: 0': 'SITE_NAME'})
             if include_tn_hybrid:
                 if tn_df:
-                    metrics = get_metrics_hybrid(tn_dff, train_size=test_train_split, include_tnr=True)
-                    metrics = metrics = {"Model": "Hybrid with true negatives", "Parameters": str([test_train_split, oc_threshold_hybrid, hybrid_method, weight_hybrid, threshold_hybrid, k_hybrid, min_k_hybrid, include_tn_hybrid]),**metrics}
+                    metrics_tn = get_metrics_hybrid(tn_dff, train_size=test_train_split, include_tnr=True)
+                    metrics_tp = get_metrics_hybrid(dff, train_size=test_train_split, include_tnr=False)
+                    metrics = {
+                        "expected_percentile_rank": metrics_tp["expected_percentile_rank"],
+                        "true_positive_rate": metrics_tp["true_positive_rate"],
+                        "true negative_rate": metrics_tn["true negative_rate"]}
+                    metrics = metrics = {"Model": "CF with true negatives", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
                 else:
                     raise ValueError("The True Negative Matrix was not uploaded.")
             else:
