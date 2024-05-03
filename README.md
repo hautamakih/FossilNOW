@@ -20,8 +20,19 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 - Content-based Filtering and kNN Collaborative Filtering hybrid algorithm
   - Combines the Content-based Filtering and Collaborative filtering algorithms
 
+## Requirements
+
+This app works with `python3.10` and `python3.11`. `python3.12` will be working as soon as `scikit-surprise` package will support it.
 
 ## Instructions
+
+0. Create virtual environment (Optional):
+
+    `python -m venv venv`
+
+    Activate the virtual environment:
+
+    `source venv/bin/activate`
 
 1. Install packages with pip by running:
 
@@ -38,13 +49,15 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 
 2. Go to the source directory `src` and run locally:
 
+    `cd src`
+
     `python app.py`
 
-    The app starts in a web browser.
+    The app starts running on http://127.0.0.1:8010
 
 
 3. Upload the files:
-- a csv file containing the genera occurences at sites in a matrix form (containing 0s and 1s or float value between). This file should include also information about the site (longitude, latitude etc) as last columns. The number of site information columns should be spesified in the app. The name of the site should be the first column. It is important to extract the site information from this data in the app or otherwise the algorithms will not work as intended. This file must always include longitude, latitude and country for the visualizations to work.
+- a csv file containing the genera occurences at sites in a matrix form (containing 0s and 1s or float value between). This file should include also information about the site (longitude, latitude etc) as last columns. The number of site information columns should be specified in the app. The name of the site should be the first column. Name it as "SITE_NAME" (recommended), "NAME" or "loc_name". It is important to extract the site information from this data in the app or otherwise the algorithms will not work as intended. This file must always include longitude, latitude and country for the visualizations to work.
 - a csv file containing the dental traits and log masses ('Genus','LogMass', 'HYP_Mean' and 'LOP_Mean'). This is needed for the visualizations
 - a csv file containing information about the genera. The first column of the data should be 'Genus'. (optional, used by the content-based filtering and the hybrid)
 - a csv file containing the true negatives (optional. Needed if true negative rate is wanted to be calculated)
@@ -59,9 +72,9 @@ FossilNow supports different recommendation algorithms for genera-site recommend
 
   - The paramters each algorithm uses are described below.
 
-6. Check the validation results
+5. Check the validation results
 
-7. Visualize the results
+6. Visualize the results
 
 ## Parameters of the algorithms
 
