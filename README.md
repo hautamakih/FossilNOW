@@ -134,3 +134,7 @@ As we consider the problem as *postive-only rating* recommendation, we employ 3 
         - Meaning: indicates how unlikely the genus appears in a site.
         - Availability: With algorithm **MF** and **KNN**, this metric is available only in mode `output_probability = True` and the flag `include_tnr` is set to True. Moreover, this metric is done on separated dataframe, not one used for training.
 
+
+## Modifying the histograms
+
+If you wish to plot other columns than the LogMass, HYP_Mean and LOP_Mean, you can do this by modifying the COLUMN1, COLUMN2 and COLUMN3 values in src/callback.py and src/utils/scatter_mapbox.py
