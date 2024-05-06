@@ -153,6 +153,13 @@ def add_column_and_average(df_to_add, column_name, df):
 
 
 def create_histo(clickData, species_in_sites, rec_species):
+    """
+    creates histograms of the COLUMN1, COLUMN2 and COLUMN3 of the true and recommended genera
+    input:
+    clickData: site that the user has cliked
+    species_in_sites: dataframe containing the true occurences and the genera information
+    rec_species: dataframe containing the recommended occurences and the genera information
+    """
     # site data:
     site_name = clickData["points"][0]["hovertext"]
 
@@ -165,7 +172,7 @@ def create_histo(clickData, species_in_sites, rec_species):
     # #recommendations:
     rec_data = rec_species[rec_species['SITE_NAME'] == site_name].iloc[0]
 
-    # LOG MASS:
+    # COLUMN1: LOG MASS:
     mass_bar_fig = go.Figure()
     mass_bar_fig.add_trace(
         go.Histogram(
@@ -190,7 +197,7 @@ def create_histo(clickData, species_in_sites, rec_species):
         title="{} of genera in {}".format(COLUMN1,site_name), bargap=0.2
     )
 
-    # DENTAL DATA:
+    # COLUMN2 and COLUMN3: DENTAL DATA:
     dent_fig = make_subplots(rows=1, cols=2)
     # Hyp:
     dent_fig.add_trace(
@@ -238,7 +245,7 @@ def create_histo(clickData, species_in_sites, rec_species):
         row=1,
         col=2,
     )
-
+    #names of the axes:
     dent_fig.update_xaxes(title_text="{}".format(COLUMN2), row=1, col=1)
     dent_fig.update_xaxes(title_text="{}".format(COLUMN3), row=1, col=2)
     dent_fig.update_layout(
