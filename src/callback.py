@@ -33,9 +33,12 @@ from models.models import (
 )
 from models.utils import create_test_tnr
 
-# species_in_sites = pd.read_parquet("../data/species_in_sites.parquet")
-# rec_species = pd.read_parquet("../data/rec_species.parquet")
-content_base = pd.read_csv("../data/content-based-filtering.csv")
+#genera columns to plot in histograms:
+#Change these if you wish to plot some other columns
+#NOTE: these need to be changed in the utils/scatter_mapbox.py as well
+COLUMN1 = "LogMass"
+COLUMN2 = "HYP_Mean"
+COLUMN3 = "LOP_Mean"
 
 
 def register_callbacks():
@@ -360,19 +363,19 @@ def register_callbacks():
             lambda row: list(row.index[row > 0]), axis=1
         )
         # meta_data
-        meta_data = meta_data[["Genus", "LogMass", "HYP_Mean", "LOP_Mean"]]
+        meta_data = meta_data[["Genus", COLUMN1, COLUMN2, COLUMN3]]
         # mass:
         species_in_sites = add_column_and_average(
-            species_in_sites, "LogMass", meta_data
+            species_in_sites, COLUMN1, meta_data
         )
         # dental info
-        meta_data["HYP_Mean"] = meta_data["HYP_Mean"].fillna(-1)
-        meta_data["LOP_Mean"] = meta_data["LOP_Mean"].fillna(-1)
+        meta_data[COLUMN2] = meta_data[COLUMN2].fillna(-1)
+        meta_data[COLUMN3] = meta_data[COLUMN3].fillna(-1)
         species_in_sites = add_column_and_average(
-            species_in_sites, "HYP_Mean", meta_data
+            species_in_sites, COLUMN2, meta_data
         )
         species_in_sites = add_column_and_average(
-            species_in_sites, "LOP_Mean", meta_data
+            species_in_sites, COLUMN3, meta_data
         )
         # recommendations:
         rec_species = recommendations[[get_site_name(recommendations)]].copy()
@@ -384,11 +387,11 @@ def register_callbacks():
             return [(col, score) for col, score in row.items() if score > threshold]
 
         rec_species["scores"] = recommendations.iloc[:, 1:].apply(score_tuples, axis=1)
-        rec_species = add_column_and_average(rec_species, "LogMass", meta_data)
-        rec_species = add_column_and_average(rec_species, "HYP_Mean", meta_data)
-        rec_species = add_column_and_average(rec_species, "LOP_Mean", meta_data)
+        rec_species = add_column_and_average(rec_species, COLUMN1, meta_data)
+        rec_species = add_column_and_average(rec_species, COLUMN2, meta_data)
+        rec_species = add_column_and_average(rec_species, COLUMN3, meta_data)
         rec_species = rec_species[
-            [get_site_name(rec_species), "genus_list", "scores", "LogMass", "HYP_Mean", "LOP_Mean"]
+            [get_site_name(rec_species), "genus_list", "scores", COLUMN1, COLUMN2, COLUMN3]
         ]
         return species_in_sites.to_dict("records"), rec_species.to_dict("records")
 

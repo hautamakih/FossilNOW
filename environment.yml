@@ -4,6 +4,7 @@ channels:
   - pytorch
   - defaults
 dependencies:
+  - python=3.11.1
   - conda-forge::scikit-surprise
   - dash
   - pandas
@@ -16,5 +17,5 @@ dependencies:
   - pip
   - pip:
     - dash-daq
-    - dash-mantine-components
+    - dash-mantine-components==0.12.1
   
