@@ -155,7 +155,7 @@ class ContentBasedFiltering:
 
         # Calculate using mean, max, mode, median?
         site_genus = (
-            site_genus.groupby("SITE_NAME").max().reset_index().set_index("SITE_NAME")
+            site_genus.groupby("SITE_NAME").mean().reset_index().set_index("SITE_NAME")
         )
 
         self.genus_related_site_info = site_genus
