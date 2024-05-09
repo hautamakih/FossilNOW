@@ -188,6 +188,7 @@ cython_debug/
 
 Pipfile
 Pipfile.lock
+.vscode
 
 tests
 **/data_processed
