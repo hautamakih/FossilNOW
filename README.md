@@ -85,12 +85,12 @@ This app works with `python3.10` and `python3.11`. `python3.12` will be working 
      - Tells the app whether the true negative rates are calculated. Please set this to 'No' if the true negative rate csv has not been given as an input.
 - Algorithm spesific parameters
   - Matrix Factorization
-    - Epochs
-    - Dim-hid
-    - Output probabilities
+    - Epochs: the number of training epochs
+    - Dim-hid: the dimension of site and genus embedding
+    - `output_probability`: set `True` is we want the output is the probability, otherwise the output is the non-negative number.
   - kNN
-    - Top k
-    - Output probabilities
+    - Top k: top `k` sites with highest score
+    - `output_probability`: set `True` is we want the output is the probability, otherwise the output is the non-negative number.
   - Content-based filtering
     - Occurence threshold
       - Values above this are counted as occured. Content-based filtering implementation cannot handle uncertain occurences which is why this has to be spesified if the occurence matrix contains other values than 0s and 1s.
@@ -121,18 +121,21 @@ This app works with `python3.10` and `python3.11`. `python3.12` will be working 
 ## Evaluation metrics
 
 As we consider the problem as *postive-only rating* recommendation, we employ 3 methods for evaluation:
-    1. Expected Percentile Rank: 
-        - Range: 0 - 100; lower is better ; EPR = 50 indicates that the algorihm is no better than random algorithm.
-        - Meaning: indicates how likely the sites that the genus actually appear are on the top of the recommended list of sites.
-        - Availability: With algorithm **MF** and **KNN**, this metric is available in both modes `output_probability = True` and `output_probability = False`
-    2. True Positive Rate:
-        - Range: 0 - 100; higher is better
-        - Meaning: indicates how likely the genus appears in a site.
-        - Availability: With algorithm **MF** and **KNN**, this metric is available only in mode `output_probability = True`
-    3. True Negative Rate:
-        - Range: 0 - 100; lower is better
-        - Meaning: indicates how unlikely the genus appears in a site.
-        - Availability: With algorithm **MF** and **KNN**, this metric is available only in mode `output_probability = True` and the flag `include_tnr` is set to True. Moreover, this metric is done on separated dataframe, not one used for training.
+
+1. Expected Percentile Rank: 
+  - Range: 0 - 100; lower is better ; EPR = 50 indicates that the algorihm is no better than random algorithm.
+  - Meaning: indicates how likely the sites that the genus actually appear are on the top of the recommended list of sites.
+  - Availability: With algorithm **MF** and **KNN**, this metric is available in both modes `output_probability = True` and `output_probability = False`
+  
+2. True Positive Rate:
+  - Range: 0 - 1; higher is better
+  - Meaning: indicates how likely the genus appears in a site.
+  - Availability: With algorithm **MF** and **KNN**, this metric is available only in mode `output_probability = True`
+
+3. True Negative Rate:
+  - Range: 0 - 1; lower is better
+  - Meaning: indicates how unlikely the genus appears in a site.
+  - Availability: With algorithm **MF** and **KNN**, this metric is available only in mode `output_probability = True` and the flag `include_tnr` is set to True. Moreover, this metric is done on separated dataframe, not one used for training.
 
 
 ## Modifying the histograms
