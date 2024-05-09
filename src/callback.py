@@ -661,7 +661,7 @@ def register_callbacks():
                     raise ValueError("The True Negative Matrix was not uploaded.")
             else:
                 metrics = get_metrics_colab(dff, train_size=test_train_split, include_tnr=False)
-                metrics = metrics = {"Model": "CF with true negatives", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
+                metrics = metrics = {"Model": "CF", "Parameters": str([test_train_split, k_collab, min_k_collab, include_tn_collab]),**metrics}
 
         elif model == "Hybrid: Content-based x Collaborative":
             if n_clicks_hybrid == 0  or genera is None:
