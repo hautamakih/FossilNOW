@@ -53,7 +53,7 @@ This app works with `python3.10` and `python3.11`. `python3.12` will be working 
 
     `python app.py`
 
-    The app starts running on http://127.0.0.1:8010
+    The app starts running on http://127.0.0.1:8050
 
 
 3. Upload the files:
