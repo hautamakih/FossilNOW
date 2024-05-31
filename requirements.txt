@@ -8,5 +8,5 @@ scikit-learn
 scipy
 torch
 numpy
-# scikit-surprise
+scikit-surprise
 gunicorn
