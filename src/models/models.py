@@ -4,7 +4,10 @@ from models.Hybrid.CBF_CF_hybrid import CbfCfHybrid
 from models.knn import knn
 from models.MF import mf
 from pandas import DataFrame
-from surprise import Dataset, KNNBasic, Reader
+#from surprise import Dataset, KNNBasic, Reader
+
+Dataset, KNNBasic, Reader = None
+
 
 from . import evaluation, utils
 
