@@ -6,7 +6,7 @@ from models.MF import mf
 from pandas import DataFrame
 #from surprise import Dataset, KNNBasic, Reader
 
-Dataset, KNNBasic, Reader = None
+Dataset = KNNBasic = Reader = None
 
 
 from . import evaluation, utils

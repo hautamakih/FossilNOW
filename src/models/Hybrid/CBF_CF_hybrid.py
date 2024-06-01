@@ -3,7 +3,9 @@ import sys
 # sys.path.append("..")
 
 from models.CBF.ContentBasedFiltering import ContentBasedFiltering
-from surprise import KNNBasic, Dataset, Reader
+#from surprise import KNNBasic, Dataset, Reader
+
+Dataset = KNNBasic = Reader = None
 
 import numpy as np
 import pandas as pd
