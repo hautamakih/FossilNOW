@@ -191,4 +191,3 @@ Pipfile.lock
 .vscode
 
 tests
-**/data_processed
