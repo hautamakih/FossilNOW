@@ -12,4 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src .
 
+RUN chgrp root data_processed && chmod 660 data_processed
+
 CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
