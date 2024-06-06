@@ -16,4 +16,8 @@ RUN chgrp root data_processed && chmod 770 data_processed
 
 RUN chgrp root data_processed/encoding && chmod 770 data_processed/encoding
 
+RUN chgrp root data_processed/encoding/ordinal_enc_genus.json && chmod 770 data_processed/encoding/ordinal_enc_genus.json
+
+RUN chgrp root data_processed/encoding/ordinal_enc_site.json && chmod 770 data_processed/encoding/ordinal_enc_site.json
+
 CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
